@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" fill="none">
+  <defs>
+    <pattern id="v-grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0v24" stroke="#6a7554" stroke-width=".6" opacity=".13"/></pattern>
+    <pattern id="v-hazard" width="26" height="26" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><rect width="26" height="26" fill="#928a43"/><rect width="12" height="26" fill="#222b21"/></pattern>
+    <pattern id="v-perforation" width="12" height="12" patternUnits="userSpaceOnUse"><circle cx="4" cy="4" r="1.3" fill="#101a14"/></pattern>
+    <g id="v-bolt"><circle r="4" fill="#111b14" stroke="#758364" stroke-width="1.5"/><path d="m-1.5-1.5 3 3" stroke="#758364"/></g>
+    <g id="v-rivet"><circle r="2" fill="#758364" opacity=".6"/></g>
+  </defs>
+  <rect width="1200" height="420" fill="#121c16"/>
+  <path d="M0 0h1200v311l-131 41H133L0 311Z" fill="#2b3728"/>
+  <rect y="27" width="1200" height="274" fill="#303d2c"/>
+  <path d="M0 0h1200v31H0Zm0 302h1200v25H0Z" fill="#17251b"/>
+  <path d="M0 31h1200M0 302h1200" stroke="#657556" stroke-width="2"/>
+  <path d="M0 46h1200M0 288h1200" stroke="#142219" stroke-width="8"/>
+  <path d="M0 337h1200v83H0Z" fill="#1a281c"/>
+  <path d="M0 360h1200M0 398h1200M0 420l430-83m770 83-430-83M183 420l335-83m499 83-335-83M420 420l156-83m217 83-156-83" stroke="#46583a" stroke-width="1.4"/>
+  <rect width="1200" height="420" fill="url(#v-grid)"/>
+  <!-- Thick structural ribs and recessed wall panels. -->
+  <g fill="#202d20" stroke="#6b7b58" stroke-width="1.3">
+    <path d="M7 48h77v237H7zM110 48h244v237H110zM386 48h39v237h-39zM884 48h35v237h-35zM948 48h238v237H948z"/>
+  </g>
+  <g stroke="#0b1710" stroke-width="8"><path d="M94 31v270m277-270v270m560-270v270"/></g>
+  <g stroke="#7c8966" stroke-width="1.5"><path d="M100 31v270m277-270v270m560-270v270"/></g>
+  <g fill="#44513a" stroke="#71815b"><path d="M30 80h32v118H30zm0 129h32v51H30zM980 79h175v56H980z"/></g>
+  <path d="M38 90h16m-16 10h16m-16 10h16m-16 10h16m-16 10h16m-16 10h16m-16 10h16m-16 10h16m-16 10h16m-16 10h16m-16 10h16" stroke="#142317" stroke-width="4"/>
+  <rect x="990" y="89" width="155" height="35" rx="2" fill="#0c1a11" stroke="#839365"/>
+  <path d="M1001 113v-10h6v10m8 0V99h6v14m8 0V94h6v19m8 0V99h6v14m8 0V90h6v23m8 0v-15h6v15m8 0v-8h6v8m8 0v-21h6v21m8 0V99h6v14" stroke="#88b55b" stroke-width="3"/>
+  <!-- Pipework is routed away from the service door. -->
+  <path d="M0 15h320q28 0 28 29v21m0 0v24m0 25v22M1080 0v36q0 18-20 18H960q-20 0-20 20v113" stroke="#111e14" stroke-width="18"/>
+  <path d="M0 15h320q28 0 28 29v21m0 0v24m0 25v22M1080 0v36q0 18-20 18H960q-20 0-20 20v113" stroke="#6c7955" stroke-width="10"/>
+  <path d="M0 13h320q26 0 26 29M1078 0v36q0 16-18 16H960" stroke="#a1a67b" stroke-width="2" opacity=".55"/>
+  <g fill="#84916b" stroke="#213423" stroke-width="2"><rect x="86" y="6" width="9" height="18" rx="1"/><rect x="232" y="6" width="9" height="18" rx="1"/><rect x="339" y="69" width="18" height="8" rx="1"/><rect x="1071" y="18" width="18" height="8" rx="1"/><rect x="995" y="45" width="9" height="18" rx="1"/></g>
+  <!-- Round blast door, deliberately unlike any official game asset. -->
+  <path d="M472 49h348l49 48v206l-43 35H465l-40-35V97Z" fill="#111f16" stroke="#7b8960" stroke-width="2"/>
+  <path d="M479 58h333l46 44v196l-38 31H472l-36-31V102Z" fill="url(#v-hazard)"/>
+  <path d="M490 70h311l44 40v180l-37 27H483l-35-27V110Z" fill="#283928" stroke="#0e1b12" stroke-width="6"/>
+  <path d="M489 75h313l36 37v173l-32 25H485l-31-25V112Z" stroke="#73845b" stroke-width="1.5"/>
+  <circle cx="647" cy="194" r="132" fill="#0f1e14" stroke="#687b51" stroke-width="5"/>
+  <circle cx="647" cy="194" r="119" fill="#3d4c33" stroke="#89966d" stroke-width="2"/>
+  <circle cx="647" cy="194" r="105" fill="#2f402b" stroke="#18281b" stroke-width="7"/>
+  <circle cx="647" cy="194" r="92" stroke="#738461" stroke-width="1.5"/>
+  <path d="M647 87v213M540 194h214M571 118l152 152m0-152L571 270" stroke="#14271a" stroke-width="7"/>
+  <path d="M647 90v207M543 194h208M574 121l146 146m0-146L574 267" stroke="#81916a" stroke-width="1.3"/>
+  <path d="M579 156h137v75H579Z" fill="#2e402b"/>
+  <text x="647" y="210" fill="#a0af7b" font-family="monospace" font-size="47" font-weight="700" text-anchor="middle" letter-spacing="6">2207</text>
+  <path d="M602 231h90m-78 5h66" stroke="#9ba675" stroke-width="1"/>
+  <g fill="#142519" stroke="#91a16d" stroke-width="2">
+    <rect x="624" y="74" width="46" height="13" rx="2"/><rect x="624" y="301" width="46" height="13" rx="2"/><rect x="527" y="171" width="13" height="46" rx="2"/><rect x="754" y="171" width="13" height="46" rx="2"/>
+  </g>
+  <g>
+    <use href="#v-bolt" x="647" y="84"/><use href="#v-bolt" x="647" y="304"/><use href="#v-bolt" x="537" y="194"/><use href="#v-bolt" x="757" y="194"/><use href="#v-bolt" x="570" y="117"/><use href="#v-bolt" x="724" y="117"/><use href="#v-bolt" x="570" y="271"/><use href="#v-bolt" x="724" y="271"/>
+    <use href="#v-bolt" x="464" y="113"/><use href="#v-bolt" x="830" y="113"/><use href="#v-bolt" x="464" y="284"/><use href="#v-bolt" x="830" y="284"/>
+  </g>
+  <!-- Service terminal: heavy bevels, CRT phosphor and a mechanical keyboard. -->
+  <path d="M123 113h188l17 17v138H111V128Z" fill="#0f1d13" stroke="#7f8c66" stroke-width="2"/>
+  <path d="M129 122h173l14 14v112H123V137Z" fill="#536044" stroke="#213021" stroke-width="3"/>
+  <path d="M145 136h144l9 9v77l-9 9H145l-10-9v-77Z" fill="#07160b" stroke="#92a274" stroke-width="2"/>
+  <path d="M146 140h141l7 7v73l-7 7H147l-8-8v-71Z" stroke="#2d512c"/>
+  <g stroke="#7fb25a" stroke-width="2" opacity=".9"><path d="M153 154h73m-73 9h118m-118 9h59m8 0h41m-108 17h20m7 0h50m-77 10h103m-103 10h49m8 0h35"/></g>
+  <path d="M153 181h6" stroke="#9ad46a" stroke-width="3"/>
+  <rect x="139" y="240" width="67" height="11" fill="url(#v-perforation)"/>
+  <g fill="#799f4c"><circle cx="282" cy="244" r="3"/><circle cx="293" cy="244" r="3"/></g>
+  <path d="M112 262h216l31 35v20H81v-20Z" fill="#596044" stroke="#111e14" stroke-width="4"/>
+  <path d="M119 272h200l17 22H99Z" fill="#203322" stroke="#9ca27a"/>
+  <g stroke="#929c70" stroke-width="3"><path d="M121 279h190m-197 7h204m-156-10-4 15m22-15-2 15m22-15v15m22-15 2 15m22-15 4 15m22-15 6 15"/></g>
+  <rect x="182" y="297" width="76" height="7" rx="2" fill="#243625"/>
+  <path d="M111 317h218v31H111Z" fill="#233222" stroke="#7b855f"/>
+  <g fill="#0e1d13"><rect x="130" y="327" width="7" height="12"/><rect x="145" y="327" width="7" height="12"/><rect x="160" y="327" width="7" height="12"/><rect x="280" y="327" width="7" height="12"/><rect x="295" y="327" width="7" height="12"/></g>
+  <path d="M207 348v18h28v-18" stroke="#738563" stroke-width="5"/>
+  <path d="M221 366v18h-86" stroke="#0d1b13" stroke-width="7"/>
+  <!-- Local control panel and restrained safety markings. -->
+  <rect x="980" y="157" width="175" height="105" rx="3" fill="#192a1c" stroke="#657c51" stroke-width="2"/>
+  <rect x="993" y="171" width="66" height="77" fill="#0b1c11" stroke="#84986a"/>
+  <path d="M1027 185v42m-18-21h36" stroke="#67784c" stroke-width="2"/>
+  <circle cx="1027" cy="206" r="15" stroke="#a2a16b" stroke-width="2"/>
+  <path d="m1027 206 8-11" stroke="#bbbc82" stroke-width="2"/>
+  <g fill="#81ac55" stroke="#101f14" stroke-width="3"><circle cx="1080" cy="180" r="7"/><circle cx="1105" cy="180" r="7"/></g>
+  <circle cx="1130" cy="180" r="7" fill="#7c6339" stroke="#101f14" stroke-width="3"/>
+  <path d="M1073 204h62m-62 9h62m-62 9h62m-62 9h62m-62 9h62" stroke="#68794f" stroke-width="2"/>
+  <rect x="800" y="349" width="97" height="34" fill="#a39a4d" stroke="#1d2c1e" stroke-width="3"/>
+  <path d="m818 374 11-19 11 19Z" fill="#253523"/>
+  <path d="M829 360v7" stroke="#b8ae5b" stroke-width="2"/><circle cx="829" cy="371" r="1" fill="#b8ae5b"/>
+  <path d="M849 359h37m-37 7h37m-37 7h23" stroke="#344126" stroke-width="2"/>
+  <g><use href="#v-rivet" x="17" y="40"/><use href="#v-rivet" x="300" y="40"/><use href="#v-rivet" x="455" y="40"/><use href="#v-rivet" x="850" y="40"/><use href="#v-rivet" x="970" y="40"/><use href="#v-rivet" x="1180" y="40"/><use href="#v-rivet" x="17" y="294"/><use href="#v-rivet" x="300" y="294"/><use href="#v-rivet" x="970" y="294"/><use href="#v-rivet" x="1180" y="294"/></g>
+  <path d="M0 0h1200v420H0Z" stroke="#0a160e" stroke-width="12"/>
+</svg>
