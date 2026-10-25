@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Нити — личный пульт ведущего. Сцены, персонажи, тайны и последствия решений в одном месте.">
+<meta name="theme-color" content="#151a17"><title>Нити — пульт ведущего</title>
+<link rel="stylesheet" href="style.css"><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231b241e'/%3E%3Cpath d='M18 46V18l28 28V18M18 32h28' fill='none' stroke='%23e6ddbd' stroke-width='3'/%3E%3C/svg%3E">
+</head>
+<body>
+<div class="app-shell">
+<aside class="sidebar">
+<a class="brand" href="#overview"><span class="brand-mark">И</span><span>нити<small class="brand-sub">ПУЛЬТ ВЕДУЩЕГО</small></span></a>
+<div class="campaign-label">ТВОЯ ИСТОРИЯ</div>
+<nav aria-label="Разделы" id="nav"></nav>
+<div class="sidebar-quote">«Мир продолжает жить,<br>даже когда герои<br>смотрят в другую сторону.»<span>ЗАМЕТКА НА ПОЛЯХ</span></div>
+<div class="sidebar-footer"><div id="saveStatus" class="save-status" role="status">● Сохранено в браузере</div><button class="text-button" data-action="backup">↓ Резервная копия</button><a class="text-button" href="niti-offline.html" download>↙ Забрать пульт с собой</a><button class="text-button" data-action="help">Как здесь всё устроено ↗</button></div>
+</aside>
+<main class="main">
+<header class="topbar"><div class="breadcrumbs"><span>Мастерская</span><span>/</span><strong id="crumb">За ширмой</strong></div><div class="top-actions"><span class="local-label">Личное пространство</span><button class="button ghost small" data-action="manuscript">↥ Загрузить сюжет</button></div></header>
+<div id="workspace" class="workspace"></div>
+<footer class="page-footer"><span>НИТИ <span class="footer-dot">·</span> Место, где история оживает.</span><span>Сделано для твоего следующего «а что, если?»</span></footer>
+</main>
+</div>
+<div id="modalRoot"></div><div id="focusRoot"></div><div class="toast" id="toast" role="status"></div>
+<input type="file" id="backupFile" accept=".json,application/json" hidden><input type="file" id="storyFile" accept=".txt,.md,text/plain,text/markdown" hidden>
+<script src="prompts.js"></script><script src="app.js"></script>
+</body></html>
