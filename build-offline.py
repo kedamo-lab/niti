@@ -2,7 +2,7 @@ from pathlib import Path
 import re
 root=Path(__file__).resolve().parent/'dist'
 html=(root/'index.html').read_text()
-css=re.sub(r"@import url\([^;]+;\s*",'',(root/'style.css').read_text(),count=1)
+css=re.sub(r"@import\s+url\([^)]*\)\s*;\s*",'',(root/'style.css').read_text(),count=1)
 html=html.replace('<link rel="stylesheet" href="style.css">','<style>'+css+'</style>')
 for name in ['prompts.js','app.js']:
     js=(root/name).read_text().replace('</script','<\\/script')
