@@ -6,7 +6,9 @@ css=re.sub(r"@import\s+url\([^)]*\)\s*;\s*",'',(root/'style.css').read_text(),co
 html=html.replace('<link rel="stylesheet" href="style.css">','<style>'+css+'</style>')
 html=html.replace('<link rel="stylesheet" href="module.css">','<style>'+(root/'module.css').read_text()+'</style>')
 html=html.replace('<link rel="stylesheet" href="fallout.css">','<style>'+(root/'fallout.css').read_text()+'</style>')
-for name in ['terminal.js','module-data.js','module-ui.js','prompts.js','app.js']:
+for sheet in ['palette.css','dice.css']:
+    html=html.replace('<link rel="stylesheet" href="'+sheet+'">','<style>'+(root/sheet).read_text()+'</style>')
+for name in ['dice.js','terminal.js','module-data.js','module-ui.js','prompts.js','app.js']:
     js=(root/name).read_text().replace('</script','<\\/script')
     html=html.replace('<script src="'+name+'"></script>','<script>'+js+'</script>')
 html=html.replace('<a class="text-button" href="niti-offline.html" download>↙ Забрать пульт с собой</a>','')
