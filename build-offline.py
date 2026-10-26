@@ -1,10 +1,10 @@
 from pathlib import Path
 import base64
-root=Path(__file__).resolve().parent/'dist'
-html=(root/'index.html').read_text()
-for filename in ['style.css','fallout.css','palette.css','dice.css','player.css']:
+root=Path(__file__).resolve().parent/'web'
+html=(root/'index.html').read_text().replace('<html lang="ru">','<html lang="ru" data-offline="true">')
+for filename in ['style.css','fallout.css','palette.css','dice.css','player.css','player-session.css']:
     html=html.replace('<link rel="stylesheet" href="'+filename+'">','<style>'+(root/filename).read_text()+'</style>')
-for filename in ['terminal.js','dice.js','player-app.js']:
+for filename in ['terminal.js','dice.js','player-session.js','player-app.js']:
     js=(root/filename).read_text().replace('</script','<\\/script')
     html=html.replace('<script src="'+filename+'"></script>','<script>'+js+'</script>')
 html=html.replace('src="vault-art.svg"','src="data:image/svg+xml;base64,'+base64.b64encode((root/'vault-art.svg').read_bytes()).decode()+'"')
