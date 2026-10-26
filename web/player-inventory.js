@@ -42,7 +42,8 @@
   function selectedItem() { return selection ? itemFor(selection.source, selection.id) : null; }
   function weapon(item) { return WEAPON_CATEGORIES.has(item?.category); }
   function consumable(item) {
-    return item?.consumable === true || item?.usage === 'consume' || ['consumable', 'medicine', 'food', 'ammo'].includes(item?.category);
+    if (typeof item?.consumable === 'boolean') return item.consumable;
+    return item?.usage === 'consume' || ['consumable', 'medicine', 'food', 'ammo'].includes(item?.category);
   }
   function equipped() { return room()?.self?.equipment || room()?.self?.equipped || {}; }
   function equippedId(slot) {
@@ -69,7 +70,7 @@
     return src ? `<img class="inv-item-image ${cls}" src="${e(src)}" alt="" loading="lazy">` : `<svg class="inv-item-symbol ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${symbol(item)}</svg>`;
   }
   function categoryLabel(item) {
-    return item.categoryLabel || ({weapon:'Оружие', melee:'Холодное оружие', unarmed:'Рукопашное оружие', light:'Лёгкое оружие', heavy:'Тяжёлое оружие', throwing:'Метательное оружие', thrown:'Метательное оружие', explosive:'Взрывчатка', energy:'Энергетическое оружие', armor:'Броня', medicine:'Медицина', food:'Провизия', ammo:'Боеприпасы', consumable:'Расходный предмет', tool:'Инструмент', misc:'Предмет'}[item.category]) || 'Предмет';
+    return item.categoryLabel || ({weapon:'Оружие', melee:'Холодное оружие', unarmed:'Рукопашное оружие', light:'Лёгкое оружие', heavy:'Тяжёлое оружие', throwing:'Метательное оружие', thrown:'Метательное оружие', explosive:'Взрывчатка', energy:'Энергетическое оружие', armor:'Броня', medicine:'Медицина', food:'Провизия', ammo:'Боеприпасы', consumable:'Расходный предмет', tool:'Инструмент', craft:'Материал для крафта', misc:'Предмет'}[item.category]) || 'Предмет';
   }
   function button(label, action, extra = '', primary = false) {
     return `<button type="button" class="button ${primary ? 'primary' : 'ghost'} small" data-inv-action="${action}" ${extra}>${label}</button>`;
@@ -111,6 +112,13 @@
     const seen = new Set();
     return keys.filter(([key, label]) => Object.hasOwn(value, key) && !seen.has(label) && seen.add(label)).map(([key,label]) => stat(label, value[key])).join('');
   }
+  function rangeStats(stats) {
+    if (stats.rangeFormula !== 'perception') return stat('Дальность', stats.range);
+    const perception = typeof window.playerRulesEffectivePerception === 'function' ? Number(window.playerRulesEffectivePerception()) : NaN;
+    const bonus = Number(stats.rangeBonus) || 0;
+    const rule = `Восприятие персонажа${bonus ? (bonus > 0 ? ' + ' : ' − ') + Math.abs(bonus) : ''}`;
+    return stat('Дальность', Number.isFinite(perception) ? Math.max(0, perception + bonus) + ' кл.' : rule) + `<div class="inv-range-rule"><dt>Правило дальности</dt><dd>${e(rule)}</dd></div>`;
+  }
   function detailsMarkup() {
     const item = selectedItem();
     if (!item) return '<div class="inv-detail-placeholder"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" aria-hidden="true"><path d="M8 8h40v40H8ZM8 21h40M21 8v40m14-40v40M8 35h40"/><path d="m36 33 12 5-5 2-2 6Z" stroke-width="2"/></svg><span class="eyebrow">ОСМОТР ПРЕДМЕТА</span><h2>Каждая вещь на своём месте.</h2><p>Выбери предмет в сумке, слоте экипировки или общем тайнике.</p></div>';
@@ -124,7 +132,7 @@
     const slot = slotChoices.get(item.id) || defaultSlot;
     const actionDisabled = blockActions() ? 'disabled' : '';
     let statRows = '';
-    if (weapon(item)) statRows += stat('Урон', stats.damage) + stat('Стоимость действия', stats.apCost, ' ОД') + stat('Дальность', stats.range) + stat('Боеприпасы', stats.ammo) + stat('Магазин', stats.magazine) + stat('Минимальная СИЛ', stats.minStrength) + stat('Тип урона', stats.damageType) + stat('Перезарядка', stats.reloadAp, ' ОД');
+    if (weapon(item)) statRows += stat('Урон', stats.damage) + stat('Стоимость действия', stats.apCost, ' ОД') + rangeStats(stats) + stat('Боеприпасы', stats.ammo) + stat('Магазин', stats.magazine) + stat('Минимальная СИЛ', stats.minStrength) + stat('Тип урона', stats.damageType) + stat('Перезарядка', stats.reloadAp, ' ОД');
     if (item.category === 'armor') statRows += stat('Класс брони', stats.armorClass) + armorStats(stats.resistances);
     if (!weapon(item) && item.category !== 'armor') {
       statRows += stat('Стоимость использования', stats.apCost, ' ОД');
@@ -134,10 +142,10 @@
     if (stats.weight != null) statRows += stat('Вес', stats.weight);
     if (stats.price != null) statRows += stat('Стоимость', stats.price);
     if (stats.slots != null) statRows += stat('Занимает ячеек', stats.slots);
-    const effects = stats.modifiers || stats.effect || item.effect || '';
+    const effects = [...new Set([stats.modifiers, stats.effect, item.effect].filter(value => typeof value === 'string' && value.trim()))].join('\n');
     const source = item.sourceLabel || (typeof item.source === 'string' ? item.source : item.source?.label || (item.source?.table != null ? `Прикреплённый каталог · таблица ${item.source.table}${item.source.row != null ? ', строка ' + item.source.row : ''}` : ''));
     const warnings = Array.isArray(item.warnings) ? item.warnings.filter(value => typeof value === 'string') : [];
-    return `<div class="inv-detail-top"><span class="eyebrow">${shared ? 'В ОБЩЕМ ТАЙНИКЕ' : 'ПРИНАДЛЕЖИТ ТЕБЕ'}</span>${button('×', 'clear', 'aria-label="Закрыть описание предмета"')}</div><div class="inv-detail-art">${itemImage(item)}</div><span class="inv-detail-category">${e(categoryLabel(item))}</span><h2 class="inv-detail-name">${e(item.name)}</h2><div class="inv-detail-amount"><span>Количество</span><strong>×${Number(item.quantity)}</strong></div>${selectedSlots.length ? `<p class="inv-owned-status">В экипировке: ${selectedSlots.map(([,label]) => e(label)).join(', ')}</p>` : ''}<dl class="inv-stats">${statRows}</dl>${effects ? `<div class="inv-item-effects"><span class="eyebrow">ОСОБЕННОСТИ</span><p>${e(effects)}</p></div>` : ''}${item.description ? `<p class="inv-item-description">${e(item.description)}</p>` : ''}<div class="inv-detail-actions"><label class="inv-quantity-label" for="invQuantity">КОЛИЧЕСТВО ДЛЯ ПЕРЕДАЧИ<input class="input" id="invQuantity" type="number" inputmode="numeric" min="1" max="${Number(item.quantity)}" step="1" value="${quantity}" ${actionDisabled}></label>${button(shared ? 'Взять себе ↗' : 'Вернуть в тайник ↙', shared ? 'take' : 'return', actionDisabled, true)}${!shared ? `<div class="inv-equip-actions"><label for="invEquipSlot" class="field-label">СЛОТ ЭКИПИРОВКИ<select class="input" id="invEquipSlot" ${actionDisabled}>${slots.map(([id,label]) => `<option value="${id}" ${slot === id ? 'selected' : ''}>${label}</option>`).join('')}</select></label>${button('Экипировать', 'equip', actionDisabled)}</div>${selectedSlots.length ? `<div class="inv-remove-slots">${selectedSlots.map(([slotId,label]) => button('Снять · ' + label, 'unequip', `data-slot="${slotId}" data-item-id="${e(item.id)}" ${actionDisabled}`)).join('')}</div>` : ''}${button(consumable(item) ? 'Использовать 1 шт.' : 'Использовать предмет', 'use', actionDisabled)}<p class="inv-action-hint">${consumable(item) ? 'Использование расходует одну вещь из твоего запаса. Эффект применяется по правилам вашей группы.' : 'Использование отмечается в сессии. Урон, ОД и специальные эффекты применяются по правилам вашей группы.'}</p>` : '<p class="inv-action-hint">Использовать и экипировать предмет сможет только тот, кто забрал его себе.</p>'}</div>${source ? `<p class="inv-source">${e(source)}</p>` : ''}${warnings.length ? `<details class="inv-catalog-notes"><summary>Примечания каталога</summary>${warnings.map(value => `<p>${e(value)}</p>`).join('')}</details>` : ''}<p class="inv-unknown-note">«Не указано» означает, что в прикреплённом каталоге нет этого значения. Его может уточнить ведущий.</p>`;
+    return `<div class="inv-detail-top"><span class="eyebrow">${shared ? 'В ОБЩЕМ ТАЙНИКЕ' : 'ПРИНАДЛЕЖИТ ТЕБЕ'}</span>${button('×', 'clear', 'aria-label="Закрыть описание предмета"')}</div><div class="inv-detail-art">${itemImage(item)}</div><span class="inv-detail-category">${e(categoryLabel(item))}</span><h2 class="inv-detail-name">${e(item.name)}</h2><div class="inv-detail-amount"><span>Количество</span><strong>×${Number(item.quantity)}</strong></div>${selectedSlots.length ? `<p class="inv-owned-status">В экипировке: ${selectedSlots.map(([,label]) => e(label)).join(', ')}</p>` : ''}<dl class="inv-stats">${statRows}</dl>${effects ? `<div class="inv-item-effects"><span class="eyebrow">ОСОБЕННОСТИ</span><p>${e(effects)}</p></div>` : ''}${item.description ? `<p class="inv-item-description">${e(item.description)}</p>` : ''}<div class="inv-detail-actions"><label class="inv-quantity-label" for="invQuantity">КОЛИЧЕСТВО ДЛЯ ПЕРЕДАЧИ<input class="input" id="invQuantity" type="number" inputmode="numeric" min="1" max="${Number(item.quantity)}" step="1" value="${quantity}" ${actionDisabled}></label>${button(shared ? 'Взять себе ↗' : 'Вернуть в тайник ↙', shared ? 'take' : 'return', actionDisabled, true)}${Number(item.quantity) > 1 ? button(shared ? 'Взять всё' : 'Сложить всё', shared ? 'take-all' : 'return-all', `${actionDisabled} data-inv-all="true"`) : ''}${!shared ? `<div class="inv-equip-actions"><label for="invEquipSlot" class="field-label">СЛОТ ЭКИПИРОВКИ<select class="input" id="invEquipSlot" ${actionDisabled}>${slots.map(([id,label]) => `<option value="${id}" ${slot === id ? 'selected' : ''}>${label}</option>`).join('')}</select></label>${button('Экипировать', 'equip', actionDisabled)}</div>${selectedSlots.length ? `<div class="inv-remove-slots">${selectedSlots.map(([slotId,label]) => button('Снять · ' + label, 'unequip', `data-slot="${slotId}" data-item-id="${e(item.id)}" ${actionDisabled}`)).join('')}</div>` : ''}${button(consumable(item) ? 'Использовать 1 шт.' : 'Использовать предмет', 'use', actionDisabled)}<p class="inv-action-hint">${consumable(item) ? 'Использование расходует одну вещь из твоего запаса. Эффект применяется по правилам вашей группы.' : 'Использование отмечается в сессии. Урон, ОД и специальные эффекты применяются по правилам вашей группы.'}</p>` : '<p class="inv-action-hint">Использовать и экипировать предмет сможет только тот, кто забрал его себе.</p>'}</div>${source ? `<p class="inv-source">${e(source)}</p>` : ''}${warnings.length ? `<details class="inv-catalog-notes"><summary>Примечания каталога</summary>${warnings.map(value => `<p>${e(value)}</p>`).join('')}</details>` : ''}<p class="inv-unknown-note">«Не указано» означает, что в прикреплённом каталоге нет этого значения. Его может уточнить ведущий.</p>`;
   }
   function legacyMarkup() {
     const text = typeof player !== 'undefined' ? player.profile?.inventory : '';
@@ -238,6 +246,7 @@
     if (action === 'unequip') { void perform({action,slot:target.dataset.slot,itemId:target.dataset.itemId}); return; }
     const item = selectedItem();
     if (!item) return;
+    if (action === 'take-all' || action === 'return-all') { void perform({action:action === 'take-all' ? 'take' : 'return',itemId:item.id,all:true}); return; }
     if (action === 'take' || action === 'return') {
       const input = document.getElementById('invQuantity'), n = Number(input?.value);
       if (!Number.isInteger(n) || n < 1 || n > item.quantity) {

@@ -1,0 +1,3533 @@
+[
+  {
+    "id": "perk-001",
+    "name": "Бонус движения",
+    "description": "+2 к очкам действия на передвижение.",
+    "level": 3,
+    "requirements": {
+      "text": "Ловкость: 3",
+      "special": {
+        "A": {
+          "min": 3
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {
+        "movementAp": 2
+      },
+      "conditional": [],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 1,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image1-31.png",
+      "textExact": "+2 к очкам действия на передвижение.\nТребования:\nЛовкость: 3"
+    }
+  },
+  {
+    "id": "perk-002",
+    "name": "Быстрая реакция",
+    "description": "+2 к инициативе (можно взять 2 раза)",
+    "level": 3,
+    "requirements": {
+      "text": "Восприятие: 7",
+      "special": {
+        "P": {
+          "min": 7
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 2,
+      "explicit": true,
+      "note": "В источнике явно разрешено взять 2 раза."
+    },
+    "effects": {
+      "static": {
+        "initiative": 2
+      },
+      "conditional": [],
+      "notes": [
+        "Бонус +2 применяется за каждый взятый ранг; максимум 2 ранга."
+      ]
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 2,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image3-33.png",
+      "textExact": "+2 к инициативе (можно взять 2 раза)\nТребования:\nВосприятие: 7"
+    }
+  },
+  {
+    "id": "perk-003",
+    "name": "Больше крит. атак",
+    "description": "-2 к классу брони противника при расчете критического попадания. (можно взять 2 раза, 2-й раз дает бонус +2)",
+    "level": 3,
+    "requirements": {
+      "text": "Восприятие: 6\nНельзя взять перк «Бесшумный бег»",
+      "special": {
+        "P": {
+          "min": 6
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": [
+        "Бесшумный бег"
+      ]
+    },
+    "ranks": {
+      "max": 2,
+      "explicit": true,
+      "note": "В источнике явно разрешено взять 2 раза."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "-2 к КБ противника только при расчете критического попадания. Второй ранг описан как «дает бонус +2»."
+      ],
+      "notes": [
+        "Фраза о втором ранге неоднозначна: не заменять автоматически -2 на -4 без решения мастера."
+      ]
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 3,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image5-35.png",
+      "textExact": "-2 к классу брони противника при расчете критического попадания. (можно взять 2 раза, 2-й раз дает бонус +2)\nТребования:\nВосприятие: 6\nНельзя взять перк «Бесшумный бег»"
+    }
+  },
+  {
+    "id": "perk-004",
+    "name": "Переноска",
+    "description": "+3 к выносливости при спас броске от опрокидывания дробовиком, гранатой, базукой.",
+    "level": 3,
+    "requirements": {
+      "text": "Сила: 6\nВыносливость: 6",
+      "special": {
+        "S": {
+          "min": 6
+        },
+        "E": {
+          "min": 6
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "+3 к Выносливости при спасброске от опрокидывания дробовиком, гранатой, базукой."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 4,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image7-37.png",
+      "textExact": "+3 к выносливости при спас броске от опрокидывания дробовиком, гранатой, базукой.\nТребования:\nСила: 6\nВыносливость: 6"
+    }
+  },
+  {
+    "id": "perk-005",
+    "name": "Образование",
+    "description": "Проверки на интеллект вне боя с преимуществом.",
+    "level": 3,
+    "requirements": {
+      "text": "",
+      "special": {},
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Проверки Интеллекта вне боя с преимуществом."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 5,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image9-39.png",
+      "textExact": "Проверки на интеллект вне боя с преимуществом."
+    }
+  },
+  {
+    "id": "perk-006",
+    "name": "Самоделкин",
+    "description": "Позволяет узнать,  как сильно сломано оружие. При наличии детали или ингредиента, есть возможность восстановить часть поломки оружия без верстака. +1 к ремонту.",
+    "level": 3,
+    "requirements": {
+      "text": "Ремонт: +2\nНаука +2",
+      "special": {},
+      "skills": {
+        "repair": {
+          "min": 2,
+          "sourceLabel": "ремонт"
+        },
+        "science": {
+          "min": 2,
+          "sourceLabel": "наука"
+        }
+      },
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {
+        "skills": {
+          "repair": 1
+        }
+      },
+      "conditional": [
+        "Оценка поломки и частичный ремонт оружия без верстака при наличии детали/ингредиента."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 6,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image11-41.png",
+      "textExact": "Позволяет узнать,  как сильно сломано оружие. При наличии детали или ингредиента, есть возможность восстановить часть поломки оружия без верстака. +1 к ремонту.\nТребования:\nРемонт: +2\nНаука +2"
+    }
+  },
+  {
+    "id": "perk-007",
+    "name": "Медик",
+    "description": "Бонус +2 к проверкам на доктора и первую помощь.",
+    "level": 3,
+    "requirements": {
+      "text": "Доктор +2\nПервая помощь +2",
+      "special": {},
+      "skills": {
+        "doctor": {
+          "min": 2,
+          "sourceLabel": "доктор"
+        },
+        "first_aid": {
+          "min": 2,
+          "sourceLabel": "первая помощь"
+        }
+      },
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {
+        "skills": {
+          "doctor": 2,
+          "first_aid": 2
+        }
+      },
+      "conditional": [],
+      "notes": [
+        "Источник называет +2 бонусом к проверкам; хранить отдельно от распределённых очков навыка."
+      ]
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 7,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image13-43.png",
+      "textExact": "Бонус +2 к проверкам на доктора и первую помощь.\nТребования:\nДоктор +2\nПервая помощь +2"
+    }
+  },
+  {
+    "id": "perk-008",
+    "name": "Следопыт",
+    "description": "Вы всегда находите короткий и безопасный путь до цели. Шанс избежать боя на нейтральных территориях увеличен. Обыскивая территорию в пустоши, бросьте кубик и, если выпало число больше 16, игрок найдет предмет в зависимости от своей удачи.",
+    "level": 3,
+    "requirements": {
+      "text": "Скиталец +2",
+      "special": {},
+      "skills": {
+        "outdoorsman": {
+          "min": 2,
+          "sourceLabel": "скиталец"
+        }
+      },
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Безопасные короткие пути, повышенный шанс избежать боя; поиск в пустоши при броске >16 дает предмет по Удаче."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 8,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image15-45.png",
+      "textExact": "Вы всегда находите короткий и безопасный путь до цели. Шанс избежать боя на нейтральных территориях увеличен. Обыскивая территорию в пустоши, бросьте кубик и, если выпало число больше 16, игрок найдет предмет в зависимости от своей удачи.\nТребования:\nСкиталец +2"
+    }
+  },
+  {
+    "id": "perk-009",
+    "name": "Оптимизация",
+    "description": "Сокращает затраты очков действия с инвентарем на 2.",
+    "level": 3,
+    "requirements": {
+      "text": "Ловкость: 5",
+      "special": {
+        "A": {
+          "min": 5
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Стоимость действий с инвентарем снижена на 2 ОД."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 9,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image17-47.png",
+      "textExact": "Сокращает затраты очков действия с инвентарем на 2. \nТребования:\nЛовкость: 5"
+    }
+  },
+  {
+    "id": "perk-010",
+    "name": "Самоучка",
+    "description": "Вы получаете на 100 опыта больше, чем другие. (Можно взять 3 раза)",
+    "level": 3,
+    "requirements": {
+      "text": "Интеллект : 6",
+      "special": {
+        "I": {
+          "min": 6
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 3,
+      "explicit": true,
+      "note": "В источнике явно разрешено взять 3 раза."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "+100 опыта (максимум 3 ранга)."
+      ],
+      "notes": [
+        "Источник не указывает частоту начисления бонуса опыта."
+      ]
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 10,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image19-49.png",
+      "textExact": "Вы получаете на 100 опыта больше, чем другие. (Можно взять 3 раза)\nТребования:\nИнтеллект : 6"
+    }
+  },
+  {
+    "id": "perk-011",
+    "name": "Осведомленность",
+    "description": "Вы можете видеть ХП, предметы в руках и броню персонажей.",
+    "level": 3,
+    "requirements": {
+      "text": "Восприятие: 5",
+      "special": {
+        "P": {
+          "min": 5
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Видны ХП, предметы в руках и броня персонажей."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 11,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image21-51.png",
+      "textExact": "Вы можете видеть ХП, предметы в руках и броню персонажей.\nТребования:\nВосприятие: 5"
+    }
+  },
+  {
+    "id": "perk-012",
+    "name": "Мастер ближнего боя",
+    "description": "При атаке рукопашным или холодным оружием к вашему урону добавляется случайное значение вашей Силы.",
+    "level": 3,
+    "requirements": {
+      "text": "Ловкость: 6",
+      "special": {
+        "A": {
+          "min": 6
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "К урону рукопашного/холодного оружия добавляется случайное значение Силы."
+      ],
+      "notes": [
+        "Размер и вид случайного броска не указаны."
+      ]
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 12,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image23-53.png",
+      "textExact": "При атаке рукопашным или холодным оружием к вашему урону добавляется случайное значение вашей Силы. \nТребования:\nЛовкость: 6"
+    }
+  },
+  {
+    "id": "perk-013",
+    "name": "Стиляга",
+    "description": "Скорость износа брони уменьшена в 2 раза.",
+    "level": 3,
+    "requirements": {
+      "text": "Харизма: 5",
+      "special": {
+        "C": {
+          "min": 5
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Скорость износа брони ×0,5."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 13,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image25-55.png",
+      "textExact": "Скорость износа брони уменьшена в 2 раза.\nТребования:\nХаризма: 5"
+    }
+  },
+  {
+    "id": "perk-014",
+    "name": "Бдительность",
+    "description": "+2 к восприятию на нейтральных территориях при расчете обнаружения врага. Вы восстанавливаете 1 ОД при промахе.",
+    "level": 3,
+    "requirements": {
+      "text": "Восприятие: 6",
+      "special": {
+        "P": {
+          "min": 6
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "+2 к Восприятию для обнаружения врага на нейтральных территориях.",
+        "При промахе восстанавливается 1 ОД."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 14,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image27-57.png",
+      "textExact": "+2 к восприятию на нейтральных территориях при расчете обнаружения врага. Вы восстанавливаете 1 ОД при промахе.\nТребования:\nВосприятие: 6"
+    }
+  },
+  {
+    "id": "perk-015",
+    "name": "Наблюдательность",
+    "description": "Книги имеют двойной бонус. При прочтении книги вы получаете 50 опыта. +1 Интеллект",
+    "level": 3,
+    "requirements": {
+      "text": "Интеллект < 7",
+      "special": {
+        "I": {
+          "lt": 7
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {
+        "special": {
+          "I": 1
+        }
+      },
+      "conditional": [
+        "Книги дают двойной бонус.",
+        "При прочтении книги +50 опыта."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 15,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image29-59.png",
+      "textExact": "Книги имеют двойной бонус. При прочтении книги вы получаете 50 опыта. +1 Интеллект\nТребования:\nИнтеллект < 7"
+    }
+  },
+  {
+    "id": "perk-016",
+    "name": "Обращение с оружием",
+    "description": "Повышает вашу силу на 2, если значение минимальной силы оружия, больше вашей.",
+    "level": 3,
+    "requirements": {
+      "text": "Ловкость 5",
+      "special": {
+        "A": {
+          "min": 5
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "+2 к Силе при недостатке Силы для требования используемого оружия."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 16,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image31-61.png",
+      "textExact": "Повышает вашу силу на 2, если значение минимальной силы оружия, больше вашей.\nТребования:\nЛовкость 5"
+    }
+  },
+  {
+    "id": "perk-017",
+    "name": "Бонус точности",
+    "description": "Выстрелы очередью наносят на 1 урон больше.",
+    "level": 6,
+    "requirements": {
+      "text": "Удача: 3",
+      "special": {
+        "L": {
+          "min": 3
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "+1 к урону выстрелов очередью."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 17,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image33-63.png",
+      "textExact": "Выстрелы очередью наносят на 1 урон больше.\nТребования:\nУдача: 3"
+    }
+  },
+  {
+    "id": "perk-018",
+    "name": "Быстрое лечение",
+    "description": "Лечащие препараты восстанавливают на 6 хп больше.",
+    "level": 6,
+    "requirements": {
+      "text": "Выносливость: 8",
+      "special": {
+        "E": {
+          "min": 8
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Лечащие препараты восстанавливают на 6 ХП больше."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 18,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image35-65.png",
+      "textExact": "Лечащие препараты восстанавливают на 6 хп больше.\nТребования:\nВыносливость: 8"
+    }
+  },
+  {
+    "id": "perk-019",
+    "name": "Крутизна",
+    "description": "Вы получаете на 5 урона меньше.",
+    "level": 6,
+    "requirements": {
+      "text": "Сила: 7",
+      "special": {
+        "S": {
+          "min": 7
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {
+        "damageReduction": 5
+      },
+      "conditional": [],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 19,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image37-67.png",
+      "textExact": "Вы получаете на 5 урона меньше.\nТребования:\nСила: 7"
+    }
+  },
+  {
+    "id": "perk-020",
+    "name": "Меткость",
+    "description": "+2 к восприятию, если цель находится за пределами вашего восприятия. -1 к классу брони цели.",
+    "level": 6,
+    "requirements": {
+      "text": "Интеллект: 6",
+      "special": {
+        "I": {
+          "min": 6
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "+2 к Восприятию, если цель за пределами вашего Восприятия.",
+        "-1 к классу брони цели."
+      ],
+      "notes": [
+        "Область условия для -1 КБ цели не уточнена."
+      ]
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 20,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image39-69.png",
+      "textExact": "+2 к восприятию, если цель находится за пределами вашего восприятия. -1 к классу брони цели. \nТребования:\nИнтеллект: 6"
+    }
+  },
+  {
+    "id": "perk-021",
+    "name": "Лечение",
+    "description": "Первая помощь восстанавливает на 5 хп больше. +3 хп от лечения стимуляторами.",
+    "level": 6,
+    "requirements": {
+      "text": "Навык первой помощи +2",
+      "special": {},
+      "skills": {
+        "first_aid": {
+          "min": 2,
+          "sourceLabel": "первой помощи"
+        }
+      },
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Первая помощь лечит на 5 ХП больше.",
+        "Стимуляторы лечат на 3 ХП больше."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 21,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image41-71.png",
+      "textExact": "Первая помощь восстанавливает на 5 хп больше. +3 хп от лечения стимуляторами. \nТребования:\nНавык первой помощи +2"
+    }
+  },
+  {
+    "id": "perk-022",
+    "name": "Двуличный",
+    "description": "Вы наносите на 8 больше урона своим союзникам (даже если вы покинули группу). Бонус +2 к харизме при расчете обмана союзника. На критический промах это тоже влияет.",
+    "level": 6,
+    "requirements": {
+      "text": "Харизма: 6",
+      "special": {
+        "C": {
+          "min": 6
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "+8 к урону по союзникам, включая критический промах и бывших союзников.",
+        "+2 к Харизме при обмане союзника."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 22,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image43-73.png",
+      "textExact": "Вы наносите на 8 больше урона своим союзникам (даже если вы покинули группу). Бонус +2 к харизме при расчете обмана союзника. На критический промах это тоже влияет.\nТребования:\nХаризма: 6"
+    }
+  },
+  {
+    "id": "perk-023",
+    "name": "Эволюция",
+    "description": "Вы мутируете в случайное существо. 1-2 крыса, муравей, брамин. 3-4 мантисс, койот, свинокрыс. 5-6 золотой гекко, скорпион. 7-8 Большой скорпион, кротокрыс.\n 9-10 кентавр, 11-12 летун, 13-14 ванаминго , 15-16 Коготь смерти не разумный 17-18 яогай. 19-20 Коготь смерти разумный.",
+    "level": 6,
+    "requirements": {
+      "text": "",
+      "special": {},
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Вы мутируете в случайное существо. 1-2 крыса, муравей, брамин. 3-4 мантисс, койот, свинокрыс. 5-6 золотой гекко, скорпион. 7-8 Большой скорпион, кротокрыс.\n 9-10 кентавр, 11-12 летун, 13-14 ванаминго , 15-16 Коготь смерти не разумный 17-18 яогай. 19-20 Коготь смерти разумный."
+      ],
+      "notes": [
+        "Выпавший вид существа требует решения мастера; не заменять характеристики автоматически."
+      ]
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 23,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image45-75.png",
+      "textExact": "Вы мутируете в случайное существо. 1-2 крыса, муравей, брамин. 3-4 мантисс, койот, свинокрыс. 5-6 золотой гекко, скорпион. 7-8 Большой скорпион, кротокрыс.\n 9-10 кентавр, 11-12 летун, 13-14 ванаминго , 15-16 Коготь смерти не разумный 17-18 яогай. 19-20 Коготь смерти разумный."
+    }
+  },
+  {
+    "id": "perk-024",
+    "name": "Фанат дробовиков",
+    "description": "Дробовики изнашиваются в два раза меньше, +3 к урону дробовикам, +1 точность при расчёте попадания.",
+    "level": 6,
+    "requirements": {
+      "text": "Интеллект 6\nНавык легкое оружие +4",
+      "special": {
+        "I": {
+          "min": 6
+        }
+      },
+      "skills": {
+        "small_guns": {
+          "min": 4,
+          "sourceLabel": "легкое оружие"
+        }
+      },
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Износ дробовиков ×0,5.",
+        "Урон дробовиков +3.",
+        "Точность дробовиков +1."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 24,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image47-77.png",
+      "textExact": "Дробовики изнашиваются в два раза меньше, +3 к урону дробовикам, +1 точность при расчёте попадания.\nТребования:\nИнтеллект 6\nНавык легкое оружие +4"
+    }
+  },
+  {
+    "id": "perk-025",
+    "name": "Привидение",
+    "description": "+2 к скрытности днём. +4 ночью.",
+    "level": 6,
+    "requirements": {
+      "text": "",
+      "special": {},
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Скрытность +2 днём, +4 ночью."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 25,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image49-79.png",
+      "textExact": "+2 к скрытности днём. +4 ночью."
+    }
+  },
+  {
+    "id": "perk-026",
+    "name": "Непоседа",
+    "description": "Шанс найти необычную локацию повышается в два раза. +(Сила*2) к хп.",
+    "level": 6,
+    "requirements": {
+      "text": "",
+      "special": {},
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {
+        "hpFormula": "S * 2"
+      },
+      "conditional": [
+        "Шанс найти необычную локацию ×2."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 26,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image51-81.png",
+      "textExact": "Шанс найти необычную локацию повышается в два раза. +(Сила*2) к хп."
+    }
+  },
+  {
+    "id": "perk-027",
+    "name": "Полевой санитар",
+    "description": "Используя навык «первая помощь» в бою, вы восстанавливаете (P+L) * 1,5 с округлением вниз.",
+    "level": 6,
+    "requirements": {
+      "text": "Навык санитар: +2\nНавык доктор: +2",
+      "special": {},
+      "skills": {
+        "first_aid": {
+          "min": 2,
+          "sourceLabel": "санитар"
+        },
+        "doctor": {
+          "min": 2,
+          "sourceLabel": "доктор"
+        }
+      },
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "В бою Первая помощь восстанавливает floor((P + L) * 1.5) ХП."
+      ],
+      "notes": [
+        "Специальная формула перка; источник не разъясняет совмещение с обычной формулой/другими бонусами лечения."
+      ]
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 27,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image53-83.png",
+      "textExact": "Используя навык «первая помощь» в бою, вы восстанавливаете (P+L) * 1,5 с округлением вниз. \nТребования:\nНавык санитар: +2\nНавык доктор: +2"
+    }
+  },
+  {
+    "id": "perk-028",
+    "name": "Горячая кровь",
+    "description": "На вашу точность не влияют укрытия. Вы не можете критически промахнуться.",
+    "level": 6,
+    "requirements": {
+      "text": "Восприятие 7\nНельзя брать с особенностью «дурной глаз»",
+      "special": {
+        "P": {
+          "min": 7
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [
+        "дурной глаз"
+      ],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Игнорирование укрытий при расчете точности.",
+        "Критический промах невозможен."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 28,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image55-85.png",
+      "textExact": "На вашу точность не влияют укрытия. Вы не можете критически промахнуться. \nТребования:\nВосприятие 7\nНельзя брать с особенностью «дурной глаз»"
+    }
+  },
+  {
+    "id": "perk-029",
+    "name": "Ковбой",
+    "description": "Бонусы действуют только на пистолеты. Прицельные атаки меньше на 1Од. Если игрок ходит первым, выстрел в противника обнуляет его патроны.",
+    "level": 6,
+    "requirements": {
+      "text": "Ловкость: 8\nЛегкое оружие: +6",
+      "special": {
+        "A": {
+          "min": 8
+        }
+      },
+      "skills": {
+        "small_guns": {
+          "min": 6,
+          "sourceLabel": "легкое оружие"
+        }
+      },
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Для пистолетов прицельная атака стоит на 1 ОД меньше.",
+        "Если владелец ходит первым, выстрел обнуляет патроны противника."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 29,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image57-87.png",
+      "textExact": "Бонусы действуют только на пистолеты. Прицельные атаки меньше на 1Од. Если игрок ходит первым, выстрел в противника обнуляет его патроны.\nТребования:\nЛовкость: 8\nЛегкое оружие: +6"
+    }
+  },
+  {
+    "id": "perk-030",
+    "name": "Цепной пёс",
+    "description": "+3 к классу брони, если вы находитесь за пределами восприятия противника.",
+    "level": 6,
+    "requirements": {
+      "text": "Рукопашное: +4 \n            или\nХолодное оружие: +4",
+      "special": {},
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": [],
+      "anyOf": [
+        {
+          "skills": {
+            "unarmed": {
+              "min": 4
+            }
+          }
+        },
+        {
+          "skills": {
+            "melee": {
+              "min": 4
+            }
+          }
+        }
+      ]
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "+3 КБ за пределами Восприятия противника."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 30,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image59-89.png",
+      "textExact": "+3 к классу брони, если вы находитесь за пределами восприятия противника.\nТребования:\nРукопашное: +4 \n            или\nХолодное оружие: +4"
+    }
+  },
+  {
+    "id": "perk-031",
+    "name": "Ярость",
+    "description": "Бонус распространяется на удары рукопашным и холодным оружием. Удар валит противника с ног. +2 к конечному урону.",
+    "level": 6,
+    "requirements": {
+      "text": "Навык «без оружия»: +5",
+      "special": {},
+      "skills": {
+        "unarmed": {
+          "min": 5,
+          "sourceLabel": "без оружия"
+        }
+      },
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Удар рукопашным/холодным оружием валит противника с ног.",
+        "+2 конечного урона рукопашным/холодным оружием."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 31,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image60-90.png",
+      "textExact": "Бонус распространяется на удары рукопашным и холодным оружием. Удар валит противника с ног. +2 к конечному урону.\nТребования:\nНавык «без оружия»: +5"
+    }
+  },
+  {
+    "id": "perk-032",
+    "name": "Атлет",
+    "description": "+2 к очкам действия. Но их можно потратить только на передвижение.",
+    "level": 6,
+    "requirements": {
+      "text": "",
+      "special": {},
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {
+        "movementAp": 2
+      },
+      "conditional": [],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 32,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image62-92.png",
+      "textExact": "+2 к очкам действия. Но их можно потратить только на передвижение."
+    }
+  },
+  {
+    "id": "perk-033",
+    "name": "Верткость",
+    "description": "+2 к классу брони. При избегании урона любым способом, дополнительно восстанавливаете 3 ХП.",
+    "level": 6,
+    "requirements": {
+      "text": "Удача 5",
+      "special": {
+        "L": {
+          "min": 5
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {
+        "ac": 2
+      },
+      "conditional": [
+        "При избегании урона восстанавливается 3 ХП."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 33,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image64-94.png",
+      "textExact": "+2 к классу брони. При избегании урона любым способом, дополнительно восстанавливаете 3 ХП.\nТребования:\nУдача 5"
+    }
+  },
+  {
+    "id": "perk-034",
+    "name": "Легкие шаги",
+    "description": "Урон от ловушек снижен в 2 раза. Есть шанс, что ловушка на вас не сработает. Бросок с преимуществом.",
+    "level": 6,
+    "requirements": {
+      "text": "Ловкость: 5",
+      "special": {
+        "A": {
+          "min": 5
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Урон ловушек ×0,5.",
+        "Проверка срабатывания ловушки с преимуществом."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 34,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image66-96.png",
+      "textExact": "Урон от ловушек снижен в 2 раза. Есть шанс, что ловушка на вас не сработает. Бросок с преимуществом.\nТребования:\nЛовкость: 5"
+    }
+  },
+  {
+    "id": "perk-035",
+    "name": "Прыгучесть",
+    "description": "Если вас повалили на пол, вы встаёте без штрафа на очки действия.",
+    "level": 6,
+    "requirements": {
+      "text": "Ловкость: 6",
+      "special": {
+        "A": {
+          "min": 6
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Подъем после падения без штрафа к ОД."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 35,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image68-98.png",
+      "textExact": "Если вас повалили на пол, вы встаёте без штрафа на очки действия.\nТребования:\nЛовкость: 6"
+    }
+  },
+  {
+    "id": "perk-036",
+    "name": "Человек-глыба",
+    "description": "Первое попадание по вам, снижает урон в 2 раза. +2 к проверке, если вас пытаются опрокинуть",
+    "level": 6,
+    "requirements": {
+      "text": "Сила: 6",
+      "special": {
+        "S": {
+          "min": 6
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Урон первого попадания по владельцу ×0,5.",
+        "+2 к проверке против опрокидывания."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 36,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image70-100.png",
+      "textExact": "Первое попадание по вам, снижает урон в 2 раза. +2 к проверке, если вас пытаются опрокинуть \nТребования:\nСила: 6"
+    }
+  },
+  {
+    "id": "perk-037",
+    "name": "Спартак",
+    "description": "Ваши удары холодным оружием смертоносней. Вы игнорируете 3 класса брони при атаке на противника.",
+    "level": 6,
+    "requirements": {
+      "text": "Сила: 8",
+      "special": {
+        "S": {
+          "min": 8
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Холодное оружие игнорирует 3 КБ цели."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 37,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image72-102.png",
+      "textExact": "Ваши удары холодным оружием смертоносней. Вы игнорируете 3 класса брони при атаке на противника.\nТребования:\nСила: 8"
+    }
+  },
+  {
+    "id": "perk-038",
+    "name": "Зоркий",
+    "description": "Уменьшает штраф на попадание в противника, который находится в дыму, если вы стреляете очередью.",
+    "level": 6,
+    "requirements": {
+      "text": "Восприятие: 5",
+      "special": {
+        "P": {
+          "min": 5
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Снижен штраф очереди по цели в дыму."
+      ],
+      "notes": [
+        "Численный размер снижения штрафа не указан."
+      ]
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 38,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image73-103.png",
+      "textExact": "Уменьшает штраф на попадание в противника, который находится в дыму, если вы стреляете очередью.\nТребования:\nВосприятие: 5"
+    }
+  },
+  {
+    "id": "perk-039",
+    "name": "Бесшумный бег",
+    "description": "Вес не влияет на ваше обнаружение.",
+    "level": 9,
+    "requirements": {
+      "text": "",
+      "special": {},
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Вес не влияет на обнаружение владельца."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 39,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image75-105.png",
+      "textExact": "Вес не влияет на ваше обнаружение."
+    }
+  },
+  {
+    "id": "perk-040",
+    "name": "Хитрость",
+    "description": "+2 к классу брони. +3 хп. Бросок скрытность с преимуществом.",
+    "level": 9,
+    "requirements": {
+      "text": "Иметь особенность «Вор»",
+      "special": {},
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [
+        "Вор"
+      ],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {
+        "ac": 2,
+        "hp": 3
+      },
+      "conditional": [
+        "Скрытность с преимуществом."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 40,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image77-107.png",
+      "textExact": "+2 к классу брони. +3 хп. Бросок скрытность с преимуществом.\nТребования:\nИметь особенность «Вор»"
+    }
+  },
+  {
+    "id": "perk-041",
+    "name": "Человек действия",
+    "description": "+1 од.",
+    "level": 9,
+    "requirements": {
+      "text": "Инициатива +6",
+      "special": {},
+      "skills": {},
+      "derived": {
+        "initiative": {
+          "min": 6
+        }
+      },
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {
+        "ap": 1
+      },
+      "conditional": [],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 41,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image79-109.png",
+      "textExact": "+1 од.\nТребования:\nИнициатива +6"
+    }
+  },
+  {
+    "id": "perk-042",
+    "name": "Мастер",
+    "description": "С вероятностью вашей удачи, выстрел вызовет у противника кровотечение. (Для каждого НПС проверка на кровотечение определяется мастером)",
+    "level": 9,
+    "requirements": {
+      "text": "Ловушки +2\nНельзя брать с особенность «Добродушный»",
+      "special": {},
+      "skills": {
+        "traps": {
+          "min": 2,
+          "sourceLabel": "ловушки"
+        }
+      },
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [
+        "Добродушный"
+      ],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Выстрел может вызвать кровотечение с вероятностью, зависящей от Удачи; для НПС определяет мастер."
+      ],
+      "notes": [
+        "Точная формула вероятности не указана."
+      ]
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 42,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image81-111.png",
+      "textExact": "С вероятностью вашей удачи, выстрел вызовет у противника кровотечение. (Для каждого НПС проверка на кровотечение определяется мастером)\nТребования:\nЛовушки +2\nНельзя брать с особенность «Добродушный»"
+    }
+  },
+  {
+    "id": "perk-043",
+    "name": "Увертливость",
+    "description": "+1 к классу брони. При избегании урона любым способом, дополнительно восстанавливаете 2 ХП.",
+    "level": 9,
+    "requirements": {
+      "text": "Удача: 3",
+      "special": {
+        "L": {
+          "min": 3
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {
+        "ac": 1
+      },
+      "conditional": [
+        "При избегании урона восстанавливается 2 ХП."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 43,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image83-113.png",
+      "textExact": "+1 к классу брони. При избегании урона любым способом, дополнительно восстанавливаете 2 ХП.\nТребования:\nУдача: 3"
+    }
+  },
+  {
+    "id": "perk-044",
+    "name": "Вор-профессионал",
+    "description": "Броски воровства и взлом замков с преимуществом. Ваши отмычки и ножи не ломаются. Так же для взлома замков вы можете использовать монтировку. Вы не выходите из скрытности при использовании навыков или работы с инвентарем.",
+    "level": 9,
+    "requirements": {
+      "text": "Навык Взлом +8",
+      "special": {},
+      "skills": {
+        "lockpick": {
+          "min": 8,
+          "sourceLabel": "взлом"
+        }
+      },
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Воровство и взлом с преимуществом.",
+        "Отмычки и ножи не ломаются; доступен взлом монтировкой.",
+        "Работа с навыками и инвентарем не снимает скрытность."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 44,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image85-115.png",
+      "textExact": "Броски воровства и взлом замков с преимуществом. Ваши отмычки и ножи не ломаются. Так же для взлома замков вы можете использовать монтировку. Вы не выходите из скрытности при использовании навыков или работы с инвентарем.\nТребования:\nНавык Взлом +8"
+    }
+  },
+  {
+    "id": "perk-045",
+    "name": "Полевой медик",
+    "description": "Броски доктора и первой помощи в бою с преимуществом.",
+    "level": 9,
+    "requirements": {
+      "text": "Навык Санитар: +9\nНавык Доктор: +8",
+      "special": {},
+      "skills": {
+        "first_aid": {
+          "min": 9,
+          "sourceLabel": "санитар"
+        },
+        "doctor": {
+          "min": 8,
+          "sourceLabel": "доктор"
+        }
+      },
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Доктор и Первая помощь в бою с преимуществом."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 45,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image87-117.png",
+      "textExact": "Броски доктора и первой помощи в бою с преимуществом. \nТребования:\nНавык Санитар: +9\nНавык Доктор: +8"
+    }
+  },
+  {
+    "id": "perk-046",
+    "name": "Ящерица",
+    "description": "Урон в секунду от огня, плазмы, яда на вас не действуют.",
+    "level": 9,
+    "requirements": {
+      "text": "Сила: 7",
+      "special": {
+        "S": {
+          "min": 7
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Иммунитет к урону в секунду от огня, плазмы и яда."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 46,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image89-119.png",
+      "textExact": "Урон в секунду от огня, плазмы, яда на вас не действуют.\nТребования:\nСила: 7"
+    }
+  },
+  {
+    "id": "perk-047",
+    "name": "Крутой парень",
+    "description": "Игнорирует требования силы к броску. Имеет шанс сжечь 2 Од противника если на попадание по цели выпало 15 и больше.",
+    "level": 9,
+    "requirements": {
+      "text": "Нельзя брать с особенностями «Вор» и «Добродушный»",
+      "special": {},
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [
+        "Вор",
+        "Добродушный"
+      ],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Игнорируются требования Силы к броску.",
+        "При броске на попадание >=15 может сжечь 2 ОД цели."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 47,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image91-121.png",
+      "textExact": "Игнорирует требования силы к броску. Имеет шанс сжечь 2 Од противника если на попадание по цели выпало 15 и больше.\nТребования:\nНельзя брать с особенностями «Вор» и «Добродушный»"
+    }
+  },
+  {
+    "id": "perk-048",
+    "name": "Партизанская граната",
+    "description": "+10 к урону каждой гранаты. Гранаты не могу сбить вас с ног.",
+    "level": 9,
+    "requirements": {
+      "text": "Выносливость 6",
+      "special": {
+        "E": {
+          "min": 6
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "+10 урона каждой гранаты.",
+        "Гранаты не сбивают владельца с ног."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 48,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image93-123.png",
+      "textExact": "+10 к урону каждой гранаты. Гранаты не могу сбить вас с ног.\nТребования:\nВыносливость 6"
+    }
+  },
+  {
+    "id": "perk-049",
+    "name": "Репликант",
+    "description": "Ваш персонаж может один раз возродиться.",
+    "level": 9,
+    "requirements": {
+      "text": "",
+      "special": {},
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Одно возрождение персонажа."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 49,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image95-125.png",
+      "textExact": "Ваш персонаж может один раз возродиться."
+    }
+  },
+  {
+    "id": "perk-050",
+    "name": "Глаза и уши",
+    "description": "Отменяет штраф за выстрелы в темноте.",
+    "level": 9,
+    "requirements": {
+      "text": "Восприятие 10",
+      "special": {
+        "P": {
+          "min": 10
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Отмена штрафа стрельбы в темноте."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 50,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image97-127.png",
+      "textExact": "Отменяет штраф за выстрелы в темноте.\nТребования:\nВосприятие 10"
+    }
+  },
+  {
+    "id": "perk-051",
+    "name": "Пироманьяк",
+    "description": "+5 к конечному уроны оружия с типом урона «Огонь». Урон в секунду от огня увеличивается на 1.",
+    "level": 9,
+    "requirements": {
+      "text": "Интеллект: 4",
+      "special": {
+        "I": {
+          "min": 4
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "+5 конечного урона оружия с типом «Огонь».",
+        "Урон в секунду от огня +1."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 51,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image99-129.png",
+      "textExact": "+5 к конечному уроны оружия с типом урона «Огонь». Урон в секунду от огня увеличивается на 1. \nТребования:\nИнтеллект: 4"
+    }
+  },
+  {
+    "id": "perk-052",
+    "name": "Взрывотехник",
+    "description": "Ваши ловушки невозможно заметить. +7 урона от ловушек.",
+    "level": 9,
+    "requirements": {
+      "text": "Навык ловушки +9",
+      "special": {},
+      "skills": {
+        "traps": {
+          "min": 9,
+          "sourceLabel": "ловушки"
+        }
+      },
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Ловушки владельца нельзя заметить.",
+        "Урон ловушек +7."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 52,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image101-131.png",
+      "textExact": "Ваши ловушки невозможно заметить. +7 урона от ловушек.\nТребования:\nНавык ловушки +9"
+    }
+  },
+  {
+    "id": "perk-053",
+    "name": "Токсиколог",
+    "description": "Ваше оружие наносит дополнительный урон отравлением. Урон в секунду от яда. (2д4)",
+    "level": 9,
+    "requirements": {
+      "text": "Навык Наука: +4",
+      "special": {},
+      "skills": {
+        "science": {
+          "min": 4,
+          "sourceLabel": "наука"
+        }
+      },
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Оружие добавляет отравление с уроном 2d4 в секунду."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 53,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image103-133.png",
+      "textExact": "Ваше оружие наносит дополнительный урон отравлением. Урон в секунду от яда. (2д4)\nТребования:\nНавык Наука: +4"
+    }
+  },
+  {
+    "id": "perk-054",
+    "name": "Прищур",
+    "description": "При успешной критической атаке восстанавливаете себе 2 од.",
+    "level": 9,
+    "requirements": {
+      "text": "Нельзя взять если есть навык Снайпер, критическое мышление, ковбой",
+      "special": {},
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": [
+        "Снайпер",
+        "Критическое мышление",
+        "Ковбой"
+      ]
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "При успешной критической атаке восстанавливаются 2 ОД."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 54,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image105-135.png",
+      "textExact": "При успешной критической атаке восстанавливаете себе 2 од. \nТребования:\nНельзя взять если есть навык Снайпер, критическое мышление, ковбой"
+    }
+  },
+  {
+    "id": "perk-055",
+    "name": "Огневая поддержка",
+    "description": "При расчете навыка «метательное оружие» во время броска вспомогательной гранаты, персонаж получает преимущество. Радиус завесы горчичной и дымовой гранаты увеличен. (Дым, горчичная, световая, коктейль Молотова).",
+    "level": 9,
+    "requirements": {
+      "text": "Восприятие: 7\nЛовкость: 7\nМетательное оружие: +6",
+      "special": {
+        "P": {
+          "min": 7
+        },
+        "A": {
+          "min": 7
+        }
+      },
+      "skills": {
+        "throwing": {
+          "min": 6,
+          "sourceLabel": "метательное оружие"
+        }
+      },
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Вспомогательные гранаты бросаются с преимуществом.",
+        "Увеличен радиус дыма/горчичной завесы."
+      ],
+      "notes": [
+        "Численный размер увеличения радиуса не указан."
+      ]
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 55,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image107-137.png",
+      "textExact": "При расчете навыка «метательное оружие» во время броска вспомогательной гранаты, персонаж получает преимущество. Радиус завесы горчичной и дымовой гранаты увеличен. (Дым, горчичная, световая, коктейль Молотова). \nТребования:\nВосприятие: 7\nЛовкость: 7\nМетательное оружие: +6"
+    }
+  },
+  {
+    "id": "perk-056",
+    "name": "Иммунитет",
+    "description": "Из конечного урона вычитается ваша сила.",
+    "level": 12,
+    "requirements": {
+      "text": "Сила: 6\nИнтеллект: 8",
+      "special": {
+        "S": {
+          "min": 6
+        },
+        "I": {
+          "min": 8
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "«Из конечного урона вычитается ваша сила»."
+      ],
+      "notes": [
+        "Источник не уточняет явно, входящий это урон или исходящий; автоматическое применение к атаке/защите отключено."
+      ]
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 56,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image109-139.png",
+      "textExact": "Из конечного урона вычитается ваша сила.\nТребования:\nСила: 6\nИнтеллект: 8"
+    }
+  },
+  {
+    "id": "perk-057",
+    "name": "Воодушевление",
+    "description": "При избегании урона любым способом прибавляет вам 1 од в бою.",
+    "level": 12,
+    "requirements": {
+      "text": "Перк: Увертливость",
+      "special": {},
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [
+        "Увертливость"
+      ],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "При избегании урона любым способом восстанавливается 1 ОД в бою."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 57,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image111-141.png",
+      "textExact": "При избегании урона любым способом прибавляет вам 1 од в бою.\nТребования:\nПерк: Увертливость"
+    }
+  },
+  {
+    "id": "perk-058",
+    "name": "Удачный промах",
+    "description": "+1 к ОД. Удача% шанс восстановить ОД при промахе по вам. Если шанс не выпал вы восстановите 1 ОД.",
+    "level": 12,
+    "requirements": {
+      "text": "Восприятие: 6\nУдача: 2",
+      "special": {
+        "P": {
+          "min": 6
+        },
+        "L": {
+          "min": 2
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {
+        "ap": 1
+      },
+      "conditional": [
+        "При промахе по владельцу Удача% шанс восстановить ОД, иначе восстанавливается 1 ОД."
+      ],
+      "notes": [
+        "Количество ОД при успешном шансе прямо не указано; не считать автоматически полным восстановлением."
+      ]
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 58,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image113-143.png",
+      "textExact": "+1 к ОД. Удача% шанс восстановить ОД при промахе по вам. Если шанс не выпал вы восстановите 1 ОД.\nТребования:\nВосприятие: 6\nУдача: 2"
+    }
+  },
+  {
+    "id": "perk-059",
+    "name": "Ветеран",
+    "description": "+5 к ОЗ.\n+3 к КБ.\nИгнорирование штрафа на прицельные атаки.",
+    "level": 12,
+    "requirements": {
+      "text": "Удача: 2",
+      "special": {
+        "L": {
+          "min": 2
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {
+        "hp": 5,
+        "ac": 3
+      },
+      "conditional": [
+        "Игнорирование штрафа прицельных атак."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 59,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image115-145.png",
+      "textExact": "+5 к ОЗ.\n+3 к КБ.\nИгнорирование штрафа на прицельные атаки.\nТребования:\nУдача: 2"
+    }
+  },
+  {
+    "id": "perk-060",
+    "name": "Математик",
+    "description": "+1 очко навыка при выстреле в цель, если она в дыму или за укрытием. +2 к броску на «попасть».",
+    "level": 12,
+    "requirements": {
+      "text": "Интеллект : 7\nУдача : 2\nНавык наука: +6",
+      "special": {
+        "I": {
+          "min": 7
+        },
+        "L": {
+          "min": 2
+        }
+      },
+      "skills": {
+        "science": {
+          "min": 6,
+          "sourceLabel": "наука"
+        }
+      },
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "При стрельбе в дым/за укрытие +1 очко навыка.",
+        "+2 к броску «попасть»."
+      ],
+      "notes": [
+        "Область условия для +2 к попаданию и значение «очко навыка» не уточнены; это не постоянные очки распределения."
+      ]
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 60,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image117-147.png",
+      "textExact": "+1 очко навыка при выстреле в цель, если она в дыму или за укрытием. +2 к броску на «попасть».\nТребования:\nИнтеллект : 7\nУдача : 2\nНавык наука: +6"
+    }
+  },
+  {
+    "id": "perk-061",
+    "name": "Мутация",
+    "description": "+10 к ОЗ.\n+2 к Очкам навыков",
+    "level": 12,
+    "requirements": {
+      "text": "Сила: 3\nВыносливость: 5",
+      "special": {
+        "S": {
+          "min": 3
+        },
+        "E": {
+          "min": 5
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {
+        "hp": 10,
+        "skillPoints": 2
+      },
+      "conditional": [],
+      "notes": [
+        "Источник не говорит, что +2 очка навыков начисляются за каждый уровень; учитывать как разовый бонус."
+      ]
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 61,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image119-149.png",
+      "textExact": "+10 к ОЗ.\n+2 к Очкам навыков\nТребования:\nСила: 3\nВыносливость: 5"
+    }
+  },
+  {
+    "id": "perk-062",
+    "name": "Крепкий Орешек",
+    "description": "+5 к классу брони при расчете критического попадания по вам",
+    "level": 12,
+    "requirements": {
+      "text": "Сила: 3",
+      "special": {
+        "S": {
+          "min": 3
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {
+        "critDefenseAc": 5
+      },
+      "conditional": [],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 62,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image121-151.png",
+      "textExact": "+5 к классу брони при расчете критического попадания по вам\nТребования:\nСила: 3"
+    }
+  },
+  {
+    "id": "perk-063",
+    "name": "Критическое мышление",
+    "description": "Каждый выстрел по одной цели уменьшает её класс брони при расчете критического попадания. После выпадения критического попадания шанс на крит обнуляется.",
+    "level": 12,
+    "requirements": {
+      "text": "Нельзя брать с перком «Снайпер» и «Прищур»",
+      "special": {},
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": [
+        "Снайпер",
+        "Прищур"
+      ]
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Каждый выстрел в одну цель уменьшает ее КБ для расчета крита; после крита накопление сбрасывается."
+      ],
+      "notes": [
+        "Размер снижения КБ за выстрел не указан."
+      ]
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 63,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image123-153.png",
+      "textExact": "Каждый выстрел по одной цели уменьшает её класс брони при расчете критического попадания. После выпадения критического попадания шанс на крит обнуляется.\nТребования:\nНельзя брать с перком «Снайпер» и «Прищур»"
+    }
+  },
+  {
+    "id": "perk-064",
+    "name": "Рефлексы",
+    "description": "-1 ОД к стоимости неприцельных атак для Легкого оружия, Тяжелого оружия, Энергооружия и Метательного оружия.",
+    "level": 12,
+    "requirements": {
+      "text": "Восприятие: 5\nВыносливость: 8",
+      "special": {
+        "P": {
+          "min": 5
+        },
+        "E": {
+          "min": 8
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Неприцельные атаки лёгким/тяжёлым/энергетическим/метательным оружием стоят на 1 ОД меньше."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 64,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image125-155.png",
+      "textExact": "-1 ОД к стоимости неприцельных атак для Легкого оружия, Тяжелого оружия, Энергооружия и Метательного оружия.\nТребования:\nВосприятие: 5\nВыносливость: 8"
+    }
+  },
+  {
+    "id": "perk-065",
+    "name": "Спортсмен",
+    "description": "+15 к ОЗ.\n+5 к КБ.",
+    "level": 12,
+    "requirements": {
+      "text": "Сила: 8",
+      "special": {
+        "S": {
+          "min": 8
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {
+        "hp": 15,
+        "ac": 5
+      },
+      "conditional": [],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 65,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image127-157.png",
+      "textExact": "+15 к ОЗ.\n+5 к КБ.\nТребования:\nСила: 8"
+    }
+  },
+  {
+    "id": "perk-066",
+    "name": "Старый вояка",
+    "description": "+4 к классу брони при расчёте критического попадания по вам.",
+    "level": 12,
+    "requirements": {
+      "text": "",
+      "special": {},
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {
+        "critDefenseAc": 4
+      },
+      "conditional": [],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 66,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image129-159.png",
+      "textExact": "+4 к классу брони при расчёте критического попадания по вам."
+    }
+  },
+  {
+    "id": "perk-067",
+    "name": "Дополнительные атаки",
+    "description": "После каждой атаки игрок кидает кубик. Если на кубике выпало число больше 12, игрок получает +2 к ОД на этот ход. Перк не работает на Рукопашную и Холодное оружие.",
+    "level": 12,
+    "requirements": {
+      "text": "Интеллект: 7\nЛовкость: 7",
+      "special": {
+        "I": {
+          "min": 7
+        },
+        "A": {
+          "min": 7
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "После каждой атаки бросок d20 >12 дает +2 ОД на этот ход; не работает для рукопашного/холодного оружия."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 67,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image130-160.png",
+      "textExact": "После каждой атаки игрок кидает кубик. Если на кубике выпало число больше 12, игрок получает +2 к ОД на этот ход. Перк не работает на Рукопашную и Холодное оружие.\nТребования:\nИнтеллект: 7\nЛовкость: 7"
+    }
+  },
+  {
+    "id": "perk-068",
+    "name": "Бывалый",
+    "description": "+2 к навыку лёгкого, тяжёлого и энергетического оружия.",
+    "level": 12,
+    "requirements": {
+      "text": "Интеллект: 6",
+      "special": {
+        "I": {
+          "min": 6
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {
+        "skills": {
+          "small_guns": 2,
+          "big_guns": 2,
+          "energy_weapons": 2
+        }
+      },
+      "conditional": [],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 68,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image132-162.png",
+      "textExact": "+2 к навыку лёгкого, тяжёлого и энергетического оружия.\nТребования:\nИнтеллект: 6"
+    }
+  },
+  {
+    "id": "perk-069",
+    "name": "Живчик",
+    "description": "+15 к очкам жизни. +1 к классу брони.",
+    "level": 12,
+    "requirements": {
+      "text": "Выносливость: 6",
+      "special": {
+        "E": {
+          "min": 6
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {
+        "hp": 15,
+        "ac": 1
+      },
+      "conditional": [],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 69,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image134-164.png",
+      "textExact": "+15 к очкам жизни. +1 к классу брони.\nТребования:\nВыносливость: 6"
+    }
+  },
+  {
+    "id": "perk-070",
+    "name": "Реаниматор",
+    "description": "Каждое изменение вашего здоровья лечит вас на 4 хп. Примечание: Восстановление ОЗ при любом изменений ОЗ, например: лечение санитаром, лечение суперстимуляторами, отравлении, получение урона от оружия, тиков Огня или Плазмы и т.д.",
+    "level": 12,
+    "requirements": {
+      "text": "Доктор: +10",
+      "special": {},
+      "skills": {
+        "doctor": {
+          "min": 10,
+          "sourceLabel": "доктор"
+        }
+      },
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Любое изменение ХП дополнительно лечит на 4 ХП."
+      ],
+      "notes": [
+        "Не запускать рекурсивное самолечение от собственного эффекта; автоматизация боевых событий требует отдельного решения."
+      ]
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 70,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image136-166.png",
+      "textExact": "Каждое изменение вашего здоровья лечит вас на 4 хп. Примечание: Восстановление ОЗ при любом изменений ОЗ, например: лечение санитаром, лечение суперстимуляторами, отравлении, получение урона от оружия, тиков Огня или Плазмы и т.д. \nТребования:\nДоктор: +10"
+    }
+  },
+  {
+    "id": "perk-071",
+    "name": "Боевой Инженер",
+    "description": "+2 к навыку ремонт. Инженерное оружие наносит полный урон. Вы можете ремонтировать оружие и броню другого игрока.",
+    "level": 12,
+    "requirements": {
+      "text": "Восприятие: 6\nИнтеллект: 6\nЛовкость: 3\nРемонт: +8",
+      "special": {
+        "P": {
+          "min": 6
+        },
+        "I": {
+          "min": 6
+        },
+        "A": {
+          "min": 3
+        }
+      },
+      "skills": {
+        "repair": {
+          "min": 8,
+          "sourceLabel": "ремонт"
+        }
+      },
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {
+        "skills": {
+          "repair": 2
+        }
+      },
+      "conditional": [
+        "Инженерное оружие наносит полный урон.",
+        "Ремонт оружия и брони другого игрока."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 71,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image138-168.png",
+      "textExact": "+2 к навыку ремонт. Инженерное оружие наносит полный урон. Вы можете ремонтировать оружие и броню другого игрока.\nТребования:\nВосприятие: 6\nИнтеллект: 6\nЛовкость: 3\nРемонт: +8"
+    }
+  },
+  {
+    "id": "perk-072",
+    "name": "Пробивающий удар",
+    "description": "Атаки рукопашным и холодным оружием получают к конечному урону  резист цели, включая резист брони.",
+    "level": 12,
+    "requirements": {
+      "text": "Сила: 10\nХолодное оружие: +10",
+      "special": {
+        "S": {
+          "min": 10
+        }
+      },
+      "skills": {
+        "melee": {
+          "min": 10,
+          "sourceLabel": "холодное оружие"
+        }
+      },
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Конечный урон рукопашной/холодной атаки увеличен на резист цели, включая броню."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 72,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image140-170.png",
+      "textExact": "Атаки рукопашным и холодным оружием получают к конечному урону  резист цели, включая резист брони. \nТребования:\nСила: 10\nХолодное оружие: +10"
+    }
+  },
+  {
+    "id": "perk-073",
+    "name": "Боевой аналитик",
+    "description": "При стрельбе из базук и метании осколочных гранат радиус взрыва боеприпаса увеличивается на 2 гекса.",
+    "level": 12,
+    "requirements": {
+      "text": "Восприятие: 7\nНаука: +8",
+      "special": {
+        "P": {
+          "min": 7
+        }
+      },
+      "skills": {
+        "science": {
+          "min": 8,
+          "sourceLabel": "наука"
+        }
+      },
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Радиус базук и осколочных гранат +2 гекса."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 73,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image141-171.png",
+      "textExact": "При стрельбе из базук и метании осколочных гранат радиус взрыва боеприпаса увеличивается на 2 гекса.\nТребования:\nВосприятие: 7\nНаука: +8"
+    }
+  },
+  {
+    "id": "perk-074",
+    "name": "Доп. рукопашн. атаки",
+    "description": "-1 ОД к стоимости ОД за атаку для Рукопашной и Холодного оружия.",
+    "level": 15,
+    "requirements": {
+      "text": "Ловкость: 6",
+      "special": {
+        "A": {
+          "min": 6
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Рукопашные атаки и атаки холодным оружием стоят на 1 ОД меньше."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 74,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image143-173.png",
+      "textExact": "-1 ОД к стоимости ОД за атаку для Рукопашной и Холодного оружия.\nТребования:\nЛовкость: 6"
+    }
+  },
+  {
+    "id": "perk-075",
+    "name": "Бонус скорости",
+    "description": "-1 ОД к стоимости неприцельных атак. Примечание: Уменьшение стоимости атак не работает на Инженерное оружие, Рукопашную и Холодное Оружие.",
+    "level": 15,
+    "requirements": {
+      "text": "Восприятие: 6\nИнтеллект: 6\nЛовкость: 7",
+      "special": {
+        "P": {
+          "min": 6
+        },
+        "I": {
+          "min": 6
+        },
+        "A": {
+          "min": 7
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Неприцельные атаки стоят на 1 ОД меньше; исключены инженерное, рукопашное и холодное оружие."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 75,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image145-175.png",
+      "textExact": "-1 ОД к стоимости неприцельных атак. Примечание: Уменьшение стоимости атак не работает на Инженерное оружие, Рукопашную и Холодное Оружие.\nТребования:\nВосприятие: 6\nИнтеллект: 6\nЛовкость: 7"
+    }
+  },
+  {
+    "id": "perk-076",
+    "name": "Дробила",
+    "description": "+5 к классу брони при расчете критического попадания по вам. Ваши атаки ближнего боя всегда критические.",
+    "level": 15,
+    "requirements": {
+      "text": "Сила: 7\nЛовкость: 6\nРукопашное: +12\nНельзя взять если есть особенность «Добродушный» \nНельзя взять если есть перк «Пробивающий удар»",
+      "special": {
+        "S": {
+          "min": 7
+        },
+        "A": {
+          "min": 6
+        }
+      },
+      "skills": {
+        "unarmed": {
+          "min": 12,
+          "sourceLabel": "рукопашное"
+        }
+      },
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [
+        "Добродушный"
+      ],
+      "forbiddenPerks": [
+        "Пробивающий удар"
+      ]
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {
+        "critDefenseAc": 5
+      },
+      "conditional": [
+        "Атаки ближнего боя всегда критические."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 76,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image147-177.png",
+      "textExact": "+5 к классу брони при расчете критического попадания по вам. Ваши атаки ближнего боя всегда критические. \n\n\nТребования:\nСила: 7\nЛовкость: 6\nРукопашное: +12\nНельзя взять если есть особенность «Добродушный» \nНельзя взять если есть перк «Пробивающий удар»"
+    }
+  },
+  {
+    "id": "perk-077",
+    "name": "Снайпер",
+    "description": "-5 к классу брони противника при расчете критического попадания. -1 ОД к стоимости прицельных атак для Легкого оружия, Тяжелого оружия, Энергооружия и Инженерного оружия. Ваша первая атака всегда попадает.",
+    "level": 15,
+    "requirements": {
+      "text": "Нельзя взять, если есть:\nДобродушие\nУмелец\nПерк: Ковбой\nПерк: Рефлексы\nПерк: Бесшумный бег\nПерк: Неудержимый\nПерк: Терминатор\nПерк: Прищур\nПерк: Критическое мышление",
+      "special": {},
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [
+        "Добродушие",
+        "Умелец"
+      ],
+      "forbiddenPerks": [
+        "Ковбой",
+        "Рефлексы",
+        "Бесшумный бег",
+        "Неудержимый",
+        "Терминатор",
+        "Прищур",
+        "Критическое мышление"
+      ]
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "КБ противника для расчета крита -5.",
+        "Прицельная атака лёгким/тяжёлым/энергетическим/инженерным оружием стоит на 1 ОД меньше.",
+        "Первая атака всегда попадает."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 77,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image149-179.png",
+      "textExact": "-5 к классу брони противника при расчете критического попадания. -1 ОД к стоимости прицельных атак для Легкого оружия, Тяжелого оружия, Энергооружия и Инженерного оружия. Ваша первая атака всегда попадает.\nТребования:\nНельзя взять, если есть:\nДобродушие\nУмелец\nПерк: Ковбой\nПерк: Рефлексы\nПерк: Бесшумный бег\nПерк: Неудержимый\nПерк: Терминатор\nПерк: Прищур\nПерк: Критическое мышление"
+    }
+  },
+  {
+    "id": "perk-078",
+    "name": "Сила жизни",
+    "description": "+20 хп.",
+    "level": 15,
+    "requirements": {
+      "text": "Выносливость: 4",
+      "special": {
+        "E": {
+          "min": 4
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {
+        "hp": 20
+      },
+      "conditional": [],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 78,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image151-181.png",
+      "textExact": "+20 хп.\nТребования:\nВыносливость: 4"
+    }
+  },
+  {
+    "id": "perk-079",
+    "name": "Концентрация",
+    "description": "-1 ОД к стоимости прицельных атак для Легкого оружия, Тяжелого оружия, Энергооружия и Метательного оружия.",
+    "level": 15,
+    "requirements": {
+      "text": "Удача: 3\nНельзя взять если есть перк «Бесшумный бег»",
+      "special": {
+        "L": {
+          "min": 3
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": [
+        "Бесшумный бег"
+      ]
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Прицельная атака лёгким/тяжёлым/энергетическим/метательным оружием стоит на 1 ОД меньше."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 79,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image153-183.png",
+      "textExact": "-1 ОД к стоимости прицельных атак для Легкого оружия, Тяжелого оружия, Энергооружия и Метательного оружия.\nТребования:\nУдача: 3\nНельзя взять если есть перк «Бесшумный бег»"
+    }
+  },
+  {
+    "id": "perk-080",
+    "name": "Авторитет",
+    "description": "Если нанести урон взрывом, а потом выпустить урон очередью с 1-3 гексов, то цель получит эффект Ошарашен.\nВ эффекте Ошарашен персонаж не может применять предметы и стрелять.\nВ этом эффекте любой входящий урон увеличен на +7.\nЭффект проходит через количество секунд равное Удаче атакующего.",
+    "level": 15,
+    "requirements": {
+      "text": "",
+      "special": {},
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "После взрыва и очереди с 1–3 гексов цель получает «Ошарашен»: не применяет предметы/не стреляет, входящий урон +7, длительность равна Удаче атакующего в секундах."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 80,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image155-185.png",
+      "textExact": "Если нанести урон взрывом, а потом выпустить урон очередью с 1-3 гексов, то цель получит эффект Ошарашен.\nВ эффекте Ошарашен персонаж не может применять предметы и стрелять.\nВ этом эффекте любой входящий урон увеличен на +7.\nЭффект проходит через количество секунд равное Удаче атакующего."
+    }
+  },
+  {
+    "id": "perk-081",
+    "name": "Неудержимый",
+    "description": "+((Ловкость / 2) - 1) к ОД. Вы можете атаковать с двуручного оружия если у вас сломана рука. +5 к конечному урону.",
+    "level": 15,
+    "requirements": {
+      "text": "Ловкость: 8\nНельзя брать, если есть:\nОсобенность добродушный.\nПерк бесшумный бег\nПерк снайпер\nПерк терминатор",
+      "special": {
+        "A": {
+          "min": 8
+        }
+      },
+      "skills": {},
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [
+        "добродушный"
+      ],
+      "forbiddenPerks": [
+        "Бесшумный бег",
+        "Снайпер",
+        "Терминатор"
+      ]
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {
+        "apFormula": "(A / 2) - 1",
+        "damageBonus": 5
+      },
+      "conditional": [
+        "Можно атаковать двуручным оружием со сломанной рукой."
+      ],
+      "notes": [
+        "Для добавки к ОД источник не указывает округление; базовая формула ОД в книге правил округляется вниз."
+      ]
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 81,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image157-187.png",
+      "textExact": "+((Ловкость / 2) - 1) к ОД. Вы можете атаковать с двуручного оружия если у вас сломана рука. +5 к конечному урону. \nТребования:\nЛовкость: 8\nНельзя брать, если есть:\nОсобенность добродушный.\nПерк бесшумный бег\nПерк снайпер\nПерк терминатор"
+    }
+  },
+  {
+    "id": "perk-082",
+    "name": "Анатомия жизни",
+    "description": "+2 к доктору. +5 к конечному урону.",
+    "level": 15,
+    "requirements": {
+      "text": "Восприятие: 7\nДоктор +8",
+      "special": {
+        "P": {
+          "min": 7
+        }
+      },
+      "skills": {
+        "doctor": {
+          "min": 8,
+          "sourceLabel": "доктор"
+        }
+      },
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {
+        "skills": {
+          "doctor": 2
+        },
+        "damageBonus": 5
+      },
+      "conditional": [],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 82,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image159-189.png",
+      "textExact": "+2 к доктору. +5 к конечному урону.\nТребования:\nВосприятие: 7\nДоктор +8"
+    }
+  },
+  {
+    "id": "perk-083",
+    "name": "Военврач",
+    "description": "Лечение санитаром дополнительно восстанавливает 1d20 хп.",
+    "level": 15,
+    "requirements": {
+      "text": "Доктор +13",
+      "special": {},
+      "skills": {
+        "doctor": {
+          "min": 13,
+          "sourceLabel": "доктор"
+        }
+      },
+      "derived": {},
+      "requiredTraits": [],
+      "requiredPerks": [],
+      "forbiddenTraits": [],
+      "forbiddenPerks": []
+    },
+    "ranks": {
+      "max": 1,
+      "explicit": false,
+      "note": "Повторное взятие не указано в источнике."
+    },
+    "effects": {
+      "static": {},
+      "conditional": [
+        "Лечение санитаром дополнительно восстанавливает 1d20 ХП."
+      ],
+      "notes": []
+    },
+    "evidence": {
+      "file": "/tmp/codex-remote-attachments/01a174ee-78cf-72a3-ab5e-aa4a93e0b040/68F10B04-622C-4A16-A635-93DB15103E14/1-Перки.pages",
+      "record": 1732641,
+      "field": ".3",
+      "entry": 83,
+      "titleImage": "/workspace/scratch/pages-perks/Data/image161-191.png",
+      "textExact": "Лечение санитаром дополнительно восстанавливает 1d20 хп.\nТребования:\nДоктор +13"
+    }
+  }
+]

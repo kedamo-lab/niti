@@ -1,14 +1,16 @@
 import { ITEM_CATALOG, REWARD_ALIASES } from './item-catalog.js';
+import { LEGACY_ITEM_CATALOG } from './legacy-item-stats.js';
 
 const INVENTORY_VERSION = 1;
 const INVENTORY_SLOTS = ['weapon', 'armor', 'extra1', 'extra2'];
 const INVENTORY_WEAPONS = new Set(['melee', 'unarmed', 'light', 'heavy', 'energy', 'throwing', 'thrown', 'explosive', 'weapon']);
-const INVENTORY_STAT_KEYS = ['damage', 'damageFormula', 'apCost', 'range', 'ammo', 'magazine', 'minStrength', 'damageType', 'modifiers', 'armorClass', 'resistances', 'weight', 'price', 'reloadAp', 'slots', 'effect'];
+const INVENTORY_STAT_KEYS = ['damage', 'damageFormula', 'apCost', 'range', 'rangeFormula', 'rangeBonus', 'ammo', 'magazine', 'minStrength', 'damageType', 'modifiers', 'armorClass', 'resistances', 'weight', 'price', 'reloadAp', 'slots', 'effect'];
 const INVENTORY_RESISTANCE_KEYS = ['normal', 'laser', 'fire', 'plasma', 'electric', 'explosive'];
-const INVENTORY_CATEGORY_LABELS = { melee: 'Холодное оружие', unarmed: 'Рукопашное оружие', light: 'Лёгкое оружие', heavy: 'Тяжёлое оружие', energy: 'Энергетическое оружие', throwing: 'Метательное оружие', thrown: 'Метательное оружие', explosive: 'Взрывчатка', armor: 'Броня', consumable: 'Расходуемый предмет', ammo: 'Боеприпасы', tool: 'Инструмент', misc: 'Предмет', other: 'Предмет', food: 'Еда', medicine: 'Лекарство', weapon: 'Оружие' };
+const INVENTORY_CATEGORY_LABELS = { melee: 'Холодное оружие', unarmed: 'Рукопашное оружие', light: 'Лёгкое оружие', heavy: 'Тяжёлое оружие', energy: 'Энергетическое оружие', throwing: 'Метательное оружие', thrown: 'Метательное оружие', explosive: 'Взрывчатка', armor: 'Броня', consumable: 'Расходуемый предмет', ammo: 'Боеприпасы', tool: 'Инструмент', craft: 'Материал для крафта', misc: 'Предмет', other: 'Предмет', food: 'Еда', medicine: 'Лекарство', weapon: 'Оружие' };
 const INVENTORY_MAX_OPERATIONS = 3000;
 const INVENTORY_MAX_LOTS = 1000;
 const INVENTORY_CATALOG = new Map(ITEM_CATALOG.map(item => [item.id, item]));
+const INVENTORY_CATALOG_REVISIONS = new Map(ITEM_CATALOG.map(item => [item.id, invStableSuffix(invCanonical({stats:item.stats,category:item.category,categoryLabel:item.categoryLabel,consumable:item.consumable ?? null}))]));
 
 export class InventoryError extends Error {
   constructor(status, message) { super(message); this.status = status; }
@@ -55,7 +57,13 @@ function invStatsPatch(input) {
   const result = {};
   for (const field of Object.keys(input)) {
     if (!INVENTORY_STAT_KEYS.includes(field)) throw new InventoryError(400, 'Неизвестная характеристика предмета.');
-    if (field === 'resistances') {
+    if (field === 'rangeFormula') {
+      if (input[field] !== null && input[field] !== 'perception') throw new InventoryError(400, 'Неизвестная формула дальности.');
+      result[field] = input[field];
+    } else if (field === 'rangeBonus') {
+      if (input[field] !== null && (typeof input[field] !== 'number' || !Number.isFinite(input[field]) || Math.abs(input[field]) > 1e9)) throw new InventoryError(400, 'Поправка дальности должна быть числом.');
+      result[field] = input[field];
+    } else if (field === 'resistances') {
       if (input[field] === null) { result[field] = null; continue; }
       if (!input[field] || typeof input[field] !== 'object' || Array.isArray(input[field])) throw new InventoryError(400, 'Некорректное сопротивление брони.');
       const resistances = {};
@@ -82,7 +90,48 @@ function invDefinition(name, catalogId = null) {
     categoryLabel: catalog?.categoryLabel || INVENTORY_CATEGORY_LABELS[category] || 'Предмет',
     consumable: typeof catalog?.consumable === 'boolean' ? catalog.consumable : invConsumes(category, name),
     stats: invApplyStats(catalog?.stats || {}, {}),
+    catalogStatsOverrides: [],
+    catalogMetadataOverrides: [],
   };
+}
+const INVENTORY_METADATA_KEYS = ['category', 'categoryLabel', 'consumable'];
+function invSame(left, right) { return invCanonical(left ?? null) === invCanonical(right ?? null); }
+function invCatalogMetadata(catalog, name) {
+  return { category: catalog.category, categoryLabel: catalog.categoryLabel || INVENTORY_CATEGORY_LABELS[catalog.category] || 'Предмет', consumable: typeof catalog.consumable === 'boolean' ? catalog.consumable : invConsumes(catalog.category, name) };
+}
+function invSyncCatalog(lot) {
+  // Previously uncatalogued award items can gain a definition when the catalog grows.
+  const catalog = INVENTORY_CATALOG.get(lot.catalogId) || (lot.legacyKey ? invCatalogForName(lot.name) : null);
+  if (!catalog) return;
+  const revision = INVENTORY_CATALOG_REVISIONS.get(catalog.id);
+  if (lot.catalogRevision === revision) return;
+  const attaching = lot.legacyKey && !lot.catalogId;
+  const baseline = LEGACY_ITEM_CATALOG[catalog.id] || (attaching ? { category: invCategoryForName(lot.name), stats: {} } : null);
+  lot.catalogId = catalog.id;
+  const oldStats = invApplyStats(baseline?.stats || {}, {});
+  // Existing rooms predate field overrides. Infer only their changed fields once.
+  if (attaching || !Array.isArray(lot.catalogStatsOverrides)) lot.catalogStatsOverrides = INVENTORY_STAT_KEYS.filter(key => !invSame(lot.stats?.[key], oldStats[key]));
+  if (attaching || !Array.isArray(lot.catalogMetadataOverrides)) {
+    const oldMetadata = baseline ? invCatalogMetadata(baseline, lot.name) : invCatalogMetadata(catalog, lot.name);
+    lot.catalogMetadataOverrides = INVENTORY_METADATA_KEYS.filter(key => !invSame(lot[key], oldMetadata[key]));
+  }
+  const overrides = new Set(lot.catalogStatsOverrides);
+  if (overrides.has('range')) {
+    overrides.add('rangeFormula'); overrides.add('rangeBonus');
+    lot.catalogStatsOverrides = [...overrides];
+  }
+  const latestStats = invApplyStats(catalog.stats || {}, {});
+  lot.stats = invApplyStats(lot.stats || {}, {});
+  for (const key of INVENTORY_STAT_KEYS) if (!overrides.has(key)) lot.stats[key] = structuredClone(latestStats[key]);
+  const metadata = invCatalogMetadata(catalog, lot.name);
+  for (const key of INVENTORY_METADATA_KEYS) if (!lot.catalogMetadataOverrides.includes(key)) lot[key] = metadata[key];
+  lot.catalogRevision = revision;
+}
+function invTrackOverrides(base, updated) {
+  if (!base.catalogId) return updated;
+  updated.catalogStatsOverrides = [...new Set([...(base.catalogStatsOverrides || []), ...INVENTORY_STAT_KEYS.filter(key => !invSame(base.stats?.[key], updated.stats?.[key]))])];
+  updated.catalogMetadataOverrides = [...new Set([...(base.catalogMetadataOverrides || []), ...INVENTORY_METADATA_KEYS.filter(key => !invSame(base[key], updated[key]))])];
+  return updated;
 }
 function invBalance(lot, ownerId) { return Number(lot.balances[ownerId === null ? 'shared' : ownerId] || 0); }
 function invSetBalance(lot, ownerId, quantity) {
@@ -112,6 +161,7 @@ export function inventoryEnsure(state) {
     state.inventoryV1 = { version: INVENTORY_VERSION, lots: [], importedEvents: [], equipment: {}, operations: [] };
   }
   const stock = state.inventoryV1;
+  for (const lot of stock.lots) invSyncCatalog(lot);
   const imported = new Set(stock.importedEvents);
   for (const event of state.events || []) {
     if (imported.has(event.eventId)) continue;
@@ -134,6 +184,9 @@ function invPublicLot(lot, quantity) {
     image: catalog?.image || null,
     source: catalog?.source || null,
     warnings: catalog?.warnings || [],
+    description: catalog?.description || null,
+    craftable: typeof catalog?.craftable === 'boolean' ? catalog.craftable : null,
+    craftRecipes: catalog?.craftRecipes || null,
   };
 }
 export function inventoryItems(state, ownerId) {
@@ -189,33 +242,39 @@ function invAddMetadata(input, base, patch = false) {
   if (Object.hasOwn(input, 'consumable')) {
     if (typeof input.consumable !== 'boolean') throw new InventoryError(400, 'Укажите, расходуется ли предмет.');
     definition.consumable = input.consumable;
-  } else if (!patch && Object.hasOwn(input, 'category')) definition.consumable = invConsumes(definition.category, definition.name);
+  } else if (!patch && Object.hasOwn(input, 'category') && typeof INVENTORY_CATALOG.get(base.catalogId)?.consumable !== 'boolean') definition.consumable = invConsumes(definition.category, definition.name);
   if (Object.hasOwn(input, 'stats')) {
     const stats = invStatsPatch(input.stats);
+    if (Object.hasOwn(stats, 'range') && !invSame(stats.range, base.stats?.range) && !Object.hasOwn(stats, 'rangeFormula')) {
+      stats.rangeFormula = null;
+      if (!Object.hasOwn(stats, 'rangeBonus')) stats.rangeBonus = null;
+    }
     if (Object.hasOwn(stats, 'damage') && !Object.hasOwn(stats, 'damageFormula')) {
       const formula = typeof stats.damage === 'string' ? stats.damage.replace(/[дД]/g, 'd').replace(/\s/g, '').toLowerCase() : '';
       stats.damageFormula = /^\d{1,2}d(?:4|6|8|10|12|20|100)(?:[+-]\d{1,4})?$/.test(formula) ? formula : null;
     }
     definition.stats = invApplyStats(base.stats, stats);
   }
-  return definition;
+  return invTrackOverrides(base, definition);
 }
 
 export async function inventoryApply(state, auth, input) {
   const action = invText(input.action, 20);
-  const masterAction = ['add', 'edit'].includes(action);
+  const masterAction = ['add', 'edit', 'remove'].includes(action);
   if (masterAction && auth.role !== 'master') throw new InventoryError(403, 'Создавать и менять предметы может только мастер.');
   if (!masterAction && auth.role !== 'player') throw new InventoryError(403, 'Это действие выполняется из терминала владельца предмета.');
-  if (!['add', 'edit', 'take', 'return', 'use', 'equip', 'unequip'].includes(action)) throw new InventoryError(400, 'Неизвестное действие с предметом.');
+  if (!['add', 'edit', 'remove', 'take', 'return', 'use', 'equip', 'unequip'].includes(action)) throw new InventoryError(400, 'Неизвестное действие с предметом.');
   const operationId = invKey(input.operationId);
   if (operationId.length < 16) throw new InventoryError(400, 'Нужен случайный идентификатор действия.');
   const allowed = ['operationId', 'action'];
   if (action === 'add') allowed.push('catalogId', 'name', 'category', 'consumable', 'stats', 'quantity', 'recipientId');
   if (action === 'edit') allowed.push('itemId', 'name', 'category', 'consumable', 'stats');
-  if (['take', 'return', 'use'].includes(action)) allowed.push('itemId', 'quantity');
+  if (['take', 'return', 'use', 'remove'].includes(action)) allowed.push('itemId', 'quantity');
+  if (['take', 'return', 'remove'].includes(action)) allowed.push('all');
   if (action === 'equip') allowed.push('itemId', 'slot');
   if (action === 'unequip') allowed.push('slot', 'itemId');
   invAssertFields(input, allowed);
+  if (Object.hasOwn(input, 'all') && (input.all !== true || Object.hasOwn(input, 'quantity'))) throw new InventoryError(400, 'Выбери количество или все экземпляры предмета.');
   const stock = inventoryEnsure(state);
   const actorId = auth.role === 'master' ? 'master' : auth.playerId;
   const fingerprint = await invFingerprint(input);
@@ -267,13 +326,21 @@ export async function inventoryApply(state, auth, input) {
           if (equipment.armor === lot.id && lot.category !== 'armor') equipment.armor = null;
           invCleanEquipment(stock, player.id);
         }
+      } else if (action === 'remove') {
+        quantity = input.all === true ? invBalance(lot, null) : invQuantity(input.quantity);
+        if (!Number.isSafeInteger(quantity) || quantity < 1 || invBalance(lot, null) < quantity) throw new InventoryError(409, 'В общем тайнике уже нет такого количества предметов.');
+        // Keep the lot and imported event IDs: old awards must never recreate deleted stock.
+        invSetBalance(lot, null, invBalance(lot, null) - quantity);
+        recipientId = null;
       } else if (action === 'take') {
-        quantity = invQuantity(input.quantity);
+        quantity = input.all === true ? invBalance(lot, null) : invQuantity(input.quantity);
+        if (!Number.isSafeInteger(quantity) || quantity < 1) throw new InventoryError(409, 'В общем тайнике уже нет этого предмета.');
         if (invBalance(lot, null) < quantity) throw new InventoryError(409, 'В общем тайнике уже нет такого количества предметов.');
         invSetBalance(lot, null, invBalance(lot, null) - quantity);
         invSetBalance(lot, auth.playerId, invBalance(lot, auth.playerId) + quantity);
       } else {
-        quantity = ['equip'].includes(action) ? 1 : invQuantity(input.quantity);
+        quantity = action === 'equip' ? 1 : action === 'return' && input.all === true ? invBalance(lot, auth.playerId) : invQuantity(input.quantity);
+        if (!Number.isSafeInteger(quantity) || quantity < 1) throw new InventoryError(403, 'Предмет не принадлежит этому персонажу.');
         if (invBalance(lot, auth.playerId) < quantity) throw new InventoryError(403, 'Предмет не принадлежит этому персонажу или его недостаточно.');
         if (action === 'return') {
           invSetBalance(lot, auth.playerId, invBalance(lot, auth.playerId) - quantity);

@@ -1,5 +1,7 @@
 /* The equipment and 8×8 pack follow the supplied inventory sheet. */
 #playerInventoryRoot{min-width:0}
+.inv-stats .inv-range-rule{font-size:9px;line-height:1.8}.inv-stats .inv-range-rule dd{color:var(--terminal-accent)}
+.inv-detail-actions>[data-inv-all]{grid-column:1/-1;justify-content:center;border-style:dashed}
 #playerInventoryRoot .button{min-width:0;max-width:100%;white-space:normal;line-height:1.7}
 .inv-channel{display:flex;align-items:center;justify-content:space-between;gap:20px;border-block:1px solid var(--line);padding:18px 0;margin-bottom:22px}
 .inv-channel>div{display:grid;gap:7px;min-width:0}
