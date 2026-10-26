@@ -93,7 +93,7 @@
   }
   function roomMarkup(room) {
     const self = room.self || { name: access?.name || '', xp: 0, inventory: [] };
-    return `<div class="session-room-bar"><div><span class="eyebrow">ОБЩАЯ ИГРОВАЯ КОМНАТА</span><h2>${safeText(room.name)}</h2><span class="session-player-label">Ты: ${safeText(self.name)}</span></div><div class="session-room-controls">${statusMarkup()}<button type="button" class="button ghost small" data-session-action="refresh">Обновить</button></div></div>${errorMarkup()}<div class="session-grid"><div class="session-main-column">${missionMarkup(room)}${eventsMarkup(room.events)}</div><aside class="session-side-column"><section class="panel session-experience"><span class="eyebrow">ТВОЙ ОПЫТ В СЕССИИ</span><div class="session-xp-number"><strong data-session-xp>${safeText(self.xp || 0)}</strong><span>XP</span></div><p>Начисляет ведущий за завершённые задания.</p><small>Награды сохраняются и приходят, даже если ты временно не в сети. Учитываются события после твоего вступления.</small></section><section class="panel session-inventory"><div class="panel-header"><h2 class="panel-title">Полученное снаряжение</h2></div>${itemList(self.inventory, 'Личные награды ещё не выданы.', 'data-session-personal-items')}<p class="session-card-hint">Это награды сессии. Твой личный список вещей в листе персонажа остаётся отдельно.</p></section><section class="panel session-inventory"><div class="panel-header"><h2 class="panel-title">Общий тайник</h2><span class="tag">НА ГРУППУ</span></div>${itemList(room.sharedItems, 'Общая добыча пока не найдена.', 'data-session-shared-items')}<p class="session-card-hint">Каждый предмет здесь один на всю группу.</p></section><section class="panel session-party"><div class="panel-header"><h2 class="panel-title">Участники</h2><span class="badge">${room.players?.length || 0}</span></div><ul>${(room.players || []).map(member => `<li><span class="session-member-initial" aria-hidden="true">${safeText((member.name || '?').slice(0, 1))}</span><strong>${safeText(member.name)}</strong>${member.id === self.id ? '<small>ТЫ</small>' : ''}</li>`).join('')}</ul><p class="session-card-hint">Список вошедших в сессию; он не показывает присутствие в сети.</p></section></aside></div><div class="session-access-bar"><p>Доступ к этому персонажу сохранён в браузере. Скачай его для переноса на другое устройство.</p><div><button type="button" class="button ghost small" data-session-action="export">↓ Сохранить доступ</button><button type="button" class="button ghost small" data-session-action="leave">Отключиться</button></div></div>${leavePrompt ? `<div class="session-disconnect-confirm" role="alert"><p>Отключить этот браузер от сессии? Персонаж и награды останутся в комнате. Для возвращения сохрани доступ.</p><div><button type="button" class="button ghost small" data-session-action="export">Сохранить доступ</button><button type="button" class="button ghost small" data-session-action="leave-cancel">Остаться</button><button type="button" class="button danger small" data-session-action="leave-confirm">Отключиться</button></div></div>` : ''}`;
+    return `<div class="session-room-bar"><div><span class="eyebrow">ОБЩАЯ ИГРОВАЯ КОМНАТА</span><h2>${safeText(room.name)}</h2><span class="session-player-label">Ты: ${safeText(self.name)}</span></div><div class="session-room-controls">${statusMarkup()}<button type="button" class="button ghost small" data-session-action="refresh">Обновить</button></div></div>${errorMarkup()}<div class="session-grid"><div class="session-main-column">${missionMarkup(room)}${eventsMarkup(room.events)}</div><aside class="session-side-column"><section class="panel session-experience"><span class="eyebrow">ТВОЙ ОПЫТ В СЕССИИ</span><div class="session-xp-number"><strong data-session-xp>${safeText(self.xp || 0)}</strong><span>XP</span></div><p>Начисляет ведущий за завершённые задания.</p><small>Награды сохраняются и приходят, даже если ты временно не в сети. Учитываются события после твоего вступления.</small></section><section class="panel session-inventory"><div class="panel-header"><h2 class="panel-title">Полученное снаряжение</h2></div>${itemList(self.inventory, 'Личные награды ещё не выданы.', 'data-session-personal-items')}<p class="session-card-hint"><a class="text-button" href="#inventory">Открыть инвентарь и экипировку ↗</a></p></section><section class="panel session-inventory"><div class="panel-header"><h2 class="panel-title">Общий тайник</h2><span class="tag">НА ГРУППУ</span></div>${itemList(room.sharedItems, 'Общая добыча пока не найдена.', 'data-session-shared-items')}<p class="session-card-hint"><a class="text-button" href="#inventory">Забрать вещи из тайника ↗</a></p></section><section class="panel session-party"><div class="panel-header"><h2 class="panel-title">Участники</h2><span class="badge">${room.players?.length || 0}</span></div><ul>${(room.players || []).map(member => `<li><span class="session-member-initial" aria-hidden="true">${safeText((member.name || '?').slice(0, 1))}</span><strong>${safeText(member.name)}</strong>${member.id === self.id ? '<small>ТЫ</small>' : ''}</li>`).join('')}</ul><p class="session-card-hint">Список вошедших в сессию; он не показывает присутствие в сети.</p></section></aside></div><div class="session-access-bar"><p>Доступ к этому персонажу сохранён в браузере. Скачай его для переноса на другое устройство.</p><div><button type="button" class="button ghost small" data-session-action="export">↓ Сохранить доступ</button><button type="button" class="button ghost small" data-session-action="leave">Отключиться</button></div></div>${leavePrompt ? `<div class="session-disconnect-confirm" role="alert"><p>Отключить этот браузер от сессии? Персонаж и награды останутся в комнате. Для возвращения сохрани доступ.</p><div><button type="button" class="button ghost small" data-session-action="export">Сохранить доступ</button><button type="button" class="button ghost small" data-session-action="leave-cancel">Остаться</button><button type="button" class="button danger small" data-session-action="leave-confirm">Отключиться</button></div></div>` : ''}`;
   }
   function joinMarkup() {
     if (!ONLINE) return `<section class="panel session-offline"><div class="eyebrow">ЛИЧНЫЕ ИНСТРУМЕНТЫ ДОСТУПНЫ</div><h2>Сессия работает в интернете.</h2><p>Открой онлайн-терминал по приглашению ведущего, чтобы получать миссии и награды. Персонаж, заметки и кубики в этом файле работают без соединения.</p></section>`;
@@ -131,11 +131,13 @@
     if (summaryNode) summaryNode.outerHTML = summary();
     const rewardNode = document.querySelector('[data-session-character-rewards]');
     if (rewardNode) rewardNode.outerHTML = stats();
+    notifySession();
   }
   function updateStatusOnly() {
     for (const node of document.querySelectorAll('[data-session-status]')) node.outerHTML = statusMarkup();
     const feedback = document.querySelector('[data-session-form-feedback]');
     if (feedback) feedback.textContent = connectionMessage;
+    notifySession();
   }
   async function api(path, { method = 'GET', body, token } = {}) {
     const controller = new AbortController();
@@ -172,7 +174,7 @@
         if (access !== credential || currentRoomId() !== roomId) return;
         if (!data.room || !data.room.self) throw new Error('Комната прислала неполные данные. Повтори подключение.');
         const changed = !snapshot || snapshot.revision !== data.room.revision || connection !== 'live';
-        snapshot = data.room;
+        if (!snapshot || data.room.revision >= snapshot.revision) snapshot = data.room;
         access.playerId = data.room.self.id;
         access.name = data.room.self.name;
         writeAccess(access);
@@ -297,6 +299,28 @@
     access = readAccess(); snapshot = null; lastSuccess = 0; connection = 'idle'; connectionMessage = ''; requestedRoom = access?.roomId || requestedRoom;
     updateMounted(); refresh();
   });
+  function notifySession() {
+    window.dispatchEvent(new CustomEvent('niti:session-update', {detail: {room: ONLINE && hasCurrentAccess() ? snapshot : null, connection: ONLINE ? connection : 'offline'}}));
+  }
+  async function inventoryAction(operation) {
+    if (!ONLINE || !hasCurrentAccess()) throw new Error('Для вещей общей группы подключись к игровой сессии.');
+    const credential = access;
+    try {
+      const data = await api('/' + encodeURIComponent(credential.roomId) + '/inventory', {method: 'POST', token: credential.playerToken, body: operation});
+      if (access !== credential || currentRoomId() !== credential.roomId) throw new Error('Комната изменилась. Открой нужную сессию.');
+      if (!data.room || !data.room.self) throw new Error('Не удалось получить обновлённый инвентарь.');
+      if (!snapshot || data.room.revision >= snapshot.revision) snapshot = data.room;
+      connection = 'live'; connectionMessage = ''; lastSuccess = Date.now();
+      updateMounted();
+      return snapshot;
+    } catch (error) {
+      if (error.status === 409 || error.status === 403) await refresh();
+      throw error;
+    }
+  }
+  window.playerSessionSnapshot = () => ONLINE && hasCurrentAccess() ? snapshot : null;
+  window.playerSessionConnection = () => ONLINE ? connection : 'offline';
+  window.playerSessionInventoryAction = inventoryAction;
   window.playerSessionPage = page;
   window.playerSessionSummary = summary;
   window.playerSessionStats = stats;

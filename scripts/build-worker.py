@@ -1,10 +1,11 @@
 from pathlib import Path
-import json, shutil, subprocess
+import json, shutil, subprocess, re
 
 root = Path(__file__).resolve().parent.parent
 subprocess.run(['python3', str(root/'build-offline.py')], cwd=root, check=True)
 files = [
     'index.html', 'player-app.js', 'player-session.js', 'player-session.css',
+    'player-sheet.js', 'player-sheet.css', 'player-inventory.js', 'player-inventory.css',
     'player.css', 'style.css', 'fallout.css', 'palette.css', 'terminal.js',
     'dice.js', 'dice.css', 'vault-art.svg', 'niti-player-offline.html',
 ]
@@ -12,7 +13,12 @@ types = {'.html':'text/html', '.js':'text/javascript', '.css':'text/css', '.svg'
 assets = {name: {'type': types[Path(name).suffix]+'; charset=utf-8', 'body': (root/'web'/name).read_text()} for name in files}
 asset_module = 'const assets = '+json.dumps(assets, ensure_ascii=False, separators=(',',':'))+';\n'
 (root/'worker/assets.js').write_text('export '+asset_module)
-api = (root/'worker/api.js').read_text().replace('export async function handleApi(', 'async function handleApi(')
+modules = []
+for name in ['item-catalog.js', 'inventory.js', 'api.js']:
+    module = (root/'worker'/name).read_text()
+    module = re.sub(r"(?m)^import[\s\S]*?from ['\"][^'\"]+['\"];?\n", '', module)
+    modules.append(module)
+api = '\n'.join(modules)
 entry = (root/'worker/index.js').read_text()
 entry = entry.replace("import { handleApi } from './api.js';\n", '').replace("import { assets } from './assets.js';\n", '')
 dist = root/'dist'

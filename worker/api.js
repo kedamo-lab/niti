@@ -1,3 +1,4 @@
+import { InventoryError, inventoryEnsure, inventoryItems, inventoryEquipment, inventoryHistory, inventoryApply } from './inventory.js';
 // Durable, capability-based session API. Only explicitly public mission fields
 // and announced rewards ever enter this service; the GM module stays elsewhere.
 const TABLE = 'niti_rooms';
@@ -127,7 +128,8 @@ function playerView(state, player) {
   return {
     id: player.id, name: player.name,
     xp: own.reduce((sum, event) => sum + event.xp, 0),
-    inventory: mergeItems(state.events.flatMap(event => event.items.filter(item => item.recipientId === player.id))),
+    inventory: inventoryItems(state, player.id),
+    equipment: inventoryEquipment(state, player.id),
   };
 }
 
@@ -145,7 +147,8 @@ function roomView(row, state, auth) {
     id: row.id, name: state.name, revision: row.revision,
     mission: state.mission, result: state.result,
     players: state.players.map(player => master ? playerView(state, player) : { id: player.id, name: player.name }),
-    sharedItems: mergeItems(state.events.flatMap(event => event.items.filter(item => item.recipientId === null))),
+    sharedItems: inventoryItems(state, null),
+    inventoryHistory: inventoryHistory(state, auth),
     completedMissions: state.completedMissions,
     awardedMissions: Object.keys(state.awardedMissions),
     events,
@@ -205,7 +208,7 @@ async function route(request, env, pathname) {
       .bind(roomId, masterHash, JSON.stringify(state), now, now).run();
     return { roomId, masterToken, room: roomView({ id: roomId, revision: 0 }, state, { role: 'master' }) };
   }
-  const match = /^\/api\/rooms\/([a-f0-9]{32})(?:\/(join|mission|result))?$/.exec(pathname);
+  const match = /^\/api\/rooms\/([a-f0-9]{32})(?:\/(join|mission|result|inventory))?$/.exec(pathname);
   if (!match) throw new ApiError(404, 'Адрес не найден.');
   const [, roomId, action] = match;
 
@@ -243,6 +246,15 @@ async function route(request, env, pathname) {
     masterOnly(auth);
     await env.DB.prepare(`DELETE FROM ${TABLE} WHERE id = ? AND master_hash = ?`).bind(roomId, row.master_hash).run();
     return { deleted: true };
+  }
+  if (action === 'inventory' && request.method === 'POST') {
+    const input = await body(request);
+    const mutation = await mutate(env, roomId, async (row, state) => {
+      const auth = await authenticate(request, row, state);
+      const outcome = await inventoryApply(state, auth, input);
+      return { ...outcome, auth };
+    });
+    return { duplicate: !!mutation.duplicate, room: roomView(mutation.row, mutation.state, mutation.auth) };
   }
   if (action === 'mission' && request.method === 'POST') {
     const input = await body(request);
@@ -282,6 +294,7 @@ async function route(request, env, pathname) {
       const createdAt = Date.now();
       const event = { eventId, missionId, resultId, summary, xp, items, complete: input.complete, createdAt, recipients: state.players.map(player => player.id) };
       state.events.push(event);
+      inventoryEnsure(state);
       if (xp > 0 || input.complete) state.awardedMissions[missionId] = { xp, eventId };
       if (input.complete) state.completedMissions[missionId] = { resultId, eventId };
       if (!completed) state.result = { missionId, resultId, summary, complete: input.complete, eventId, createdAt };
@@ -313,8 +326,8 @@ export async function handleApi(request, env, options = {}) {
     const result = await route(request, env, pathname);
     return new Response(JSON.stringify(result), { status: 200, headers });
   } catch (error) {
-    const status = error instanceof ApiError ? error.status : 503;
-    const message = error instanceof ApiError ? error.message : 'Общая сессия временно недоступна. Повторите действие.';
+    const status = (error instanceof ApiError || error instanceof InventoryError) ? error.status : 503;
+    const message = (error instanceof ApiError || error instanceof InventoryError) ? error.message : 'Общая сессия временно недоступна. Повторите действие.';
     return new Response(JSON.stringify({ error: message }), { status, headers });
   }
 }
