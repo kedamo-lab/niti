@@ -6,7 +6,7 @@ const INVENTORY_SLOTS = ['weapon', 'armor', 'extra1', 'extra2'];
 const INVENTORY_WEAPONS = new Set(['melee', 'unarmed', 'light', 'heavy', 'energy', 'throwing', 'thrown', 'explosive', 'weapon']);
 const INVENTORY_STAT_KEYS = ['damage', 'damageFormula', 'apCost', 'range', 'rangeFormula', 'rangeBonus', 'ammo', 'magazine', 'minStrength', 'damageType', 'modifiers', 'armorClass', 'resistances', 'weight', 'price', 'reloadAp', 'slots', 'effect'];
 const INVENTORY_RESISTANCE_KEYS = ['normal', 'laser', 'fire', 'plasma', 'electric', 'explosive'];
-const INVENTORY_CATEGORY_LABELS = { melee: 'Холодное оружие', unarmed: 'Рукопашное оружие', light: 'Лёгкое оружие', heavy: 'Тяжёлое оружие', energy: 'Энергетическое оружие', throwing: 'Метательное оружие', thrown: 'Метательное оружие', explosive: 'Взрывчатка', armor: 'Броня', consumable: 'Расходуемый предмет', ammo: 'Боеприпасы', tool: 'Инструмент', craft: 'Материал для крафта', misc: 'Предмет', other: 'Предмет', food: 'Еда', medicine: 'Лекарство', weapon: 'Оружие' };
+const INVENTORY_CATEGORY_LABELS = { melee: 'Холодное оружие', unarmed: 'Рукопашное оружие', light: 'Лёгкое оружие', heavy: 'Тяжёлое оружие', energy: 'Энергетическое оружие', throwing: 'Метательное оружие', thrown: 'Метательное оружие', explosive: 'Взрывчатка', armor: 'Броня', consumable: 'Расходуемый предмет', ammo: 'Боеприпасы', currency: 'Валюта', tool: 'Инструмент', craft: 'Материал для крафта', misc: 'Предмет', other: 'Предмет', food: 'Еда', medicine: 'Лекарство', weapon: 'Оружие' };
 const INVENTORY_MAX_OPERATIONS = 3000;
 const INVENTORY_MAX_LOTS = 1000;
 const INVENTORY_CATALOG = new Map(ITEM_CATALOG.map(item => [item.id, item]));
@@ -151,7 +151,7 @@ function invLegacyLot(stock, item) {
   let id = item.id;
   if (stock.lots.some(entry => entry.id === id)) id = id.slice(0, 110) + '-' + invStableSuffix(legacyKey);
   while (stock.lots.some(entry => entry.id === id)) id += 'x';
-  lot = { id, legacyKey, name: item.name, ...invDefinition(item.name), balances: {} };
+  lot = { id, legacyKey, name: item.name, ...invDefinition(item.name, item.catalogId || null), balances: {} };
   stock.lots.push(lot);
   return lot;
 }
@@ -196,6 +196,25 @@ export function inventoryEquipment(state, playerId) {
   const stock = inventoryEnsure(state);
   const equipment = stock.equipment[playerId] || {};
   return Object.fromEntries(INVENTORY_SLOTS.map(slot => [slot, equipment[slot] || null]));
+}
+// Called inside the same room CAS transaction that revokes a character's access.
+// Keep lots/imported event IDs so legacy awards cannot recreate an old owner.
+export function inventoryDeleteCharacter(state, player, operationId, auth) {
+  const stock = inventoryEnsure(state);
+  let quantity = 0, kinds = 0;
+  for (const lot of stock.lots) {
+    const owned = invBalance(lot, player.id);
+    if (owned < 1) continue;
+    invSetBalance(lot, null, invBalance(lot, null) + owned);
+    invSetBalance(lot, player.id, 0);
+    quantity += owned;
+    kinds += 1;
+  }
+  delete stock.equipment[player.id];
+  if (quantity > 0 && stock.operations.length < INVENTORY_MAX_OPERATIONS) {
+    stock.operations.push({ id: 'character-delete:' + operationId, fingerprint: 'character-delete:' + player.id, actorId: auth.role === 'master' ? 'master' : player.id, actorName: auth.role === 'master' ? 'Мастер' : player.name, action: 'return', itemId: null, itemName: 'Все вещи персонажа «' + player.name + '»', quantity, slot: null, recipientId: null, createdAt: Date.now() });
+  }
+  return { quantity, kinds };
 }
 export function inventoryHistory(state, auth) {
   const master = auth.role === 'master';

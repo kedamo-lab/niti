@@ -70,7 +70,7 @@
     return src ? `<img class="inv-item-image ${cls}" src="${e(src)}" alt="" loading="lazy">` : `<svg class="inv-item-symbol ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${symbol(item)}</svg>`;
   }
   function categoryLabel(item) {
-    return item.categoryLabel || ({weapon:'Оружие', melee:'Холодное оружие', unarmed:'Рукопашное оружие', light:'Лёгкое оружие', heavy:'Тяжёлое оружие', throwing:'Метательное оружие', thrown:'Метательное оружие', explosive:'Взрывчатка', energy:'Энергетическое оружие', armor:'Броня', medicine:'Медицина', food:'Провизия', ammo:'Боеприпасы', consumable:'Расходный предмет', tool:'Инструмент', craft:'Материал для крафта', misc:'Предмет'}[item.category]) || 'Предмет';
+    return item.categoryLabel || ({weapon:'Оружие', melee:'Холодное оружие', unarmed:'Рукопашное оружие', light:'Лёгкое оружие', heavy:'Тяжёлое оружие', throwing:'Метательное оружие', thrown:'Метательное оружие', explosive:'Взрывчатка', energy:'Энергетическое оружие', armor:'Броня', medicine:'Медицина', food:'Провизия', ammo:'Боеприпасы', currency:'Крышки и деньги', consumable:'Расходный предмет', tool:'Инструмент', craft:'Материал для крафта', misc:'Предмет'}[item.category]) || 'Предмет';
   }
   function button(label, action, extra = '', primary = false) {
     return `<button type="button" class="button ${primary ? 'primary' : 'ghost'} small" data-inv-action="${action}" ${extra}>${label}</button>`;

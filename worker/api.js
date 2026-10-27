@@ -1,4 +1,5 @@
-import { InventoryError, inventoryEnsure, inventoryItems, inventoryEquipment, inventoryHistory, inventoryApply } from './inventory.js';
+import { InventoryError, inventoryEnsure, inventoryItems, inventoryEquipment, inventoryHistory, inventoryApply, inventoryDeleteCharacter } from './inventory.js';
+import { ITEM_CATALOG } from './item-catalog.js';
 // Durable, capability-based session API. Only explicitly public mission fields
 // and announced rewards ever enter this service; the GM module stays elsewhere.
 const TABLE = 'niti_rooms';
@@ -11,9 +12,12 @@ const encoder = new TextEncoder();
 const MAX_BODY = 32768;
 const MAX_PLAYERS = 20;
 const MAX_EVENTS = 400;
+// The level thresholds printed in the supplied rulebook (level one is the floor).
+const CHARACTER_XP_THRESHOLDS = [0, 200, 400, 800, 1400, 2200, 3200, 4400, 5800, 7400, 9100, 11000, 13100, 15400, 17900, 20600];
+const CHARACTER_MAX_OPERATIONS = 1000;
 
 class ApiError extends Error {
-  constructor(status, message) { super(message); this.status = status; }
+  constructor(status, message, code) { super(message); this.status = status; if (code) this.code = code; }
 }
 
 function text(value, max, required = true) {
@@ -108,7 +112,9 @@ function publicItems(input, state) {
     if (recipientId && !state.players.some(player => player.id === recipientId)) {
       throw new ApiError(400, 'Получатель предмета не найден.');
     }
-    return { id: key(item?.id), name: text(item.name, 180), quantity: integer(item.quantity, 1, 9999), recipientId };
+    const catalogId = item?.catalogId == null || item.catalogId === '' ? null : key(item.catalogId);
+    if (catalogId && !ITEM_CATALOG.some(entry => entry.id === catalogId)) throw new ApiError(400, 'Предмет не найден в каталоге.');
+    return { id: key(item?.id), name: text(item.name, 180), quantity: integer(item.quantity, 1, 9999), recipientId, ...(catalogId ? { catalogId } : {}) };
   });
 }
 
@@ -123,11 +129,39 @@ function mergeItems(items) {
   return [...groups.values()];
 }
 
-function playerView(state, player) {
+function characterLevel(totalXP) {
+  let level = 1;
+  for (let next = 2; next < CHARACTER_XP_THRESHOLDS.length; next += 1) {
+    if (totalXP >= CHARACTER_XP_THRESHOLDS[next]) level = next;
+  }
+  return level;
+}
+
+function playerRawXP(state, player) {
   const own = state.events.filter(event => event.recipients.includes(player.id));
+  return own.reduce((sum, event) => sum + event.xp, 0) + (player.characterXP || 0);
+}
+
+function characterView(state, player) {
+  const rawXP = playerRawXP(state, player);
+  const baseXP = player.character?.baseXP || 0;
+  const beacon = player.character?.beacon === true;
+  const earnedXP = rawXP * (beacon ? 0.5 : 1);
+  const totalXP = baseXP + earnedXP;
+  const level = characterLevel(totalXP);
+  return {
+    name: player.name, synced: !!player.character, baseXP, beacon,
+    rawXP, earnedXP, totalXP, level,
+    nextXP: CHARACTER_XP_THRESHOLDS[level + 1] ?? null,
+    updatedAt: player.character?.updatedAt || null,
+  };
+}
+
+function playerView(state, player) {
   return {
     id: player.id, name: player.name,
-    xp: own.reduce((sum, event) => sum + event.xp, 0),
+    xp: playerRawXP(state, player),
+    character: characterView(state, player),
     inventory: inventoryItems(state, player.id),
     equipment: inventoryEquipment(state, player.id),
   };
@@ -138,7 +172,7 @@ function roomView(row, state, auth) {
   const currentPlayer = state.players.find(player => player.id === auth.playerId);
   const events = state.events.map(event => ({
     id: event.eventId, eventId: event.eventId, missionId: event.missionId,
-    resultId: event.resultId, summary: event.summary, xp: event.xp,
+    resultId: event.resultId, summary: event.summary, xp: event.xp, xpScope:event.xpScope || 'mission',
     items: event.items.filter(item => master || item.recipientId === null || item.recipientId === auth.playerId),
     complete: event.complete, createdAt: event.createdAt,
     ...(master ? { recipients: event.recipients } : { awardedToSelf: event.recipients.includes(auth.playerId) }),
@@ -162,7 +196,7 @@ async function load(env, id) {
   return { row, state: JSON.parse(row.state_json) };
 }
 
-async function authenticate(request, row, state) {
+async function authenticate(request, row, state, allowDeleted = false) {
   const header = request.headers.get('authorization') || '';
   const token = /^Bearer ([A-Za-z0-9_-]{32,256})$/.exec(header)?.[1];
   if (!token) throw new ApiError(401, 'Нужен ключ сессии.');
@@ -170,6 +204,11 @@ async function authenticate(request, row, state) {
   if (equalHash(digest, row.master_hash)) return { role: 'master' };
   const player = state.players.find(item => equalHash(digest, item.tokenHash));
   if (player) return { role: 'player', playerId: player.id };
+  const deleted = (state.deletedPlayers || []).find(item => equalHash(digest, item.tokenHash));
+  if (deleted) {
+    if (allowDeleted) return { role: 'deleted-player', playerId: deleted.id };
+    throw new ApiError(401, 'Этот персонаж удалён. Создайте нового персонажа для подключения.', 'CHARACTER_DELETED');
+  }
   throw new ApiError(401, 'Ключ сессии не подходит.');
 }
 
@@ -208,7 +247,7 @@ async function route(request, env, pathname) {
       .bind(roomId, masterHash, JSON.stringify(state), now, now).run();
     return { roomId, masterToken, room: roomView({ id: roomId, revision: 0 }, state, { role: 'master' }) };
   }
-  const match = /^\/api\/rooms\/([a-f0-9]{32})(?:\/(join|mission|result|inventory))?$/.exec(pathname);
+  const match = /^\/api\/rooms\/([a-f0-9]{32})(?:\/(join|mission|result|inventory|characters))?$/.exec(pathname);
   if (!match) throw new ApiError(404, 'Адрес не найден.');
   const [, roomId, action] = match;
 
@@ -222,11 +261,15 @@ async function route(request, env, pathname) {
     if (!/^[A-Za-z0-9_-]{32,256}$/.test(playerToken)) throw new ApiError(400, 'Нужен случайный ключ игрока.');
     const tokenHash = await hash(playerToken);
     const mutation = await mutate(env, roomId, (row, state) => {
+      if ((state.deletedPlayers || []).some(player => equalHash(player.joinHash, joinHash) || equalHash(player.tokenHash, tokenHash))) {
+        throw new ApiError(410, 'Этот персонаж удалён. Подключитесь заново с новым персонажем.', 'CHARACTER_DELETED');
+      }
       const existing = state.players.find(player => equalHash(player.joinHash, joinHash));
       if (existing) {
         if (!equalHash(existing.tokenHash, tokenHash)) throw new ApiError(409, 'Ключ подключения уже использован.');
         return { changed: false, auth: { role: 'player', playerId: existing.id }, duplicate: true };
       }
+      if (state.players.some(player => equalHash(player.tokenHash, tokenHash))) throw new ApiError(409, 'Ключ игрока уже использован.');
       if (state.players.length >= MAX_PLAYERS) throw new ApiError(409, 'В сессии уже 20 игроков.');
       const playerId = randomToken(12);
       state.players.push({ id: playerId, name, tokenHash, joinHash, joinedAt: Date.now() });
@@ -246,6 +289,72 @@ async function route(request, env, pathname) {
     masterOnly(auth);
     await env.DB.prepare(`DELETE FROM ${TABLE} WHERE id = ? AND master_hash = ?`).bind(roomId, row.master_hash).run();
     return { deleted: true };
+  }
+  if (action === 'characters' && request.method === 'POST') {
+    const input = await body(request);
+    const characterAction = text(input.action, 20);
+    if (!['sync', 'level', 'delete'].includes(characterAction)) throw new ApiError(400, 'Неизвестное действие с персонажем.');
+    const allowedFields = characterAction === 'sync' ? ['action', 'character'] : characterAction === 'level' ? ['action', 'playerId', 'targetLevel', 'operationId'] : ['action', 'playerId', 'operationId'];
+    if (Object.keys(input).some(field => !allowedFields.includes(field))) throw new ApiError(400, 'Неизвестное поле действия с персонажем.');
+    const operationId = characterAction === 'sync' ? null : key(input.operationId);
+    if (operationId && operationId.length < 16) throw new ApiError(400, 'Нужен случайный идентификатор действия.');
+    const mutation = await mutate(env, roomId, async (row, state) => {
+      const auth = await authenticate(request, row, state, characterAction === 'delete');
+      if (characterAction === 'sync') {
+        if (auth.role !== 'player') throw new ApiError(403, 'Анкету синхронизирует её владелец.');
+        const source = input.character;
+        if (!source || typeof source !== 'object' || Array.isArray(source) || Object.keys(source).some(field => !['name', 'baseXP', 'beacon'].includes(field))) throw new ApiError(400, 'Некорректные данные анкеты.');
+        const baseXP = integer(source.baseXP, 0, Number.MAX_SAFE_INTEGER - 1000000000);
+        if (typeof source.beacon !== 'boolean') throw new ApiError(400, 'Укажите наличие особенности «Светоч».');
+        const name = source.name === undefined ? '' : text(source.name, 80, false);
+        const player = state.players.find(item => item.id === auth.playerId);
+        if (player.character?.baseXP === baseXP && player.character?.beacon === source.beacon && (!name || player.name === name)) return { changed: false, auth };
+        player.character = { version: 1, baseXP, beacon: source.beacon, updatedAt: Date.now() };
+        if (name) player.name = name;
+        return { changed: true, auth };
+      }
+      const playerId = input.playerId == null && characterAction === 'delete' ? auth.playerId : key(input.playerId);
+      if (characterAction === 'level') masterOnly(auth);
+      if (characterAction === 'delete' && auth.role !== 'master' && auth.playerId !== playerId) throw new ApiError(403, 'Удалить персонажа может его владелец или мастер.');
+      const targetLevel = characterAction === 'level' ? integer(input.targetLevel, 2, CHARACTER_XP_THRESHOLDS.length - 1) : null;
+      const fingerprint = await hash(JSON.stringify({ action: characterAction, playerId, targetLevel }));
+      const operations = state.characterOperations || [];
+      const actorId = auth.role === 'master' ? 'master' : auth.playerId;
+      const prior = operations.find(operation => operation.id === operationId);
+      if (prior) {
+        if (prior.actorId !== actorId || prior.fingerprint !== fingerprint) throw new ApiError(409, 'Идентификатор действия уже использован.');
+        return { changed: false, auth, duplicate: true, deleted: characterAction === 'delete', playerId, appliedXp: prior.appliedXp || 0, returnedItems: prior.returnedItems || 0 };
+      }
+      if (auth.role === 'deleted-player') throw new ApiError(401, 'Этот персонаж уже удалён.', 'CHARACTER_DELETED');
+      if (operations.length >= CHARACTER_MAX_OPERATIONS) throw new ApiError(409, 'Журнал персонажей заполнен. Начните новую сессию.');
+      const player = state.players.find(item => item.id === playerId);
+      if (!player) throw new ApiError(404, 'Персонаж не найден.');
+      const operation = { id: operationId, actorId, fingerprint, action: characterAction, playerId, createdAt: Date.now() };
+      if (characterAction === 'level') {
+        if (!player.character) throw new ApiError(409, 'Игроку нужно открыть обновлённую анкету онлайн, чтобы синхронизировать опыт и особенности.');
+        const progress = characterView(state, player);
+        if (targetLevel <= progress.level) throw new ApiError(409, 'Выберите уровень выше текущего.');
+        const rate = progress.beacon ? 0.5 : 1;
+        const appliedXp = Math.ceil((CHARACTER_XP_THRESHOLDS[targetLevel] - progress.totalXP) / rate);
+        if (!Number.isSafeInteger(appliedXp) || appliedXp < 1) throw new ApiError(409, 'Не удалось рассчитать повышение уровня.');
+        player.characterXP = (player.characterXP || 0) + appliedXp;
+        player.character.updatedAt = operation.createdAt;
+        operation.appliedXp = appliedXp;
+      } else {
+        const returned = inventoryDeleteCharacter(state, player, operationId, auth);
+        operation.returnedItems = returned.quantity;
+        state.deletedPlayers = [...(state.deletedPlayers || []), { id: player.id, name: player.name, tokenHash: player.tokenHash, joinHash: player.joinHash, deletedAt: operation.createdAt }];
+        state.players = state.players.filter(item => item.id !== player.id);
+      }
+      state.characterOperations = [...operations, operation];
+      return { changed: true, auth, deleted: characterAction === 'delete', playerId, appliedXp: operation.appliedXp || 0, returnedItems: operation.returnedItems || 0 };
+    });
+    return {
+      duplicate: !!mutation.duplicate,
+      ...(mutation.deleted ? { deleted: true, playerId: mutation.playerId, returnedItems: mutation.returnedItems } : {}),
+      ...(characterAction === 'level' ? { appliedXp: mutation.appliedXp, playerId: mutation.playerId } : {}),
+      ...(!mutation.deleted || mutation.auth.role === 'master' ? { room: roomView(mutation.row, mutation.state, mutation.auth) } : {}),
+    };
   }
   if (action === 'inventory' && request.method === 'POST') {
     const input = await body(request);
@@ -278,6 +387,8 @@ async function route(request, env, pathname) {
     const eventId = key(input.eventId), missionId = key(input.missionId), resultId = key(input.resultId);
     const summary = text(input.summary, 2000);
     const requestedXp = integer(input.xp, 0, 100000);
+    const xpScope = input.xpScope ?? 'mission';
+    if (!['mission', 'event'].includes(xpScope) || (xpScope === 'event' && input.complete !== false)) throw new ApiError(400, 'Некорректный способ начисления опыта.');
     if (typeof input.complete !== 'boolean') throw new ApiError(400, 'Укажите завершение миссии.');
     const mutation = await mutate(env, roomId, async (row, state) => {
       const auth = await authenticate(request, row, state);
@@ -290,12 +401,12 @@ async function route(request, env, pathname) {
       if (state.mission?.id !== missionId) throw new ApiError(409, 'Сначала покажите эту миссию игрокам.');
       if (state.events.length >= MAX_EVENTS) throw new ApiError(409, 'Журнал сессии заполнен. Начните новую сессию.');
       const items = publicItems(input.items ?? [], state);
-      const xp = Object.hasOwn(state.awardedMissions, missionId) ? 0 : requestedXp;
+      const xp = xpScope === 'event' ? requestedXp : Object.hasOwn(state.awardedMissions, missionId) ? 0 : requestedXp;
       const createdAt = Date.now();
-      const event = { eventId, missionId, resultId, summary, xp, items, complete: input.complete, createdAt, recipients: state.players.map(player => player.id) };
+      const event = { eventId, missionId, resultId, summary, xp, items, complete: input.complete, createdAt, recipients: state.players.map(player => player.id), xpScope };
       state.events.push(event);
       inventoryEnsure(state);
-      if (xp > 0 || input.complete) state.awardedMissions[missionId] = { xp, eventId };
+      if ((xp > 0 && xpScope === 'mission') || input.complete) state.awardedMissions[missionId] = { xp, eventId };
       if (input.complete) state.completedMissions[missionId] = { resultId, eventId };
       if (!completed) state.result = { missionId, resultId, summary, complete: input.complete, eventId, createdAt };
       return { changed: true, auth, appliedXp: xp };
@@ -328,6 +439,6 @@ export async function handleApi(request, env, options = {}) {
   } catch (error) {
     const status = (error instanceof ApiError || error instanceof InventoryError) ? error.status : 503;
     const message = (error instanceof ApiError || error instanceof InventoryError) ? error.message : 'Общая сессия временно недоступна. Повторите действие.';
-    return new Response(JSON.stringify({ error: message }), { status, headers });
+    return new Response(JSON.stringify({ error: message, ...(error instanceof ApiError && error.code ? { code: error.code } : {}) }), { status, headers });
   }
 }

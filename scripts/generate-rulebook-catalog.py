@@ -2,6 +2,7 @@ from pathlib import Path
 from zipfile import ZipFile
 from lxml import etree as E
 import json,base64,re,hashlib,copy
+from fallout2_catalog import extend_catalog
 root=Path(__file__).resolve().parent.parent;gm=Path('/workspace/sites/niti-storydesk/dist')
 current=(root/'worker/item-catalog.js').read_text();prefix='export const ITEM_CATALOG = ';sep=';\nexport const REWARD_ALIASES = '
 raw,aliases=current[len(prefix):].split(sep,1)
@@ -81,6 +82,7 @@ with ZipFile(book)as z:
    i['craftRecipes']=[{'ingredients':r['ingredients'],'result':r['result']}for r in related]
    i['craftable']=True
    i['stats']['effect']='\n'.join(filter(None,[i['stats'].get('effect'),'\n'.join(' + '.join(r['ingredients'])+' → '+r['result']for r in related)]))
+items=extend_catalog(items,root)
 for i in items:
  if i['category'] in weaponcats:assert i['stats'].get('damageType')
  if i['category'] in weaponcats and i['stats'].get('ammo'):assert i['stats']['reloadAp']==2

@@ -33,6 +33,11 @@
   let selectedTrait = '';
   let selectedPerk = '';
   let perkSearch = '';
+  let perkDialogSearch = '';
+  let perkDialogAvailableOnly = true;
+  let perkDialogSelection = '';
+  let promptTimer = 0;
+  let progressSignature = '';
 
   let rememberedRoom = null;
 
@@ -86,7 +91,8 @@
     const room = currentRoom();
     const armor = room ? equippedItems(room).find(item => item.equippedSlot === 'armor' || item.category === 'armor') || null
       : sheet.armor_name.trim() ? {name:sheet.armor_name,stats:{armorClass:RULES.integer(sheet.armor_ac) || 0}} : null;
-    return RULES.calculate(sheet, {sessionXP: room?.self?.xp || 0, armor});
+    const sessionXP=room?.self ? room.self.xp || 0 : sheet.rules.progress?.sessionXP || 0;
+    return RULES.calculate(sheet, {sessionXP, armor});
   }
   function applyCalculated(sheet, result = calculation(sheet)) {
     sheet.level = String(result.level);
@@ -121,7 +127,12 @@
     if (status) status.textContent = success ? (showNotice ? 'Анкета сохранена. Особенности закреплены на всю игру.' : 'Анкета сохранена в этом браузере.') : 'Не удалось сохранить. Скачай резервную копию.';
     if (showNotice && typeof toast === 'function') toast(success ? 'Анкета сохранена. Особенности закреплены.' : 'Браузер не сохранил анкету. Скачай копию данных.');
     if (showNotice && success) refreshSelectors();
+    if (success) syncCharacter(sheet, result);
     return success;
+  }
+  function syncCharacter(sheet=currentSheet(), result=calculation(sheet)) {
+    if (typeof window.playerSessionSyncCharacter!=='function') return;
+    Promise.resolve(window.playerSessionSyncCharacter({name:sheet.name,baseXP:result.manualXP,beacon:sheet.rules.traits.includes('beacon')})).catch(()=>{});
   }
   function field(name, label, sheet, options = {}) {
     const attributes = `name="${name}" id="sheet-${name}" data-sheet-field="${name}" maxlength="${limitFor(name)}"`;
@@ -132,7 +143,10 @@
   }
   function xpBreakdown(sheet) {
     const result = calculation(sheet);
-    return `<small>Стартовый опыт: ${result.manualXP} · из сессии: +${result.serverXP}${result.earnedXP !== result.serverXP ? ` → +${result.earnedXP} («Светоч»)` : ''}<br>Всего: <b>${result.totalXP} XP</b>${result.nextXP ? ` · следующий уровень: ${result.nextXP} XP` : ' · достигнут конец таблицы (15-й уровень)'}<br>В поле — уже полученный опыт до сессии.</small>`;
+    return `<small>До сессии: ${result.manualXP} · получено: +${result.serverXP}${result.earnedXP !== result.serverXP ? ` → +${result.earnedXP} («Светоч»)` : ''}<br>${result.nextXP ? `До следующего уровня: <b>${Math.max(0,result.nextXP-result.totalXP)} XP</b>` : 'Достигнут конец таблицы (15-й уровень)'}${!currentRoom() && sheet.rules.progress?.sessionXP ? '<br>Последний полученный опыт сохранён для работы без связи.' : ''}</small>`;
+  }
+  function experienceMarkup(sheet,result=calculation(sheet)) {
+    return `<div class="sheet-field sheet-xp-field"><label for="sheet-experience-total">Опыт · всего</label><input class="input sheet-xp-total" id="sheet-experience-total" value="${result.totalXP}" readonly aria-readonly="true" aria-describedby="sheet-xp-help"><span class="sheet-xp-breakdown" id="sheet-xp-help" data-sheet-xp>${xpBreakdown(sheet)}</span><details class="sheet-xp-baseline"><summary>Опыт до сессии</summary>${field('experience','Уже заработано до подключения',sheet,{numeric:true})}<small>Награды ведущего добавляются автоматически. Повторно вписывать их сюда не нужно.</small></details></div>`;
   }
   function sectionTitle(title, extra = '') { return `<div class="sheet-section-title"><h2>${title}</h2>${extra}</div>`; }
   function specialMarkup(sheet) {
@@ -210,11 +224,116 @@
     if (!concept && !description) return '';
     return `<details class="sheet-legacy-details"><summary>Личные детали из прежнего листа</summary>${concept ? `<p><strong>Роль / концепция:</strong> ${escapeText(concept)}</p>` : ''}${description ? `<p class="prewrap">${escapeText(description)}</p>` : ''}</details>`;
   }
+  function progression(sheet=currentSheet()) {
+    if (!sheet.rules.progress) sheet.rules.progress=RULES.normalizeMeta(sheet.rules,sheet).progress;
+    return sheet.rules.progress;
+  }
+  function freePerks(result=calculation()) {
+    return Math.max(0,result.perkBudget-result.meta.perks.reduce((sum,entry)=>sum+entry.rank,0));
+  }
+  function progressMarkup(sheet=currentSheet(),result=calculation(sheet)) {
+    const progress=progression(sheet),available=freePerks(result);
+    return `<div class="sheet-advancement ${available ? 'has-perks' : ''}" data-sheet-advancement><div><span class="eyebrow">РАЗВИТИЕ ПЕРСОНАЖА</span><strong>Уровень ${result.level}${available ? ` · свободных перков: ${available}` : ''}</strong><p>${available ? 'Выбери перк с описанием и проверкой требований. Выбор можно отложить.' : 'Следующий выбор перка — на уровне '+(3*(result.perkBudget+1))+'. Новые очки навыков и S.P.E.C.I.A.L. доступны в анкете.'}</p></div>${available ? '<button type="button" class="button primary" data-sheet-progress-action="choose-perk">Выбрать перк ↗</button>' : ''}${progress.observedLevel>progress.acknowledgedLevel ? '<button type="button" class="button ghost small" data-sheet-progress-action="acknowledge">Повышение прочитано ✓</button>' : ''}</div>`;
+  }
+  function mountLevelNotice(sheet=currentSheet()) {
+    const progress=progression(sheet),unread=progress.observedLevel>progress.acknowledgedLevel;
+    let notice=document.getElementById('sheetProgressNotice');
+    if(!unread) {notice?.remove();return;}
+    if(!notice) {notice=document.createElement('aside');notice.id='sheetProgressNotice';notice.className='sheet-progress-notice';notice.setAttribute('role','status');notice.setAttribute('aria-label','Повышение уровня');document.body.append(notice);}
+    const markup=`<div><span>УРОВЕНЬ ПОВЫШЕН</span><strong>Теперь уровень ${progress.observedLevel}</strong><p>Анкета и доступные очки пересчитаны.</p></div><div><button type="button" class="button primary small" data-sheet-progress-action="open-sheet">Открыть анкету ↗</button><button type="button" class="button ghost small" data-sheet-progress-action="acknowledge" aria-label="Закрыть уведомление о повышении уровня">Понятно ✓</button></div>`;
+    if(notice.innerHTML!==markup)notice.innerHTML=markup;
+  }
+  function processProgress() {
+    if(typeof player==='undefined') return;
+    const sheet=currentSheet(),before=JSON.stringify(sheet),room=currentRoom(),progress=progression(sheet);
+    const key=room?.self ? room.id+':'+room.self.id : progress.characterKey || 'local';
+    if(progress.characterKey!==key) {
+      const initialLevel=RULES.levelForXP(Math.max(0,RULES.integer(sheet.experience) || 0));
+      Object.assign(progress,{characterKey:key,sessionXP:0,observedLevel:initialLevel,acknowledgedLevel:initialLevel,perkPromptBudget:0});
+    }
+    if(room?.self && Number.isSafeInteger(room.self.xp) && room.self.xp>=0)progress.sessionXP=room.self.xp;
+    const result=applyCalculated(sheet);
+    updateLegacyProfile(sheet,result);
+    if(result.level>progress.observedLevel) {
+      progress.observedLevel=result.level;
+      if(typeof toast==='function')toast(`Новый уровень: ${result.level}!${freePerks(result) ? ' Доступен выбор перка.' : ' Анкета пересчитана.'}`);
+    } else if(result.level<progress.observedLevel) {
+      // Correcting starting XP or an unlocked trait must not leave a stale notice.
+      progress.observedLevel=result.level;
+      progress.acknowledgedLevel=Math.min(progress.acknowledgedLevel,result.level);
+      progress.perkPromptBudget=Math.min(progress.perkPromptBudget,result.perkBudget);
+    }
+    if(before!==JSON.stringify(sheet) && typeof save==='function')save();
+    mountLevelNotice(sheet);
+    if(room?.self)syncCharacter(sheet,result);
+    const signature=key+':'+result.level+':'+freePerks(result)+':'+progress.perkPromptBudget;
+    if(signature!==progressSignature) {progressSignature=signature;clearTimeout(promptTimer);promptTimer=setTimeout(()=>maybePromptPerk(),120);}
+    return result;
+  }
+  function perkOptions(result=calculation()) {
+    return RULES.PERKS.map(perk=>{
+      const selected=result.meta.perks.find(entry=>entry.id===perk.id),rank=(selected?.rank || 0)+1;
+      return {perk,rank,reasons:RULES.eligibility(perk,result,rank)};
+    }).filter(option=>option.rank<=option.perk.ranks.max).sort((a,b)=>Number(a.reasons.length>0)-Number(b.reasons.length>0) || a.perk.level-b.perk.level || a.perk.name.localeCompare(b.perk.name,'ru'));
+  }
+  function refreshPerkDialog() {
+    const dialog=document.querySelector('[data-sheet-perk-dialog]');if(!dialog)return;
+    const result=calculation(),query=perkDialogSearch.toLocaleLowerCase('ru'),all=perkOptions(result);
+    const options=all.filter(option=>(!perkDialogAvailableOnly || !option.reasons.length) && (!query || (option.perk.name+' '+option.perk.description).toLocaleLowerCase('ru').includes(query)));
+    const list=dialog.querySelector('[data-perk-dialog-list]');
+    list.innerHTML=options.map(({perk,rank,reasons})=>`<button type="button" class="sheet-perk-option ${perkDialogSelection===perk.id ? 'is-selected' : ''}" data-perk-dialog-select="${perk.id}" aria-pressed="${perkDialogSelection===perk.id}"><strong>${escapeText(perk.name)}${rank>1 ? ' · ранг '+rank : ''}</strong><small>Уровень ${perk.level} · ${reasons.length ? 'Требования не выполнены' : 'Доступен'}</small></button>`).join('') || '<p class="sheet-rules-help">По этим условиям перков нет. Измени поиск или покажи все перки, чтобы посмотреть требования.</p>';
+    const selected=all.find(option=>option.perk.id===perkDialogSelection),preview=dialog.querySelector('[data-perk-dialog-preview]');
+    preview.innerHTML=selected ? `<span class="eyebrow">ПЕРК · РАНГ ${selected.rank} ИЗ ${selected.perk.ranks.max}</span><h3>${escapeText(selected.perk.name)}</h3><p>${escapeText(selected.perk.description)}</p><div class="sheet-perk-requirements"><strong>Требования</strong><p>Уровень ${selected.perk.level}${selected.perk.requirements.text ? '\n'+escapeText(selected.perk.requirements.text) : '\nБез дополнительных требований'}</p>${selected.reasons.length ? `<p class="sheet-warning">Пока недоступен: ${selected.reasons.map(escapeText).join(', ')}.</p>` : '<p class="sheet-perk-eligible">Все требования выполнены ✓</p>'}</div>` : '<div class="sheet-perk-preview-empty"><span aria-hidden="true">✦</span><h3>Твоя новая возможность</h3><p>Выбери перк в списке. Здесь появятся полное описание, требования и доступный ранг.</p></div>';
+    const count=dialog.querySelector('[data-perk-dialog-count]');if(count)count.textContent=freePerks(result);
+    const submit=document.querySelector('#dialogForm button[type="submit"]');if(submit){submit.textContent=selected ? 'Выбрать «'+selected.perk.name+'»' : 'Выбрать перк';submit.disabled=!selected || !!selected.reasons.length || !freePerks(result);}
+  }
+  function confirmDialogPerk() {
+    const sheet=currentSheet(),result=calculation(sheet),option=perkOptions(result).find(entry=>entry.perk.id===perkDialogSelection);
+    if(!option || option.reasons.length || !freePerks(result))return;
+    const selected=sheet.rules.perks.find(entry=>entry.id===option.perk.id);
+    if(selected)selected.rank++;else sheet.rules.perks.push({id:option.perk.id,rank:1});
+    applyCalculated(sheet);persist();refreshSelectors();updateSessionParts();
+    if(!freePerks()) {if(typeof closeModal==='function')closeModal();if(typeof toast==='function')toast('Перк выбран. Постоянные бонусы внесены в анкету.');}
+    else {perkDialogSelection='';refreshPerkDialog();}
+  }
+  function openPerkDialog() {
+    const sheet=currentSheet(),result=calculation(sheet);
+    if(!freePerks(result) || !document.getElementById('falloutSheetForm') || typeof modal!=='function' || document.getElementById('modalRoot')?.children.length)return;
+    progression(sheet).perkPromptBudget=Math.max(progression(sheet).perkPromptBudget,result.perkBudget);
+    if(typeof save==='function')save();
+    perkDialogSearch='';perkDialogAvailableOnly=true;perkDialogSelection='';
+    modal('Выбери новый перк',`<div class="sheet-perk-dialog" data-sheet-perk-dialog><p class="sheet-perk-dialog-intro">Уровень ${result.level}. Доступно выборов: <strong data-perk-dialog-count>${freePerks(result)}</strong>. Каждый выбор даёт один ранг перка. Можно выбрать позже — очки сохранятся.</p><div class="sheet-perk-dialog-filters"><label for="perk-dialog-search">Поиск по названию и описанию<input class="input" id="perk-dialog-search" data-perk-dialog-search placeholder="Например, лечение" maxlength="100"></label><label><input type="checkbox" data-perk-dialog-available checked>Только доступные</label></div><div class="sheet-perk-dialog-grid"><div class="sheet-perk-option-list" data-perk-dialog-list aria-label="Список перков"></div><article class="sheet-perk-dialog-preview" data-perk-dialog-preview aria-live="polite"></article></div></div>`,confirmDialogPerk);
+    document.querySelector('#modalRoot .modal')?.classList.add('sheet-advancement-modal');
+    const later=document.querySelector('#modalRoot .modal-footer [data-player-action="close-modal"]');if(later)later.textContent='Выбрать позже';
+    refreshPerkDialog();
+    document.getElementById('perk-dialog-search')?.focus();
+  }
+  function maybePromptPerk() {
+    if(!document.getElementById('falloutSheetForm'))return;
+    if(document.getElementById('modalRoot')?.children.length) {
+      if(!document.querySelector('[data-sheet-perk-dialog]'))promptTimer=setTimeout(()=>maybePromptPerk(),400);
+      return;
+    }
+    const result=calculation(),progress=progression();
+    if(freePerks(result) && result.perkBudget>progress.perkPromptBudget)openPerkDialog();
+  }
+  function confirmDeleteCharacter() {
+    if(typeof modal!=='function' || typeof window.playerDeleteCharacter!=='function')return;
+    const room=currentRoom();
+    modal('Удалить персонажа?',`<p>Анкета <strong>${escapeText(currentSheet().name || room?.self?.name || 'этого персонажа')}</strong> будет удалена.${room ? ' Персонаж также исчезнет из списка участников, а его вещи вернутся в общий тайник.' : ''}</p><p>Личные заметки останутся. Чтобы сохранить анкету, сначала скачай резервную копию.</p><p class="sheet-delete-feedback" data-sheet-delete-feedback role="status"></p>`,async()=>{
+      const submit=document.querySelector('#dialogForm button[type="submit"]');if(submit)submit.disabled=true;
+      const feedback=document.querySelector('[data-sheet-delete-feedback]');
+      try {await window.playerDeleteCharacter();if(typeof closeModal==='function')closeModal();}
+      catch(error) {if(feedback)feedback.textContent=error.message || 'Не удалось удалить персонажа. Попробуй ещё раз.';if(submit)submit.disabled=false;}
+    });
+    const submit=document.querySelector('#dialogForm button[type="submit"]');if(submit){submit.textContent='Удалить персонажа';submit.classList.add('danger');submit.classList.remove('primary');}
+  }
   function page() {
     const sheet = currentSheet();
     const result=applyCalculated(sheet);
+    queueMicrotask(()=>{processProgress();maybePromptPerk();});
     const heading = typeof head === 'function' ? head('ЛИЧНЫЙ ЛИСТ · ПРАВИЛА ПУСТОШИ', 'Мой персонаж.', 'Характеристики считаются по правилам. Обучение навыкам и текущее здоровье — под твоим контролем.') : '<h1>Мой персонаж.</h1>';
-    return heading + `<form class="panel fallout-sheet" id="falloutSheetForm"><div class="sheet-masthead"><div class="sheet-brand"><h2>Fallout</h2><small>ПЕРСОНАЛЬНОЕ ДЕЛО ВЫЖИВШЕГО</small></div><span class="sheet-document-id">S.P.E.C.I.A.L. // 2207<br>АВТОМАТИЧЕСКИЙ РАСЧЁТ ПО ПРАВИЛАМ</span></div><div class="sheet-top"><div class="sheet-identity">${field('name', 'Имя', sheet)}${field('gender', 'Пол', sheet)}${field('age', 'Возраст', sheet, {numeric:true})}</div><div class="sheet-combat-summary">${field('initiative', 'Инициатива · авто', sheet, {readonly:true})}${field('action_points', 'Очки действия · авто', sheet, {readonly:true,after:`<small data-movement-ap>${result.movementAP ? '+'+result.movementAP+' ОД только на передвижение' : 'Общие ОД на ход'}</small>`})}${field('armor_class', 'Класс брони · авто', sheet, {readonly:true})}${field('experience', 'Опыт до сессии', sheet, {numeric:true, wrapClass:'sheet-xp-field', after:`<span class="sheet-xp-breakdown" data-sheet-xp>${xpBreakdown(sheet)}</span>`})}${field('level', 'Уровень · авто', sheet, {readonly:true})}<label class="sheet-field" for="sheet-health-current"><span>Здоровье · текущее / максимум</span><span class="sheet-health-control"><input class="input" type="number" step="1" inputmode="numeric" id="sheet-health-current" data-health-current aria-label="Текущее здоровье" value="${result.currentHP===null?'':result.currentHP}"><output data-health-max>/ ${result.maxHP}</output></span><small>Максимум считается; текущее не лечится при повышении уровня.</small></label></div></div><div class="sheet-rule-notices" data-rules-warnings aria-live="polite">${warningsMarkup(result)}</div><div class="sheet-body">${specialMarkup(sheet)}<div class="sheet-notes-column"><section class="sheet-notebox sheet-traits" id="sheetTraits">${traitMarkup(sheet)}</section><section class="sheet-notebox sheet-perks" id="sheetPerks">${perkMarkup(sheet)}</section><section class="sheet-notebox sheet-wounds">${sectionTitle('Ранения')}${field('wounds', '<span class="sr-only">Ранения</span>', sheet, {multiline:true, rows:6})}</section>${legacyNotes()}</div>${skillsMarkup(sheet)}</div><div id="falloutSheetEquipment">${equipmentMarkup(sheet)}</div><details class="sheet-formulas"><summary>Как считается анкета</summary><p>Модификатор S.P.E.C.I.A.L. = итог − 5. Максимум здоровья = 15 + 3 × В + (уровень − 1) × В + бонусы. ОД = 5 + ⌊Л / 2⌋ + бонусы. Инициатива = Восприятие + d20; кубик бросается в игре.</p><p>КБ = КБ экипированной брони + бонус ловкости + постоянные бонусы. Без брони бонус равен ловкости; кожаная куртка — ⌊Л/2⌋, кожаная боевая куртка — ⌊Л/3⌋, кожаная броня — ⌊Л/4⌋, кожаная броня МК2 — ⌊Л/6⌋. «Камикадзе» исключает бонус ловкости к КБ и прибавляет ловкость к инициативе.</p><p>В таблице опыта: 1 — 200; 2 — 400; 3 — 800; 4 — 1400; 5 — 2200; 6 — 3200; 7 — 4400; 8 — 5800; 9 — 7400; 10 — 9100; 11 — 11000; 12 — 13100; 13 — 15400; 14 — 17900; 15 — 20600. Создание начинается с 1-го уровня: при 0–399 XP показан 1-й уровень. Выше 15-го формулы опыта в файле нет.</p><p>Стартовый опыт — уже полученная сумма. «Светоч» делит новый опыт сессии на два; округление в правилах не указано, поэтому сохраняется точная половина. Серверная запись опыта остаётся исходной.</p></details><div class="sheet-footer"><button class="button primary" type="submit">Сохранить анкету ↗</button><span class="sheet-save-status" id="falloutSheetSaveStatus" role="status">Изменения сохраняются автоматически в этом браузере.</span></div><p class="sheet-storage-note">Расчёты — по твоим «Правилам игры» и «Перкам». Лист сохраняется в браузере и входит в резервную копию. Предметы и опыт сессии хранятся отдельно.</p></form>`;
+    return heading + `<form class="panel fallout-sheet" id="falloutSheetForm"><div class="sheet-masthead"><div class="sheet-brand"><h2>Fallout</h2><small>ПЕРСОНАЛЬНОЕ ДЕЛО ВЫЖИВШЕГО</small></div><span class="sheet-document-id">S.P.E.C.I.A.L. // 2207<br>АВТОМАТИЧЕСКИЙ РАСЧЁТ ПО ПРАВИЛАМ</span></div><div class="sheet-top"><div class="sheet-identity">${field('name', 'Имя', sheet)}${field('gender', 'Пол', sheet)}${field('age', 'Возраст', sheet, {numeric:true})}</div><div class="sheet-combat-summary">${field('initiative', 'Инициатива · авто', sheet, {readonly:true})}${field('action_points', 'Очки действия · авто', sheet, {readonly:true,after:`<small data-movement-ap>${result.movementAP ? '+'+result.movementAP+' ОД только на передвижение' : 'Общие ОД на ход'}</small>`})}${field('armor_class', 'Класс брони · авто', sheet, {readonly:true})}${experienceMarkup(sheet,result)}${field('level', 'Уровень · авто', sheet, {readonly:true})}<label class="sheet-field" for="sheet-health-current"><span>Здоровье · текущее / максимум</span><span class="sheet-health-control"><input class="input" type="number" step="1" inputmode="numeric" id="sheet-health-current" data-health-current aria-label="Текущее здоровье" value="${result.currentHP===null?'':result.currentHP}"><output data-health-max>/ ${result.maxHP}</output></span><small>Максимум считается; текущее не лечится при повышении уровня.</small></label></div></div><div id="sheetAdvancement">${progressMarkup(sheet,result)}</div><div class="sheet-rule-notices" data-rules-warnings aria-live="polite">${warningsMarkup(result)}</div><div class="sheet-body">${specialMarkup(sheet)}<div class="sheet-notes-column"><section class="sheet-notebox sheet-traits" id="sheetTraits">${traitMarkup(sheet)}</section><section class="sheet-notebox sheet-perks" id="sheetPerks">${perkMarkup(sheet)}</section><section class="sheet-notebox sheet-wounds">${sectionTitle('Ранения')}${field('wounds', '<span class="sr-only">Ранения</span>', sheet, {multiline:true, rows:6})}</section>${legacyNotes()}</div>${skillsMarkup(sheet)}</div><div id="falloutSheetEquipment">${equipmentMarkup(sheet)}</div><details class="sheet-formulas"><summary>Как считается анкета</summary><p>Модификатор S.P.E.C.I.A.L. = итог − 5. Максимум здоровья = 15 + 3 × В + (уровень − 1) × В + бонусы. ОД = 5 + ⌊Л / 2⌋ + бонусы. Инициатива = Восприятие + d20; кубик бросается в игре.</p><p>КБ = КБ экипированной брони + бонус ловкости + постоянные бонусы. Без брони бонус равен ловкости; кожаная куртка — ⌊Л/2⌋, кожаная боевая куртка — ⌊Л/3⌋, кожаная броня — ⌊Л/4⌋, кожаная броня МК2 — ⌊Л/6⌋. «Камикадзе» исключает бонус ловкости к КБ и прибавляет ловкость к инициативе.</p><p>В таблице опыта: 1 — 200; 2 — 400; 3 — 800; 4 — 1400; 5 — 2200; 6 — 3200; 7 — 4400; 8 — 5800; 9 — 7400; 10 — 9100; 11 — 11000; 12 — 13100; 13 — 15400; 14 — 17900; 15 — 20600. Создание начинается с 1-го уровня: при 0–399 XP показан 1-й уровень. Выше 15-го формулы опыта в файле нет.</p><p>Стартовый опыт — уже полученная сумма. «Светоч» делит новый опыт сессии на два; округление в правилах не указано, поэтому сохраняется точная половина. Серверная запись опыта остаётся исходной.</p></details><div class="sheet-footer"><button class="button primary" type="submit">Сохранить анкету ↗</button><button type="button" class="button ghost small sheet-delete-character" data-sheet-progress-action="delete-character">Удалить персонажа</button><span class="sheet-save-status" id="falloutSheetSaveStatus" role="status">Изменения сохраняются автоматически в этом браузере.</span></div><p class="sheet-storage-note">Расчёты — по твоим «Правилам игры» и «Перкам». Лист и последний полученный опыт сохраняются в браузере и входят в резервную копию. Награды приходят с сервера автоматически.</p></form>`;
   }
   function warningsMarkup(result) { return result.warnings.length ? result.warnings.map(text=>`<p class="sheet-warning">${escapeText(text)}</p>`).join('') : '<p class="sheet-rules-help">Постоянные бонусы особенностей и перков учтены в итогах.</p>'; }
   function scheduleSave() {
@@ -245,12 +364,16 @@
     if(perks) { const wasOpen=!!perks.querySelector('.sheet-catalog[open]');perks.innerHTML=perkMarkup(sheet);if(wasOpen)perks.querySelector('.sheet-catalog')?.setAttribute('open',''); }
   }
   function updateSessionParts() {
+    processProgress();
+    if(document.querySelector('[data-sheet-perk-dialog]'))refreshPerkDialog();
     const form=document.getElementById('falloutSheetForm');
     if(!form) return;
     const sheet=currentSheet(),result=applyCalculated(sheet);
     updateLegacyProfile(sheet,result);
     for(const name of ['initiative','action_points','armor_class','level']) {const input=document.getElementById('sheet-'+name);if(input)input.value=sheet[name];}
+    const total=document.getElementById('sheet-experience-total');if(total)total.value=String(result.totalXP);
     const xp=form.querySelector('[data-sheet-xp]');if(xp)xp.innerHTML=xpBreakdown(sheet);
+    const advancement=document.getElementById('sheetAdvancement');if(advancement){const markup=progressMarkup(sheet,result);if(advancement.innerHTML!==markup)advancement.innerHTML=markup;}
     const health=form.querySelector('[data-health-max]');if(health)health.textContent='/ '+result.maxHP;
     const movement=form.querySelector('[data-movement-ap]');if(movement)movement.textContent=result.movementAP ? '+'+result.movementAP+' ОД только на передвижение' : 'Общие ОД на ход';
     for(const [letter] of SPECIAL_ROWS) {const effective=form.querySelector(`[data-special-effective="${letter}"]`),mod=form.querySelector(`[data-special-mod="${letter}"]`);if(effective)effective.textContent=result.special[letter]+' итог';if(mod)mod.value=signed(result.modifiers[letter]);}
@@ -297,6 +420,17 @@
     if(sheet.rules.traits.includes('thief') && (!sheet.rules.thiefSubtype || sheet.rules.thiefSkills.length!==2)) {if(typeof toast==='function')toast('Для «Вора» выбери подтип и два навыка.');return;}
     persist(true);
   });
+  document.addEventListener('click',event=>{
+    const action=event.target.closest('[data-sheet-progress-action]')?.dataset.sheetProgressAction;
+    if(action==='choose-perk')openPerkDialog();
+    if(action==='open-sheet') {if(location.hash!=='#character')location.hash='character';else document.getElementById('falloutSheetForm')?.scrollIntoView({behavior:'smooth',block:'start'});}
+    if(action==='acknowledge') {const progress=progression();progress.acknowledgedLevel=progress.observedLevel;if(typeof save==='function')save();mountLevelNotice();updateSessionParts();}
+    if(action==='delete-character')confirmDeleteCharacter();
+    const choice=event.target.closest('[data-perk-dialog-select]');
+    if(choice) {perkDialogSelection=choice.dataset.perkDialogSelect;refreshPerkDialog();}
+  });
+  document.addEventListener('input',event=>{if(event.target.hasAttribute('data-perk-dialog-search')){perkDialogSearch=event.target.value.slice(0,100);refreshPerkDialog();}});
+  document.addEventListener('change',event=>{if(event.target.hasAttribute('data-perk-dialog-available')){perkDialogAvailableOnly=event.target.checked;refreshPerkDialog();}});
   window.addEventListener('niti:session-update',event=>{rememberedRoom=event.detail?.room?.self ? event.detail.room : null;updateSessionParts();});
   window.addEventListener('pagehide',()=>{if(saveTimer)persist();});
   document.addEventListener('visibilitychange',()=>{if(document.hidden && saveTimer)persist();});
@@ -305,4 +439,5 @@
   window.playerSheetValid = validSheet;
   window.playerSheetNormalize = normalizeSheet;
   window.playerSheetRefresh = updateSessionParts;
+  window.playerSheetResetProgress=()=>{clearTimeout(saveTimer);clearTimeout(promptTimer);saveTimer=0;promptTimer=0;progressSignature='';rememberedRoom=null;document.getElementById('sheetProgressNotice')?.remove();};
 })();

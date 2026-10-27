@@ -1,0 +1,1396 @@
+{
+  "title": "Боеприпасы Fallout 2 и крышки",
+  "sourceUrl": "https://fallout.wiki/wiki/Fallout_2_ammunition",
+  "retrievedAt": "2026-10-27",
+  "ammoCount": 24,
+  "inventoryUnit": "Single round / rocket / ammunition charge, not a full source batch.",
+  "excludedNonItem": "Sunlight is the Solar Scorcher fuel source, not a transferable inventory object.",
+  "items": [
+    {
+      "item": {
+        "id": "fo2-ammo-223-fmj",
+        "name": "Патроны .223 FMJ",
+        "category": "ammo",
+        "categoryLabel": "Боеприпасы",
+        "stats": {
+          "damage": null,
+          "damageFormula": null,
+          "apCost": null,
+          "range": null,
+          "rangeFormula": null,
+          "rangeBonus": null,
+          "ammo": null,
+          "magazine": null,
+          "minStrength": null,
+          "damageType": "Норма",
+          "modifiers": "Fallout 2: КБ цели -20%; сопротивление урону цели -20%; множитель урона ×1.",
+          "armorClass": null,
+          "resistances": null,
+          "weight": "2 фунта / 50 шт.",
+          "price": "4 / шт.",
+          "reloadAp": 2,
+          "slots": null,
+          "effect": "Совместимость: Пистолет .223, Bozar, охотничья винтовка, лёгкий ручной пулемёт, снайперская винтовка."
+        },
+        "image": "data:image/webp;base64,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",
+        "source": {
+          "label": "Fallout 2",
+          "url": "https://fallout.wiki/wiki/.223_FMJ_(Fallout_2)"
+        },
+        "warnings": [],
+        "consumable": true,
+        "description": "Винтовочные цельнооболочечные патроны .223. Количество учитывается поштучно: одна единица запаса означает один патрон.",
+        "rulesVersion": 3
+      },
+      "reference": {
+        "originalName": ".223 FMJ",
+        "caliber": "FMJ",
+        "armorClassModifier": "-20%",
+        "damageResistanceModifier": "-20%",
+        "damageMultiplier": "1",
+        "batchPrice": 200,
+        "batchSize": 50,
+        "sourceCostPerRound": "$4",
+        "batchWeight": 2,
+        "compatibleWeapons": ".223 Pistol Bozar Hunting Rifle Light Support Weapon Scoped Hunting Rifle Sniper Rifle",
+        "sourceUrl": "https://fallout.wiki/wiki/.223_FMJ_(Fallout_2)",
+        "imageUrl": "https://images.fallout.wiki/thumb/c/cd/FO1_Ammo_.223_FMJ.webp/81px-FO1_Ammo_.223_FMJ.webp",
+        "imageSha256": "6df6b95c4532cd606d8d29036f4ce7eb14e9a200bb24b2c3234276f860c31814",
+        "imageSize": [
+          81,
+          59
+        ],
+        "imageBytes": 2394
+      }
+    },
+    {
+      "item": {
+        "id": "fo2-ammo-44-fmj",
+        "name": "Патроны .44 Magnum FMJ",
+        "category": "ammo",
+        "categoryLabel": "Боеприпасы",
+        "stats": {
+          "damage": null,
+          "damageFormula": null,
+          "apCost": null,
+          "range": null,
+          "rangeFormula": null,
+          "rangeBonus": null,
+          "ammo": null,
+          "magazine": null,
+          "minStrength": null,
+          "damageType": "Норма",
+          "modifiers": "Fallout 2: КБ цели 0%; сопротивление урону цели -20%; множитель урона ×1.",
+          "armorClass": null,
+          "resistances": null,
+          "weight": "1 фунт / 20 шт.",
+          "price": "2,5 / шт.",
+          "reloadAp": 2,
+          "slots": null,
+          "effect": "Совместимость: Револьвер .44 Magnum, Desert Eagle и их модификации."
+        },
+        "image": "data:image/webp;base64,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",
+        "source": {
+          "label": "Fallout 2",
+          "url": "https://fallout.wiki/wiki/.44_Magnum_(Fallout_2)"
+        },
+        "warnings": [],
+        "consumable": true,
+        "description": "Цельнооболочечные патроны .44 Magnum. Количество учитывается поштучно: одна единица запаса означает один патрон.",
+        "rulesVersion": 3
+      },
+      "reference": {
+        "originalName": ".44 Magnum FMJ",
+        "caliber": "FMJ",
+        "armorClassModifier": "0%",
+        "damageResistanceModifier": "-20%",
+        "damageMultiplier": "1",
+        "batchPrice": 50,
+        "batchSize": 20,
+        "sourceCostPerRound": "$2.5",
+        "batchWeight": 1,
+        "compatibleWeapons": ".44 Magnum Revolver .44 Magnum (Speed Load) Desert Eagle .44 Desert Eagle (Exp. Mag.)",
+        "sourceUrl": "https://fallout.wiki/wiki/.44_Magnum_(Fallout_2)",
+        "imageUrl": "https://images.fallout.wiki/thumb/b/b1/FO1_Ammo_.44_Magnum_FMJ.webp/85px-FO1_Ammo_.44_Magnum_FMJ.webp",
+        "imageSha256": "79dc7b84b44878e619757fdeddf1ec7b572d4be2899b0de2d41fd7eb60f20c40",
+        "imageSize": [
+          85,
+          55
+        ],
+        "imageBytes": 2782
+      }
+    },
+    {
+      "item": {
+        "id": "fo2-ammo-44-jhp",
+        "name": "Патроны .44 Magnum JHP",
+        "category": "ammo",
+        "categoryLabel": "Боеприпасы",
+        "stats": {
+          "damage": null,
+          "damageFormula": null,
+          "apCost": null,
+          "range": null,
+          "rangeFormula": null,
+          "rangeBonus": null,
+          "ammo": null,
+          "magazine": null,
+          "minStrength": null,
+          "damageType": "Норма",
+          "modifiers": "Fallout 2: КБ цели 0%; сопротивление урону цели 20%; множитель урона ×2.",
+          "armorClass": null,
+          "resistances": null,
+          "weight": "1 фунт / 20 шт.",
+          "price": "2,5 / шт.",
+          "reloadAp": 2,
+          "slots": null,
+          "effect": "Совместимость: Револьвер .44 Magnum, Desert Eagle и их модификации."
+        },
+        "image": "data:image/webp;base64,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",
+        "source": {
+          "label": "Fallout 2",
+          "url": "https://fallout.wiki/wiki/.44_Magnum_(Fallout_2)"
+        },
+        "warnings": [],
+        "consumable": true,
+        "description": "Экспансивные патроны .44 Magnum с полостью в головной части. Количество учитывается поштучно: одна единица запаса означает один патрон.",
+        "rulesVersion": 3
+      },
+      "reference": {
+        "originalName": ".44 Magnum JHP",
+        "caliber": "JHP",
+        "armorClassModifier": "0%",
+        "damageResistanceModifier": "20%",
+        "damageMultiplier": "2",
+        "batchPrice": 50,
+        "batchSize": 20,
+        "sourceCostPerRound": "$2.5",
+        "batchWeight": 1,
+        "compatibleWeapons": ".44 Magnum Revolver .44 Magnum (Speed Load) Desert Eagle .44 Desert Eagle (Exp. Mag.)",
+        "sourceUrl": "https://fallout.wiki/wiki/.44_Magnum_(Fallout_2)",
+        "imageUrl": "https://images.fallout.wiki/thumb/a/a7/FO1_Ammo_.44_Magnum_JHP.webp/84px-FO1_Ammo_.44_Magnum_JHP.webp",
+        "imageSha256": "9579d58902bcd78fe1af186b26733d87385a135e41db16a245cca95da29faa9f",
+        "imageSize": [
+          84,
+          55
+        ],
+        "imageBytes": 2718
+      }
+    },
+    {
+      "item": {
+        "id": "fo2-ammo-45",
+        "name": "Патроны .45",
+        "category": "ammo",
+        "categoryLabel": "Боеприпасы",
+        "stats": {
+          "damage": null,
+          "damageFormula": null,
+          "apCost": null,
+          "range": null,
+          "rangeFormula": null,
+          "rangeBonus": null,
+          "ammo": null,
+          "magazine": null,
+          "minStrength": null,
+          "damageType": "Норма",
+          "modifiers": "Fallout 2: КБ цели 0%; сопротивление урону цели 0%; множитель урона ×1.",
+          "armorClass": null,
+          "resistances": null,
+          "weight": "1 фунт / 10 шт.",
+          "price": "7,5 / шт.",
+          "reloadAp": 2,
+          "slots": null,
+          "effect": "Совместимость: M3A1 «Маслёнка», пистолет-пулемёт Томпсона."
+        },
+        "image": "data:image/webp;base64,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",
+        "source": {
+          "label": "Fallout 2",
+          "url": "https://fallout.wiki/wiki/.45_Caliber_(Fallout_2)"
+        },
+        "warnings": [],
+        "consumable": true,
+        "description": "Пистолетные патроны .45 калибра. Количество учитывается поштучно: одна единица запаса означает один патрон.",
+        "rulesVersion": 3
+      },
+      "reference": {
+        "originalName": ".45 Caliber",
+        "caliber": ".45 Caliber",
+        "armorClassModifier": "0%",
+        "damageResistanceModifier": "0%",
+        "damageMultiplier": "1",
+        "batchPrice": 75,
+        "batchSize": 10,
+        "sourceCostPerRound": "$7.5",
+        "batchWeight": 1,
+        "compatibleWeapons": "M3A1 \"Grease Gun\" SMG Tommy gun",
+        "sourceUrl": "https://fallout.wiki/wiki/.45_Caliber_(Fallout_2)",
+        "imageUrl": "https://images.fallout.wiki/thumb/6/6d/FO2_Ammo_.45_Caliber.webp/62px-FO2_Ammo_.45_Caliber.webp",
+        "imageSha256": "e2757c3aae17be2f78ce83e24598fc4463e3aaf7891966f15d147284f8444027",
+        "imageSize": [
+          62,
+          53
+        ],
+        "imageBytes": 1560
+      }
+    },
+    {
+      "item": {
+        "id": "fo2-ammo-2mm-ec",
+        "name": "Патроны 2 мм EC",
+        "category": "ammo",
+        "categoryLabel": "Боеприпасы",
+        "stats": {
+          "damage": null,
+          "damageFormula": null,
+          "apCost": null,
+          "range": null,
+          "rangeFormula": null,
+          "rangeBonus": null,
+          "ammo": null,
+          "magazine": null,
+          "minStrength": null,
+          "damageType": "Норма",
+          "modifiers": "Fallout 2: КБ цели -30%; сопротивление урону цели -20%; множитель урона ×3/2.",
+          "armorClass": null,
+          "resistances": null,
+          "weight": "1 фунт / 50 шт.",
+          "price": "8 / шт.",
+          "reloadAp": 2,
+          "slots": null,
+          "effect": "Совместимость: Винтовка Гаусса M72, пистолет Гаусса PPK12."
+        },
+        "image": "data:image/webp;base64,UklGRsIFAABXRUJQVlA4WAoAAAAwAAAAIgAAMAAASUNDUKACAAAAAAKgbGNtcwRAAABtbnRyUkdCIFhZWiAH6AABAAYADwAqAANhY3NwTVNGVAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9tYAAQAAAADTLWxjbXMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA1kZXNjAAABIAAAAEBjcHJ0AAABYAAAADZ3dHB0AAABmAAAABRjaGFkAAABrAAAACxyWFlaAAAB2AAAABRiWFlaAAAB7AAAABRnWFlaAAACAAAAABRyVFJDAAACFAAAACBnVFJDAAACFAAAACBiVFJDAAACFAAAACBjaHJtAAACNAAAACRkbW5kAAACWAAAACRkbWRkAAACfAAAACRtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACQAAAAcAEcASQBNAFAAIABiAHUAaQBsAHQALQBpAG4AIABzAFIARwBCbWx1YwAAAAAAAAABAAAADGVuVVMAAAAaAAAAHABQAHUAYgBsAGkAYwAgAEQAbwBtAGEAaQBuAABYWVogAAAAAAAA9tYAAQAAAADTLXNmMzIAAAAAAAEMQgAABd7///MlAAAHkwAA/ZD///uh///9ogAAA9wAAMBuWFlaIAAAAAAAAG+gAAA49QAAA5BYWVogAAAAAAAAJJ8AAA+EAAC2xFhZWiAAAAAAAABilwAAt4cAABjZcGFyYQAAAAAAAwAAAAJmZgAA8qcAAA1ZAAAT0AAACltjaHJtAAAAAAADAAAAAKPXAABUfAAATM0AAJmaAAAmZwAAD1xtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAEcASQBNAFBtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJBTFBITAAAAAEPMP8REYJRbNtNLn0JDrDBLtKCtEiJhCzp6TQFEf0P5gIGVcG0WcFlrcD+dv17/La8ldEmVexMXsUiYqyVUcQ+dmhrK7QdQUtAAQBWUDggqAIAAPAPAJ0BKiMAMQA+GQqDQSEGAwGABABhLSAaP++X+j/hR5m+Hn0d7N+mp+gd9thZ+F8mtwt/kflmzC3+q75L+u4xb/Uajb/ieclis+gp/rfVN6AAOKKurOZqDUrfg4E4i6N291WMMwPYyEBJazBMjYj8/XMjE6d0dX4co4z7vnoegDLL+EKzd2AA/v+XqzM/cVAUrfzfOqiUic8CyOPF6ZxWli53Tej3T97vpF2c0Xn79WR9pwqipKJbL3zTXVIpspakXmsm/rG4bcP//+SHzk+Zj5loFFVXTI4qE6la9q0UVxlpKKhIh6DwTcSMw3fdImqgQ9OeXeEgpSlX3/7mtP6SN1RmOxIBizLN+hbpM4wz4SEWdZ05otRvH5uec9lHuoFRwSPzMzOPxgD6X0yA5jCd4YEEtDbQ2n9Ywv1WdOeTaWk83IJkGADybpQHnVJkX8hmB8s3c0meEJAf84/FgnQXVu/zFBL/rfwl7hufiOICPL1m95sU8y/b6viHAFJT+2LcvOZUduCAXe6b4iFAz8ndCamsZYcKLnpxFUGo3e5V26jZyASUxrJpVN6qXbNqvurCzEJuOvgl0x9vWupUw3bqosQhGPEnRtOL7s2/WP3J8SmfgUJ3FHJ53LsLoRh/1WYMKu+d4lj0jHSOiyQos+ld7o7R12zO1G/5/pzSYmWjx7CLzEX3WRCxVt8S+dlW5SFf/Axf/oO5O8r5Xu8sTfmQs2P3p0fFyUsPEmaH9NvHzEvw+Xmys3585ShezlIRQ92+7yHBlFLsfzwmY6HWKmB/dtF5H/gZfVLOxzFRLDs7aue35L0/45vQCFvd4BnASdKmpeIa9Fm6/sw6vgsumc2HgEWa9bh+z9Y7TPY+bYEfq0R/6Fcsw9hw1AVjJcLZLhba006yAAAA",
+        "source": {
+          "label": "Fallout 2",
+          "url": "https://fallout.wiki/wiki/2mm_EC_(Fallout_2)"
+        },
+        "warnings": [],
+        "consumable": true,
+        "description": "Электромагнитные патроны для оружия Гаусса. Количество учитывается поштучно: одна единица запаса означает один патрон.",
+        "rulesVersion": 3
+      },
+      "reference": {
+        "originalName": "2mm EC",
+        "caliber": "2mm EC",
+        "armorClassModifier": "-30%",
+        "damageResistanceModifier": "-20%",
+        "damageMultiplier": "3/2",
+        "batchPrice": 400,
+        "batchSize": 50,
+        "sourceCostPerRound": "$8",
+        "batchWeight": 1,
+        "compatibleWeapons": "M72 Gauss Rifle PPK12 Gauss Pistol",
+        "sourceUrl": "https://fallout.wiki/wiki/2mm_EC_(Fallout_2)",
+        "imageUrl": "https://images.fallout.wiki/thumb/0/00/FO2_Ammo_2mm_EC.webp/35px-FO2_Ammo_2mm_EC.webp",
+        "imageSha256": "5acf47faa7aa0ca70206d804dfb5ccb4382225c6996dc70420534bbf05a5fe09",
+        "imageSize": [
+          35,
+          49
+        ],
+        "imageBytes": 1482
+      }
+    },
+    {
+      "item": {
+        "id": "fo2-ammo-47mm-caseless",
+        "name": "Патроны 4,7 мм — безгильзовые",
+        "category": "ammo",
+        "categoryLabel": "Боеприпасы",
+        "stats": {
+          "damage": null,
+          "damageFormula": null,
+          "apCost": null,
+          "range": null,
+          "rangeFormula": null,
+          "rangeBonus": null,
+          "ammo": null,
+          "magazine": null,
+          "minStrength": null,
+          "damageType": "Норма",
+          "modifiers": "Fallout 2: КБ цели -5%; сопротивление урону цели -10%; множитель урона ×3/2.",
+          "armorClass": null,
+          "resistances": null,
+          "weight": "1 фунт / 50 шт.",
+          "price": "12 / шт.",
+          "reloadAp": 2,
+          "slots": null,
+          "effect": "Совместимость: H&K G11, H&K G11E, миниган «Виндикатор»."
+        },
+        "image": "data:image/webp;base64,UklGRigEAABXRUJQVlA4WAoAAAAQAAAAOAAAKwAAQUxQSGEAAAABDzD/ERHCTQAGThT6iISzwXbOAGlIQQJjJ8An3xRE9H8C5gxypguGlaELhpUhsIto6BLVQcWvhTfOH9V/U4Ef7WYSGQYDN5vR9C8JgNPMZiA7vJJR7KzFyEr0TARa6AYAAFZQOCCgAwAAMBMAnQEqOQAsAD4ZCoNBoQVXAAQAYSgDS1A7epfyA3QD+gbZX+me+AcAB+wHWQfqh6Lt3SfbPpJ9be8X4Zyif4Docb0/8bnGMZX3hv9pxj3+W1Ff+z84/6f9D3y96D3oS9TT+maa+owcLWASR4vofl2jfuEh9o8zGRpZog+C8lBXzNY/x6ApVU3lFNmzeXtyUxoaCT5fy1ib9CgWL+W7/tEAAP7//mG/Yb9ui/5iVfX76dcgRKx/bZ+3q4woxtFYmkDfUe8cr58DJ7eDCW+2QbqzFXr/dr1FRD16MqG33ndOUALsQI1g704r9d99owGJIGYcQ2N9KRS0uINXmTtWYmoUsj+IqY6RTjy4ON8S6Ey7uIbMrwl5InWzaUF8TXwf88rmThuWxc9nJk7DGq+OYpvdLSDpnfjibG8H8wwnOofbjQbW52xuZ6olBYrXZBEGqPkge/hHDlYsdYn9eRVOSku97vGFD3UF2F6POnGCGJAS5og8b1Onfvi2nwl6fyGZ8UXX/Y4T+6dnoJYt/bLNKuumhd/F2WkDGc8N8j6X62MgsD26gcnkpB8wWxaDxhJtk5aRzoKG/HZRD7/fqnv3LArvLLfgENionuxUvvU+fu7QEMyD9HKNhbyrTCYU39tgbK0f9QR/st8diNfI7nXbnpX//m4cUbfZrBCK9a+gP/9MUIz2Kr/3ziooZV7CIcSh2+wNKbIlghanvbGReHhih/TgI/IeJJpVv9eZpZzFUT8LGT6Knvkt0msnF44Xbm6AAp/GH73YqYAAtb9hf/45nKbjBF8wzdeO3X//xJL7+cqQRwnbwZ6XYQYJhQw5uCM8AS0H4TmHTdPqw8bJrEgHGyaIuTL7XAb3MSyyGKX3ePJlphftn5AiPYCAb2L0UjaEYj9HtnxU9Uu/vxPq/G/P5bsdSGFqoswzt7WEv9KXrxFwgT2/qpsjkRlpiTcacTXYoR3W9KR55pwIgplInF8ih+YTnw028a9RAmHBL+W9h+w2+w0i+JjdfPHw496bX3DqKe36k64vMLj3FBkWHGPLoT9C9/cYfk/VXYuNa2JOpo1dGWsRGUaG6Ni/hra1n9L+m4N1cSexf69vRFop+t/oKnCpeHZ/n6/Klxpjq3MwZfm98Vqxod1rS6birc8evgytqtA+RSBl3zs5ga0FQRj+k5q/CGtoR7nevYnpc2trV9Qd8mqIczr23S3mUNbudtqFz5Ze2gmeIgb2LSq+CCAAAA==",
+        "source": {
+          "label": "Fallout 2",
+          "url": "https://fallout.wiki/wiki/4.7mm_Caseless"
+        },
+        "warnings": [],
+        "consumable": true,
+        "description": "Безгильзовые патроны 4,7 мм. Количество учитывается поштучно: одна единица запаса означает один патрон.",
+        "rulesVersion": 3
+      },
+      "reference": {
+        "originalName": "4.7mm Caseless",
+        "caliber": "4.7mm Caseless",
+        "armorClassModifier": "-5%",
+        "damageResistanceModifier": "-10%",
+        "damageMultiplier": "3/2",
+        "batchPrice": 600,
+        "batchSize": 50,
+        "sourceCostPerRound": "$12",
+        "batchWeight": 1,
+        "compatibleWeapons": "H&K G11 H&K G11E Vindicator Minigun",
+        "sourceUrl": "https://fallout.wiki/wiki/4.7mm_Caseless",
+        "imageUrl": "https://images.fallout.wiki/thumb/b/b1/FO2_Ammo_4.7mm_Caseless.webp/57px-FO2_Ammo_4.7mm_Caseless.webp",
+        "imageSha256": "c7d9b2041a71db434b11918c4228e924cbde3e002443f3f25078603990261574",
+        "imageSize": [
+          57,
+          44
+        ],
+        "imageBytes": 1072
+      }
+    },
+    {
+      "item": {
+        "id": "fo2-ammo-5mm-ap",
+        "name": "Патроны 5 мм AP",
+        "category": "ammo",
+        "categoryLabel": "Боеприпасы",
+        "stats": {
+          "damage": null,
+          "damageFormula": null,
+          "apCost": null,
+          "range": null,
+          "rangeFormula": null,
+          "rangeBonus": null,
+          "ammo": null,
+          "magazine": null,
+          "minStrength": null,
+          "damageType": "Норма",
+          "modifiers": "Fallout 2: КБ цели 0%; сопротивление урону цели -35%; множитель урона ×1/2.",
+          "armorClass": null,
+          "resistances": null,
+          "weight": "1 фунт / 50 шт.",
+          "price": "2,4 / шт.",
+          "reloadAp": 2,
+          "slots": null,
+          "effect": "Совместимость: Штурмовая винтовка, XL70E3, миниган, миниган «Мститель»."
+        },
+        "image": "data:image/webp;base64,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",
+        "source": {
+          "label": "Fallout 2",
+          "url": "https://fallout.wiki/wiki/5mm_AP_(Fallout_2)"
+        },
+        "warnings": [],
+        "consumable": true,
+        "description": "Бронебойные патроны 5 мм. Количество учитывается поштучно: одна единица запаса означает один патрон.",
+        "rulesVersion": 3
+      },
+      "reference": {
+        "originalName": "5mm AP",
+        "caliber": "AP",
+        "armorClassModifier": "0%",
+        "damageResistanceModifier": "-35%",
+        "damageMultiplier": "1/2",
+        "batchPrice": 120,
+        "batchSize": 50,
+        "sourceCostPerRound": "$2.4",
+        "batchWeight": 1,
+        "compatibleWeapons": "Assault Rifle Assault Rifle (Exp. Mag.) Avenger minigun Minigun XL70E3",
+        "sourceUrl": "https://fallout.wiki/wiki/5mm_AP_(Fallout_2)",
+        "imageUrl": "https://images.fallout.wiki/thumb/2/2c/FO1_Ammo_5mm_AP.webp/84px-FO1_Ammo_5mm_AP.webp",
+        "imageSha256": "241c4277fdace0a25a13599094ee9879f72eabfe7a64003f6256c18d2f1b1f23",
+        "imageSize": [
+          84,
+          62
+        ],
+        "imageBytes": 2188
+      }
+    },
+    {
+      "item": {
+        "id": "fo2-ammo-5mm-jhp",
+        "name": "Патроны 5 мм JHP",
+        "category": "ammo",
+        "categoryLabel": "Боеприпасы",
+        "stats": {
+          "damage": null,
+          "damageFormula": null,
+          "apCost": null,
+          "range": null,
+          "rangeFormula": null,
+          "rangeBonus": null,
+          "ammo": null,
+          "magazine": null,
+          "minStrength": null,
+          "damageType": "Норма",
+          "modifiers": "Fallout 2: КБ цели 0%; сопротивление урону цели 35%; множитель урона ×2.",
+          "armorClass": null,
+          "resistances": null,
+          "weight": "1 фунт / 50 шт.",
+          "price": "2 / шт.",
+          "reloadAp": 2,
+          "slots": null,
+          "effect": "Совместимость: Штурмовая винтовка, XL70E3, миниган, миниган «Мститель»."
+        },
+        "image": "data:image/webp;base64,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",
+        "source": {
+          "label": "Fallout 2",
+          "url": "https://fallout.wiki/wiki/5mm_JHP_(Fallout_2)"
+        },
+        "warnings": [],
+        "consumable": true,
+        "description": "Экспансивные патроны 5 мм. Количество учитывается поштучно: одна единица запаса означает один патрон.",
+        "rulesVersion": 3
+      },
+      "reference": {
+        "originalName": "5mm JHP",
+        "caliber": "JHP",
+        "armorClassModifier": "0%",
+        "damageResistanceModifier": "35%",
+        "damageMultiplier": "2",
+        "batchPrice": 100,
+        "batchSize": 50,
+        "sourceCostPerRound": "$2",
+        "batchWeight": 1,
+        "compatibleWeapons": "Assault Rifle Assault Rifle (Exp. Mag.) Avenger minigun Minigun XL70E3",
+        "sourceUrl": "https://fallout.wiki/wiki/5mm_JHP_(Fallout_2)",
+        "imageUrl": "https://images.fallout.wiki/thumb/3/36/FO1_Ammo_5mm_JHP.webp/84px-FO1_Ammo_5mm_JHP.webp",
+        "imageSha256": "a8a27099740438c8a25ab12cc44b943daec9a5898a673139bc28f3c3d6dde7b6",
+        "imageSize": [
+          84,
+          62
+        ],
+        "imageBytes": 2208
+      }
+    },
+    {
+      "item": {
+        "id": "fo2-ammo-762mm",
+        "name": "Патроны 7,62 мм",
+        "category": "ammo",
+        "categoryLabel": "Боеприпасы",
+        "stats": {
+          "damage": null,
+          "damageFormula": null,
+          "apCost": null,
+          "range": null,
+          "rangeFormula": null,
+          "rangeBonus": null,
+          "ammo": null,
+          "magazine": null,
+          "minStrength": null,
+          "damageType": "Норма",
+          "modifiers": "Fallout 2: КБ цели -5%; сопротивление урону цели -10%; множитель урона ×1.",
+          "armorClass": null,
+          "resistances": null,
+          "weight": "1 фунт / 20 шт.",
+          "price": "7,5 / шт.",
+          "reloadAp": 2,
+          "slots": null,
+          "effect": "Совместимость: FN FAL и её модификации, пулемёт M60."
+        },
+        "image": "data:image/webp;base64,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",
+        "source": {
+          "label": "Fallout 2",
+          "url": "https://fallout.wiki/wiki/7.62mm_(Fallout_2)"
+        },
+        "warnings": [],
+        "consumable": true,
+        "description": "Винтовочные патроны 7,62 мм. Количество учитывается поштучно: одна единица запаса означает один патрон.",
+        "rulesVersion": 3
+      },
+      "reference": {
+        "originalName": "7.62mm",
+        "caliber": "7.62mm",
+        "armorClassModifier": "-5%",
+        "damageResistanceModifier": "-10%",
+        "damageMultiplier": "1",
+        "batchPrice": 150,
+        "batchSize": 20,
+        "sourceCostPerRound": "$7.5",
+        "batchWeight": 1,
+        "compatibleWeapons": "FN FAL FN FAL (Night Sight) FN FAL HPFA M60",
+        "sourceUrl": "https://fallout.wiki/wiki/7.62mm_(Fallout_2)",
+        "imageUrl": "https://images.fallout.wiki/thumb/f/f3/FO2_Ammo_7.62mm.webp/57px-FO2_Ammo_7.62mm.webp",
+        "imageSha256": "eb07dac947164e5ff78981708868eee6045dfb3ee516cf431d91b5b6a9a533d2",
+        "imageSize": [
+          57,
+          54
+        ],
+        "imageBytes": 2220
+      }
+    },
+    {
+      "item": {
+        "id": "fo2-ammo-9mm",
+        "name": "Патроны 9 мм",
+        "category": "ammo",
+        "categoryLabel": "Боеприпасы",
+        "stats": {
+          "damage": null,
+          "damageFormula": null,
+          "apCost": null,
+          "range": null,
+          "rangeFormula": null,
+          "rangeBonus": null,
+          "ammo": null,
+          "magazine": null,
+          "minStrength": null,
+          "damageType": "Норма",
+          "modifiers": "Fallout 2: КБ цели 0%; сопротивление урону цели 10%; множитель урона ×1/2.",
+          "armorClass": null,
+          "resistances": null,
+          "weight": "1 фунт / 20 шт.",
+          "price": "5 / шт.",
+          "reloadAp": 2,
+          "slots": null,
+          "effect": "Совместимость: 9-мм «Маузер»."
+        },
+        "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAA0CAMAAAD7TUujAAAApVBMVEUAAAA0KABsWBBIOARYSAg0IABwSCRIJByQUDigXDhgMCR8WByMZCh8WDR8aBggGABIOChQNAQ4GBRkPBRwTBQ4MCCQTCyQeCQsGBjAcEggEBCoYED8uHjwlFzYgFScdDR4QDBAKAAwKCBgQAgwGABMRCT8/Hy4nCj8rGDIoGTMuBxoUDikUADwoGy8kFQQIBBUSDQIHATYsHisgEQQJAxYMAikiDBTxnk8AAAAAXRSTlMAQObYZgAAA3dJREFUeF6VldWW5DgMQGPmMBY3Dy7C/3/aSq6k4nTP1pz1m050fS0Zkr0fci/L7H8M+/kYlPoJIEtb3gSH794+/mTOk1f1EoTDL6Z5FPeAEOecidIcJ2/r8Q7wcn49aVmLGeinfZB1ca/K/aeTt6qoZ+BstO129R3AnPZaqvE6qQpG92C4AzR6OiOwUxGQRgdbF493DN6YaKivgNahedzdqbrsjfZoiGU/SO9lMxZp1doYk4QqaB0NcVJG89xxkgAlLkHaBMBFILDDqAOA8ocEaMzheJaqS4Dg+2ioUsMq+Px6NLJc9541vneyey4KMgO0XYHy73B4PZ0vtl4aHVNyWpEZaLcGZc3hcDLBduMW4DNA+BzMghIOwqfJXBo1LgrCU4BtAVU2++PpbHqrRrEYboBYDE+rQUkzTUYHAMabgW4AmgClKqXZ7wGAJRWLgW2ACgMR4YwqBoYzABIMu7Rq3KvfIwARAmgYaAcGPBjh0tTvAVYUzwmAcK6UYhHoZbkuCeuMhjgrIZTSKgKOKxgIaC9LsdutAE0MEDXMNiz7ShnpIqB1sGWdAJW7nobiGpWqCVpmXzlhneis115f8KytAKM0GkSMOoidu8iME8IUs0FrL209rrcWl+04WwwPUBPEEj8wxp3LvWurTohf2Q3gLi5JRB32CZUxiMcgNhG+V0nVlKKBZy+MRAHlACABDRm+IQBb0+gZEFBEizXw32B+5nJHZ4CR2fCEQKvDWgQaCGcspmD+YnAR4EQUQkorr4BgPB5vgoJr/tNqGHACLNEHW9ooxhoqQsgi4LxaDHAWv4GhAgOZJmnnP8fbW06zDvNRgCtLikYlNunlj+Nebv41DBMxH1x8rq7CElxsEj8cJm+7bT6L+SvAqmi4An8eJ1/W7wS0gnwhyM1Ab11t4O7JelwFHGqN84u/BFsavrwpaAgmqHEFXD4MQ94i8LwBlq4yZWWSn88j3k+RpYCLTSLZZqAYBn6GAkkC0FjCB8Dl1Dkpn1oASQrEp/MHAM1dr43pG9jpdr3uhKDhPwAdZBN0AwksAfj6aL0HvG1dqyWUwVOALk/7B8JrK0MfwJAIrpdL/BDIvddG49FZAEYEPiktAuwDAe0Y/OABgGAlGG6bEIR8ADKQ5zgSbUUpYxWHbJEI0kHpNh6+fPknp7Riq/Wn423IN7P8C89BPFinbUabAAAAAElFTkSuQmCC",
+        "source": {
+          "label": "Fallout 2",
+          "url": "https://fallout.wiki/wiki/9mm_(Fallout_2)"
+        },
+        "warnings": [],
+        "consumable": true,
+        "description": "Базовый вариант патронов 9 мм из Fallout 2. Количество учитывается поштучно: одна единица запаса означает один патрон.",
+        "rulesVersion": 3
+      },
+      "reference": {
+        "originalName": "9mm",
+        "caliber": "9mm",
+        "armorClassModifier": "0%",
+        "damageResistanceModifier": "10%",
+        "damageMultiplier": "1/2",
+        "batchPrice": 100,
+        "batchSize": 20,
+        "sourceCostPerRound": "$5",
+        "batchWeight": 1,
+        "compatibleWeapons": "9mm Mauser",
+        "sourceUrl": "https://fallout.wiki/wiki/9mm_(Fallout_2)",
+        "imageUrl": "https://images.fallout.wiki/0/05/9MM.png",
+        "imageSha256": "3439c4ab475a197c382c24e01b874e75e97a94276b67050c3ab4dedfbcae314a",
+        "imageSize": [
+          48,
+          52
+        ],
+        "imageBytes": 1134
+      }
+    },
+    {
+      "item": {
+        "id": "fo2-ammo-9mm-ball",
+        "name": "Патроны 9 мм Ball",
+        "category": "ammo",
+        "categoryLabel": "Боеприпасы",
+        "stats": {
+          "damage": null,
+          "damageFormula": null,
+          "apCost": null,
+          "range": null,
+          "rangeFormula": null,
+          "rangeBonus": null,
+          "ammo": null,
+          "magazine": null,
+          "minStrength": null,
+          "damageType": "Норма",
+          "modifiers": "Fallout 2: КБ цели 0%; сопротивление урону цели 0%; множитель урона ×1.",
+          "armorClass": null,
+          "resistances": null,
+          "weight": "2 фунта / 20 шт.",
+          "price": "5 / шт.",
+          "reloadAp": 2,
+          "slots": null,
+          "effect": "Совместимость: 9-мм «Маузер»."
+        },
+        "image": "data:image/png;base64,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",
+        "source": {
+          "label": "Fallout 2",
+          "url": "https://fallout.wiki/wiki/9mm_(Fallout_2)"
+        },
+        "warnings": [],
+        "consumable": true,
+        "description": "Обычные оболочечные патроны 9 мм Ball, отдельный вариант из Fallout 2. Количество учитывается поштучно: одна единица запаса означает один патрон.",
+        "rulesVersion": 3
+      },
+      "reference": {
+        "originalName": "9mm ball",
+        "caliber": "9mm",
+        "armorClassModifier": "0%",
+        "damageResistanceModifier": "0%",
+        "damageMultiplier": "1",
+        "batchPrice": 100,
+        "batchSize": 20,
+        "sourceCostPerRound": "$5",
+        "batchWeight": 2,
+        "compatibleWeapons": "9mm Mauser",
+        "sourceUrl": "https://fallout.wiki/wiki/9mm_(Fallout_2)",
+        "imageUrl": "https://images.fallout.wiki/3/3e/9mmBall.png",
+        "imageSha256": "af527dc925e831241667d87e3e37a784950aada3c1e4f07e9d13e7da3c201b1b",
+        "imageSize": [
+          109,
+          90
+        ],
+        "imageBytes": 6888
+      }
+    },
+    {
+      "item": {
+        "id": "fo2-ammo-10mm-ap",
+        "name": "Патроны 10 мм AP",
+        "category": "ammo",
+        "categoryLabel": "Боеприпасы",
+        "stats": {
+          "damage": null,
+          "damageFormula": null,
+          "apCost": null,
+          "range": null,
+          "rangeFormula": null,
+          "rangeBonus": null,
+          "ammo": null,
+          "magazine": null,
+          "minStrength": null,
+          "damageType": "Норма",
+          "modifiers": "Fallout 2: КБ цели 0%; сопротивление урону цели -25%; множитель урона ×1/2.",
+          "armorClass": null,
+          "resistances": null,
+          "weight": "1 фунт / 24 шт.",
+          "price": "4,17 / шт.",
+          "reloadAp": 2,
+          "slots": null,
+          "effect": "Совместимость: 10-мм пистолет, 10-мм пистолет-пулемёт, H&K P90c, самодельная винтовка."
+        },
+        "image": "data:image/webp;base64,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",
+        "source": {
+          "label": "Fallout 2",
+          "url": "https://fallout.wiki/wiki/10mm_(Fallout_2)"
+        },
+        "warnings": [],
+        "consumable": true,
+        "description": "Бронебойные патроны 10 мм. Количество учитывается поштучно: одна единица запаса означает один патрон.",
+        "rulesVersion": 3
+      },
+      "reference": {
+        "originalName": "10mm AP",
+        "caliber": "AP",
+        "armorClassModifier": "0%",
+        "damageResistanceModifier": "-25%",
+        "damageMultiplier": "1/2",
+        "batchPrice": 100,
+        "batchSize": 24,
+        "sourceCostPerRound": "$4.17",
+        "batchWeight": 1,
+        "compatibleWeapons": "10mm Pistol 10mm SMG H&K P90c Pipe Rifle",
+        "sourceUrl": "https://fallout.wiki/wiki/10mm_(Fallout_2)",
+        "imageUrl": "https://images.fallout.wiki/thumb/9/98/FO1_Ammo_10mm_AP.webp/83px-FO1_Ammo_10mm_AP.webp",
+        "imageSha256": "1f7cadf82fd38811d0e29eb9b41c57165dd4f68be4a83bfc30312331858fda7d",
+        "imageSize": [
+          83,
+          58
+        ],
+        "imageBytes": 2768
+      }
+    },
+    {
+      "item": {
+        "id": "fo2-ammo-10mm-jhp",
+        "name": "Патроны 10 мм JHP",
+        "category": "ammo",
+        "categoryLabel": "Боеприпасы",
+        "stats": {
+          "damage": null,
+          "damageFormula": null,
+          "apCost": null,
+          "range": null,
+          "rangeFormula": null,
+          "rangeBonus": null,
+          "ammo": null,
+          "magazine": null,
+          "minStrength": null,
+          "damageType": "Норма",
+          "modifiers": "Fallout 2: КБ цели 0%; сопротивление урону цели 25%; множитель урона ×2.",
+          "armorClass": null,
+          "resistances": null,
+          "weight": "1 фунт / 24 шт.",
+          "price": "3,125 / шт.",
+          "reloadAp": 2,
+          "slots": null,
+          "effect": "Совместимость: 10-мм пистолет, 10-мм пистолет-пулемёт, H&K P90c, самодельная винтовка."
+        },
+        "image": "data:image/webp;base64,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",
+        "source": {
+          "label": "Fallout 2",
+          "url": "https://fallout.wiki/wiki/10mm_(Fallout_2)"
+        },
+        "warnings": [],
+        "consumable": true,
+        "description": "Экспансивные патроны 10 мм. Количество учитывается поштучно: одна единица запаса означает один патрон.",
+        "rulesVersion": 3
+      },
+      "reference": {
+        "originalName": "10mm JHP",
+        "caliber": "JHP",
+        "armorClassModifier": "0%",
+        "damageResistanceModifier": "25%",
+        "damageMultiplier": "2",
+        "batchPrice": 75,
+        "batchSize": 24,
+        "sourceCostPerRound": "$3.125",
+        "batchWeight": 1,
+        "compatibleWeapons": "10mm Pistol 10mm SMG H&K P90c Pipe Rifle",
+        "sourceUrl": "https://fallout.wiki/wiki/10mm_(Fallout_2)",
+        "imageUrl": "https://images.fallout.wiki/thumb/f/f0/FO1_Ammo_10mm_JHP.webp/83px-FO1_Ammo_10mm_JHP.webp",
+        "imageSha256": "4e58627849ea1b96814258c0271439c2ff688b1ce6c79f203d85c3ddc24b6f37",
+        "imageSize": [
+          83,
+          58
+        ],
+        "imageBytes": 2648
+      }
+    },
+    {
+      "item": {
+        "id": "fo2-ammo-14mm-ap",
+        "name": "Патроны 14 мм AP",
+        "category": "ammo",
+        "categoryLabel": "Боеприпасы",
+        "stats": {
+          "damage": null,
+          "damageFormula": null,
+          "apCost": null,
+          "range": null,
+          "rangeFormula": null,
+          "rangeBonus": null,
+          "ammo": null,
+          "magazine": null,
+          "minStrength": null,
+          "damageType": "Норма",
+          "modifiers": "Fallout 2: КБ цели 0%; сопротивление урону цели -50%; множитель урона ×1/2.",
+          "armorClass": null,
+          "resistances": null,
+          "weight": "1 фунт / 30 шт.",
+          "price": "5 / шт.",
+          "reloadAp": 2,
+          "slots": null,
+          "effect": "Совместимость: 14-мм пистолет."
+        },
+        "image": "data:image/webp;base64,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",
+        "source": {
+          "label": "Fallout 2",
+          "url": "https://fallout.wiki/wiki/14mm_AP_(Fallout_2)"
+        },
+        "warnings": [],
+        "consumable": true,
+        "description": "Бронебойные патроны 14 мм. Количество учитывается поштучно: одна единица запаса означает один патрон.",
+        "rulesVersion": 3
+      },
+      "reference": {
+        "originalName": "14mm AP",
+        "caliber": "AP",
+        "armorClassModifier": "0%",
+        "damageResistanceModifier": "-50%",
+        "damageMultiplier": "1/2",
+        "batchPrice": 150,
+        "batchSize": 30,
+        "sourceCostPerRound": "$5",
+        "batchWeight": 1,
+        "compatibleWeapons": "14mm Pistol",
+        "sourceUrl": "https://fallout.wiki/wiki/14mm_AP_(Fallout_2)",
+        "imageUrl": "https://images.fallout.wiki/thumb/e/e8/FO1_Ammo_14mm_AP.webp/39px-FO1_Ammo_14mm_AP.webp",
+        "imageSha256": "afd5794779be548f8e29bc621517ff5355605609118102f4a15b44d3419cb3af",
+        "imageSize": [
+          39,
+          63
+        ],
+        "imageBytes": 1802
+      }
+    },
+    {
+      "item": {
+        "id": "fo2-ammo-bb",
+        "name": "Шарики BB",
+        "category": "ammo",
+        "categoryLabel": "Боеприпасы",
+        "stats": {
+          "damage": null,
+          "damageFormula": null,
+          "apCost": null,
+          "range": null,
+          "rangeFormula": null,
+          "rangeBonus": null,
+          "ammo": null,
+          "magazine": null,
+          "minStrength": null,
+          "damageType": "Норма",
+          "modifiers": "Fallout 2: КБ цели 0%; сопротивление урону цели 0%; множитель урона ×1.",
+          "armorClass": null,
+          "resistances": null,
+          "weight": "2 фунта / 20 шт.",
+          "price": "1 / шт.",
+          "reloadAp": 2,
+          "slots": null,
+          "effect": "Совместимость: Пневматическая винтовка Red Ryder и её ограниченная серия."
+        },
+        "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGMAAAA6CAMAAACTZBeYAAAAvVBMVEUAAABQUEhwYFCMcGBUVFSUfGB4hHigkHxkZGRISEg8PDwsGBggICBUSDRIOChoeFB0dHRYODispJiIaEw4ODjUrHzQsLBsdGy02ISMjIToyJiAgICwsLDAoKBYaGAEDAAcHBywkJCYuHDIoGSEYGBIJBw4MCBoUDgwGABMRCRAWDQ4GBQoKCgcDBhwTBRsWBBAKAAwKCAgGAAMDAx8WBz85LjMuBwgEBC4nCikiDBQNARgQAhMJAAQIBAoOCCGW6ybAAAAAXRSTlMAQObYZgAABS9JREFUeAG0lNGamjAQRs0/GX5godDpoqpLVdb3f8ZOEut1P6QHnXjlyZkLdv9IgEgIiLv/CLSCQqlKQY0QmxC2d6BtPzrRrhWIg0LToNlKVqsI+gb1jxaD6DigEH9GNFt1yIAYAjKjiAzImr5rN3OYcUQiAvg1DHBFDeDzw9XbKKa9EaOwUqnUhxzgZEfENg7ZH6nKFyelnjiq1H2HGLdQxLORQpuMPlyQnxTECwhssqkvS/fOCuOoPo3UWi5KStQNlkWbyBNpNE8RJafZy7RG2trvK/j2tmB0lIkpB9l8nI16UJLyeb1B3s54YWb5mFziCvE2tldH9N1NMfM8NClsulOlUjJeE53gTcWSFcWip1xjy73ynxwhtyQJFtcrYr5z2dP3302Zf5kBBkWyqL2RMeX/y4flFhf4LI4QgFEv2nkJ1m8qKXyUT6ngYsxIiBGoSG1v10dcq5jK8zXZ8c6i+H6tqi+vYiXlgMZWlUTSEtPeNfMzxpgfPxEAhFDLSQ8QcpUjQHXxe5/taPN5tiVX5BqPYZDyfq9lFIxkXOeIgDJv7HwsHXRKST+ISA3XDII4XLhbQxMcOBVttqTy8VQs2ntA5SkRjwPig39KqYMeR2ogCsDzXlXYtJNqR2xJc+CSlRanA/awJkADMPv/fxa2MheklsyEyi2q1qeqet2PGt8nswtJSuzzvGW27e/DJyMZ2QmN0mZ50HjCYtPVmFJ3lJT7p/FTo35QUtmrx1dUvn3YCAZNph0xtFK0z1QfyAiA94q7Ex82LKXJ5jSDyWwBYE1hz4EBF3aDjiDfSTvZg4bOwNwNNWM3flyuRpJiuHSMwQ+MpHD34BwTFWjEVS+WuKhNc4KlS5QIdITnWS0c5BT38kEem4NhdgBmupALOwg2Loo1Ixeq9wbunnnafdMeePnpyzsJsObDcXbaVZU/U3FNIOcLZZpvOTAfHG6Qk7RXpc3xy6+/vSzvREia+XHNRr2mq6W2KGVfVqiGtZjCjH6WZ1Ken8LL73/8ufi7DVow8/V4dOiMlKhcKNEsWyYPlV5dTtxH2T89ffnr72U5vtPo1y0lGzEfDu7ArGxOmyObhULmcyUkks9Ee2BZlvP5nUbbND3Bjf28h9XnQJDsc2TQVrPVGffNEPQn/Hh+/xwSsxPFGEwZ0vGQzUiGYFYrQ81kJPcSmzGo7dRRGuJV5DbRbqWYXuDHcwY9rBZoDij3pOA4NrZTR2nL8hTl1Un/Ss8BNpkbvAarhW4AyT1ADozt1N13JV7cS5TolQ0hmjIh+bqCdUUrkqtzH0ZzbKeODTml152jz1Mk5lXREbi75SOsE4XTzcmhsZ06kCKedjv3nfitz0RlR6qvoZpNBlihrU76iNhOHRijeNnteNO+M7+9UqmAZT/O7hbM1Ix2Nm3GQwVSTrdXObFg5zd6AcmO5OqePIRgINUCX16+bKd1bJz94s6+o7ddgVQ2I6emzB5sghK453IzrQMaNF+d8D5LKhKlH1dB1OrVU1OCATDcc7md1gEN0PK64iIiryV+jmuJHWGuqSGtzLqyncuNf7dpqOX57IAXyOfXQnak5prvcwSbtnP5738H9ARiPpxBT6VkUkmtnu9n9xA2crmZ1gGtTVlXt4m9lJpqrV3wcWLfjjykWw/VU1N4L0/ZU//9J+LtyOMekGgKQEbegcEQG0ce94Dw9eCQ6Kl6HRDbRx736Ef1eT599OR1/CpvH3ncQ4r0OdJg1YN8DXrAnXz1war/d2EarPqhemDVj9cDq/4Hy5mQKvdCBMsAAAAASUVORK5CYII=",
+        "source": {
+          "label": "Fallout 2",
+          "url": "https://fallout.wiki/wiki/BB_(Fallout_2)"
+        },
+        "warnings": [],
+        "consumable": true,
+        "description": "Стальные шарики для пневматического оружия. Количество учитывается поштучно: одна единица запаса означает один шарик.",
+        "rulesVersion": 3
+      },
+      "reference": {
+        "originalName": "BB's",
+        "caliber": "BBs",
+        "armorClassModifier": "0%",
+        "damageResistanceModifier": "0%",
+        "damageMultiplier": "1",
+        "batchPrice": 20,
+        "batchSize": 20,
+        "sourceCostPerRound": "$1",
+        "batchWeight": 2,
+        "compatibleWeapons": "Red Ryder BB Gun Red Ryder LE BB Gun",
+        "sourceUrl": "https://fallout.wiki/wiki/BB_(Fallout_2)",
+        "imageUrl": "https://images.fallout.wiki/1/19/BBS.png",
+        "imageSha256": "494510f6414df246bcd567d1e4c21ae07fc9bb969877d234bb067797970ff358",
+        "imageSize": [
+          99,
+          58
+        ],
+        "imageBytes": 1598
+      }
+    },
+    {
+      "item": {
+        "id": "fo2-ammo-12ga",
+        "name": "Патроны 12-го калибра",
+        "category": "ammo",
+        "categoryLabel": "Боеприпасы",
+        "stats": {
+          "damage": null,
+          "damageFormula": null,
+          "apCost": null,
+          "range": null,
+          "rangeFormula": null,
+          "rangeBonus": null,
+          "ammo": null,
+          "magazine": null,
+          "minStrength": null,
+          "damageType": "Норма",
+          "modifiers": "Fallout 2: КБ цели -10%; сопротивление урону цели 0%; множитель урона ×1.",
+          "armorClass": null,
+          "resistances": null,
+          "weight": "1 фунт / 20 шт.",
+          "price": "11,25 / шт.",
+          "reloadAp": 2,
+          "slots": null,
+          "effect": "Совместимость: Охотничье ружьё, обрез, боевой дробовик, H&K CAWS, Pancor Jackhammer."
+        },
+        "image": "data:image/webp;base64,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",
+        "source": {
+          "label": "Fallout 2",
+          "url": "https://fallout.wiki/wiki/12_ga._Shotgun_Shells_(Fallout_2)"
+        },
+        "warnings": [],
+        "consumable": true,
+        "description": "Дробовые патроны для ружей 12-го калибра. Количество учитывается поштучно: одна единица запаса означает один патрон.",
+        "rulesVersion": 3
+      },
+      "reference": {
+        "originalName": "Shotgun Shells",
+        "caliber": "Shotgun Shells",
+        "armorClassModifier": "-10%",
+        "damageResistanceModifier": "0%",
+        "damageMultiplier": "1",
+        "batchPrice": 225,
+        "batchSize": 20,
+        "sourceCostPerRound": "$11.25",
+        "batchWeight": 1,
+        "compatibleWeapons": "Combat Shotgun H&K CAWS Pancor Jackhammer Sawed-Off Shotgun Shotgun",
+        "sourceUrl": "https://fallout.wiki/wiki/12_ga._Shotgun_Shells_(Fallout_2)",
+        "imageUrl": "https://images.fallout.wiki/thumb/3/34/FO1_Ammo_12ga_Shotgun_Shells.webp/62px-FO1_Ammo_12ga_Shotgun_Shells.webp",
+        "imageSha256": "5ddaf051794c3dc302b8a4ed272dc0f4a6211b5359826e917a91aaabb85e9187",
+        "imageSize": [
+          62,
+          56
+        ],
+        "imageBytes": 1720
+      }
+    },
+    {
+      "item": {
+        "id": "fo2-ammo-rocket-explosive",
+        "name": "Ракета — осколочно-фугасная",
+        "category": "ammo",
+        "categoryLabel": "Боеприпасы",
+        "stats": {
+          "damage": null,
+          "damageFormula": null,
+          "apCost": null,
+          "range": null,
+          "rangeFormula": null,
+          "rangeBonus": null,
+          "ammo": null,
+          "magazine": null,
+          "minStrength": null,
+          "damageType": "Взрыв",
+          "modifiers": "Fallout 2: КБ цели 0%; сопротивление урону цели -25%; множитель урона ×1.",
+          "armorClass": null,
+          "resistances": null,
+          "weight": "3 фунта / 1 шт.",
+          "price": "200 / шт.",
+          "reloadAp": 2,
+          "slots": null,
+          "effect": "Совместимость: Ракетомёт."
+        },
+        "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFgAAAAiCAMAAADs8u6hAAAAzFBMVEUAAAA4ODgoKCggEBA4GBQgICAcHBw4MCAwKCAMDAxIDARcFAgkJDwsGBg8BAAgPCw4OFgQIBA8JCRISEhUSDRQUEgQECAYGCxIJBwsLExsIBAYKEAEDABERGhMLCy8vLxMRCTMzMwoRDxUVHhwcJRgMCTc3NywsLA4QFCQkJB0dHR4LBhoeFAwGACgoKBgYIQgGAD87OxIOCgcMCRUVFRsdGwYMBiQkLB4hHjs7Ox4lHh4mFyUpJSAgID86NzY2OygkHxQWFicpKTExNwd0bXxAAAAAXRSTlMAQObYZgAAA9RJREFUeF6tlIdy8zYQhHWHzt7Um3tvf0+v7/9O2SM0sn7LniRj7YEgRXG+Wy4gDV7KMQ0OLeLcqPCkDk5m9RRUUIcnU4jk4N2BwQIVdMgPHHSOGIJUCESHDRlUHCJ3SDL1GUeyGrY7X9A7d6E4DhvZZzIF6InpXeBn2bstIIR3xpMvnrHGcUtRjiFljOEhRbXl/1pdYs9ORCVopXOMwklmgo5QJ0fg3h0RM2UZoyj71xbsrWcuuXTlR8Dh0xsvVBLsSde2w08k+qkrubbjuRTGaCx6k09srDJAAe4AB9bm8kE8w23bnZQdfUXTL3dkrJ1n43mWZdMpBpTNAX+V7Qz81ibKG5YWBgeDzUAPTxAtMRH90bIqR5m4zICtqmp5ulwuq2qKVvtgo0BlU9ta1dYaCzwcSw9hl1QilSEO+vmHj6buMhgei9mrq/b014f15eW3G8Dne4k4KwLyWbmRCWSxTA5t6Ssy+qUrbWs3wU6Jrqqby4vfjo+PL749ni6nL/NgFYIKMBsWclYWwyqbWxPzAF/lmNkNnakpjCKZp1lGXx7WF8cfoL/OHkH+Pg5Thl4qTkok3F6gGng3TtazY8NuNBKyHRvmjJY3D+se/Pf147Kaznnr1jHn3jucXB35kZxLwXjt6xzByFCKXM0mC0HQI2szzqZ/3lyvL3788Pv67LSqQBbPTI5hx3uJ8RMzeybqXCgiOe8TsgapSBOtlXLSYTQCOQp7I6uqz2fXl9dnn4Gtpn3O3jgJrkS1NOw6MkpPtE7SNNGJ1vcqSNXG3gMLv6qQnWNDVITHjTetrrCd5QJbGo69o6NhNyQ/TFeN0mmqizSdQTKl5JglFhwagmtkE1RcaQFv0WCLxmNgR6Ns0Hg3aRCw54a810VvVsiilTee6Ihca/GYTpKJKjQyh4q4wiCjMCI9CtcGKTe7G48AhjmVJD0/SWaz8/NkEvvoGdCFqsO9PBIl+Gh8V3D8UpzM4EwXCkqkS9Lbv43oWwQkrAJ9E71FQyBvkglywXtgSjSAUmkR4isXMR00QMG3hJDqGd4nVzuKTBmYBvuawGeBKRV62DgSuFR6m6bxRioPyKvByIYfLfcavKIG6W4sTnSDGybPN2yhIykFgFaAanyeCF1KgxyxiwW/DoYXDSoGb2/CXUAoQheukCEA5QXx7CTJC7XBLgavihKVSoKwvdv4PJ0lqZJsImChosQssDqXfSJcrNsbguHbZHaukhcNm5VvVmTk9wHuGJjdvxRVRK4F9y2tVl5PVEJvdW6MMWKLjVAXYas97L58MwH3P4nZoIE10C7hH42HUpeH4P92AAAAAElFTkSuQmCC",
+        "source": {
+          "label": "Fallout 2",
+          "url": "https://fallout.wiki/wiki/Explosive_Rocket_(Fallout_2)"
+        },
+        "warnings": [],
+        "consumable": true,
+        "description": "Разрывная ракета для ракетомёта. Количество учитывается поштучно: одна единица запаса означает одну ракету.",
+        "rulesVersion": 3
+      },
+      "reference": {
+        "originalName": "Explosive Rocket",
+        "caliber": "Explosive",
+        "armorClassModifier": "0%",
+        "damageResistanceModifier": "-25%",
+        "damageMultiplier": "1",
+        "batchPrice": 200,
+        "batchSize": 1,
+        "sourceCostPerRound": "$200",
+        "batchWeight": 3,
+        "compatibleWeapons": "Rocket Launcher",
+        "sourceUrl": "https://fallout.wiki/wiki/Explosive_Rocket_(Fallout_2)",
+        "imageUrl": "https://images.fallout.wiki/a/ab/Explosiverocket.png",
+        "imageSha256": "7eb38054709f7452f44d26d26a6ef988c25d1a383a1e089834a644a8b33a8fce",
+        "imageSize": [
+          88,
+          34
+        ],
+        "imageBytes": 1266
+      }
+    },
+    {
+      "item": {
+        "id": "fo2-ammo-rocket-ap",
+        "name": "Ракета — бронебойная",
+        "category": "ammo",
+        "categoryLabel": "Боеприпасы",
+        "stats": {
+          "damage": null,
+          "damageFormula": null,
+          "apCost": null,
+          "range": null,
+          "rangeFormula": null,
+          "rangeBonus": null,
+          "ammo": null,
+          "magazine": null,
+          "minStrength": null,
+          "damageType": "Взрыв",
+          "modifiers": "Fallout 2: КБ цели -15%; сопротивление урону цели -50%; множитель урона ×1.",
+          "armorClass": null,
+          "resistances": null,
+          "weight": "3 фунта / 1 шт.",
+          "price": "400 / шт.",
+          "reloadAp": 2,
+          "slots": null,
+          "effect": "Совместимость: Ракетомёт."
+        },
+        "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAF4AAAAiCAMAAADh7J7mAAAA6lBMVEUAAAAcHBwgICA4ODgQECAYGCwkJDwoKCgoOCAMDAwsLEwgEBA4MCBIJBw8PDwgOFx8WDRkPBQ4OFjUrHxwSCQoRGw4GBQYKEAQIBAwGAAwKCBAWDSIaEwsGBhIOCj8/MhoUDj85LhgMCRUSDRQUEiwdEw0IAAgGAC8kFRYMAjEkGToyJj87OxIOAQEDABERGgsTHygkHyUfGBISEhMLCxoeFBAKAB4QDCsgEQcMEwcMCRwYFBMJABMRCTIoGSspJjcxMT41KRceEj84MicdDR4hHjwsIRUVFQ8JCQUKBgoRDygXDiQUDg4SGgulSDLAAAAAXRSTlMAQObYZgAABCNJREFUeF61ludy4zgQhI0M5qycs5yzN+/lfO//OtcD0taVymfvlUuNIcVfXw96QElH+xJGHB1GwnDGPMnCw+CNlJ6UzOOH4QsJPl1cHApPBh76P4QBb9o/97z5AfiGgY5FEuJA4XtO/C7eAYQwsHs7npFBLbZ44nNnGL/ZAOHsxG6ebBtHEb9xtjs456FdiEbWGhsK9ru5EbViXP8/nBAUay14tPCMRZ8mtLH4ox+7Jfrih1hYI0JIhN8O53xojYGHo4ehGfaMY1gBKtALC54QP8+tZWzbKLr/TYxexxvOGDc9/sHCAW0bM+S9nrH0jCzQt1kIjq3d3QkO+mw7y2ZZWZazLPv0KXplG+i9ZxmvZbDgxHrcmNpB/CosYrHwuZpbZrvZWbSdlWVK+it9yLJs9sIeqCHCdniHdfBIRoTvwQtCQNxahIOcrgTvxFkUbaOsTAeD5XKzvH43SLNyG/3nlwnAAWMEd+qA7YrDwKL/vuE8FMxY8bVvWdxvgR6Nykk6uL4qiun0pNgsB2UW3YbP45lHC2TP63hwauQcLNhkZvgHYz9a3hHr1io6A38ymQw2xfj09HT84wksfipn0ei5bKznxFC0ZCCBpsL1KEu3OERMraDbimAwms8nH69OxmPnMJ0Wx+/SbM8gFDiSvR6d+bDTmEj52DqD6huJcWGZ4VEAfhiiPs8n6XVxMh1Px2QyLb4sYSAatBDW0AgBxxNCxoMxwlOSoR7luJBSilmDx1UAfrc1XPXC0ejzw2RwDBXFd9PvMYYvyz+zUW2ANwdoIK2N+4sYJ5spZZT2/bbWbeCwDbLByKWirShD4w/WAWk17LbuoyiazeaYAo7R5rj45aQoNptldkt4a3Ccb+YLYYSvFU90olWSJBdV7ie4yFZKqeCptFaMo2AmA8/hWRf8VasVnaGi22xWztNBOkAdL1OagDEaVANpoU1btZXvJ36SVFWeVxrTjMMYb6zph++19jVsmBuMYkGtIaU0dB6rVhhBOFFZ+ZCm5ejxt2J3gpAImlVAQYmG1UXi+7lfJRfYGRwUcpLSKEUGqFrYRZf20aWPuqL71v47QHwKXStKRCuIXKrLy4vqMvdxr3JJ3ZO55ixg3Fnsa41ae+tnXgDfl1pp6t5ZKLr8Wkle5RgNZe/rHHxF4kMe7JmsvcCDDHj7QvOEp5uvHd65YCrIza/gzjxPUnZ6J85hw1iA8h7Fj54TQZp2K4mwjOFKerUH+DiwBOA1lqbihD0pSMon+H7ru+G+VzohvHranQGKLAjhCA6G/YGP1eQkm94Zf+FXxZc4Lijd/rdrnuRt8CRE/PNzyZybhhy6YQdM7BP3u/f/9vMcWe/NPNc+oqKkQMcwCSZpeU3gjH3Lv99YIxvVFi/8UUey9VhYgK4ZxF8h7x9PAN6ufwD9IVf5D84bRQAAAABJRU5ErkJggg==",
+        "source": {
+          "label": "Fallout 2",
+          "url": "https://fallout.wiki/wiki/Rocket_AP_(Fallout_2)"
+        },
+        "warnings": [],
+        "consumable": true,
+        "description": "Бронебойная ракета для ракетомёта. Количество учитывается поштучно: одна единица запаса означает одну ракету.",
+        "rulesVersion": 3
+      },
+      "reference": {
+        "originalName": "Rocket AP",
+        "caliber": "AP",
+        "armorClassModifier": "-15%",
+        "damageResistanceModifier": "-50%",
+        "damageMultiplier": "1",
+        "batchPrice": 400,
+        "batchSize": 1,
+        "sourceCostPerRound": "$400",
+        "batchWeight": 3,
+        "compatibleWeapons": "Rocket Launcher",
+        "sourceUrl": "https://fallout.wiki/wiki/Rocket_AP_(Fallout_2)",
+        "imageUrl": "https://images.fallout.wiki/c/ca/Rocketap.png",
+        "imageSha256": "ce942b64dee4e30f359e00e4da43e37685da4e73a7194d62eeb365229ba8ecf6",
+        "imageSize": [
+          94,
+          34
+        ],
+        "imageBytes": 1375
+      }
+    },
+    {
+      "item": {
+        "id": "fo2-ammo-flamer-fuel",
+        "name": "Топливо для огнемёта",
+        "category": "ammo",
+        "categoryLabel": "Боеприпасы",
+        "stats": {
+          "damage": null,
+          "damageFormula": null,
+          "apCost": null,
+          "range": null,
+          "rangeFormula": null,
+          "rangeBonus": null,
+          "ammo": null,
+          "magazine": null,
+          "minStrength": null,
+          "damageType": "Огонь",
+          "modifiers": "Fallout 2: КБ цели -20%; сопротивление урону цели 25%; множитель урона ×1.",
+          "armorClass": null,
+          "resistances": null,
+          "weight": "10 фунтов / 10 шт.",
+          "price": "25 / шт.",
+          "reloadAp": 2,
+          "slots": null,
+          "effect": "Совместимость: Огнемёт, улучшенный огнемёт."
+        },
+        "image": "data:image/png;base64,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",
+        "source": {
+          "label": "Fallout 2",
+          "url": "https://fallout.wiki/wiki/Flamethrower_Fuel_(Fallout_2)"
+        },
+        "warnings": [],
+        "consumable": true,
+        "description": "Стандартная топливная смесь для огнемёта. Количество учитывается поштучно: одна единица запаса означает один заряд.",
+        "rulesVersion": 3
+      },
+      "reference": {
+        "originalName": "Flamethrower Fuel",
+        "caliber": "Flamethrower Fuel",
+        "armorClassModifier": "-20%",
+        "damageResistanceModifier": "25%",
+        "damageMultiplier": "1",
+        "batchPrice": 250,
+        "batchSize": 10,
+        "sourceCostPerRound": "$25",
+        "batchWeight": 10,
+        "compatibleWeapons": "Flamer Improved Flamer",
+        "sourceUrl": "https://fallout.wiki/wiki/Flamethrower_Fuel_(Fallout_2)",
+        "imageUrl": "https://images.fallout.wiki/8/8c/Flamethrowerfuel.png",
+        "imageSha256": "1bc434344bbe0f5975daea5de38e2c5dc1686465f5bcfbad34fca3a6c0bd4a4c",
+        "imageSize": [
+          92,
+          53
+        ],
+        "imageBytes": 1962
+      }
+    },
+    {
+      "item": {
+        "id": "fo2-ammo-flamer-fuel-mk2",
+        "name": "Топливо для огнемёта Mk II",
+        "category": "ammo",
+        "categoryLabel": "Боеприпасы",
+        "stats": {
+          "damage": null,
+          "damageFormula": null,
+          "apCost": null,
+          "range": null,
+          "rangeFormula": null,
+          "rangeBonus": null,
+          "ammo": null,
+          "magazine": null,
+          "minStrength": null,
+          "damageType": "Огонь",
+          "modifiers": "Fallout 2: КБ цели -20%; сопротивление урону цели 0%; множитель урона ×1.",
+          "armorClass": null,
+          "resistances": null,
+          "weight": "10 фунтов / 10 шт.",
+          "price": "25 / шт.",
+          "reloadAp": 2,
+          "slots": null,
+          "effect": "Совместимость: Огнемёт, улучшенный огнемёт."
+        },
+        "image": "data:image/png;base64,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",
+        "source": {
+          "label": "Fallout 2",
+          "url": "https://fallout.wiki/wiki/Flamethrower_Fuel_Mk_II"
+        },
+        "warnings": [],
+        "consumable": true,
+        "description": "Улучшенная топливная смесь Mk II для огнемёта. Количество учитывается поштучно: одна единица запаса означает один заряд.",
+        "rulesVersion": 3
+      },
+      "reference": {
+        "originalName": "Flamethrower Fuel Mk II",
+        "caliber": "Flamethrower Fuel",
+        "armorClassModifier": "-20%",
+        "damageResistanceModifier": "0%",
+        "damageMultiplier": "1",
+        "batchPrice": 250,
+        "batchSize": 10,
+        "sourceCostPerRound": "$25",
+        "batchWeight": 10,
+        "compatibleWeapons": "Flamer Improved Flamer",
+        "sourceUrl": "https://fallout.wiki/wiki/Flamethrower_Fuel_Mk_II",
+        "imageUrl": "https://images.fallout.wiki/9/97/FLMFUEL2.png",
+        "imageSha256": "33045793e4c4955351cdc121d84b569b16c34d39be3e8e8ef30e2823691e2827",
+        "imageSize": [
+          104,
+          65
+        ],
+        "imageBytes": 3405
+      }
+    },
+    {
+      "item": {
+        "id": "fo2-ammo-needler-hn",
+        "name": "Иглы HN",
+        "category": "ammo",
+        "categoryLabel": "Боеприпасы",
+        "stats": {
+          "damage": null,
+          "damageFormula": null,
+          "apCost": null,
+          "range": null,
+          "rangeFormula": null,
+          "rangeBonus": null,
+          "ammo": null,
+          "magazine": null,
+          "minStrength": null,
+          "damageType": "Норма",
+          "modifiers": "Fallout 2: КБ цели -10%; сопротивление урону цели 0%; множитель урона ×1.",
+          "armorClass": null,
+          "resistances": null,
+          "weight": "1 фунт / 30 шт.",
+          "price": "8,33 / шт.",
+          "reloadAp": 2,
+          "slots": null,
+          "effect": "Совместимость: Игольчатый пистолет."
+        },
+        "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFIAAABHCAIAAAAbVYfkAAAABnRSTlMAAAAAAABupgeRAAAPeUlEQVR4Ae3ZhVokWZYH8HMlPCIdSAooGsoNqtrH3d3dXT9Zd3uGfYB1d3drt3LFLUnPyIwMvbbjMy3V4zDVH783+F85EfccuGXs2bNnz549exD8+N1xek59FWAMUiGlFELo7PkLz9nY8/Nzt7n6O2dllnQaXeO2cXa15rZ5WEDev/nw2PnzsEso/DjNlaJ3HQZTd8UQaZlWddKBoVcI2eyEUhmwezD8OLk1NLvUYzRgvZGRlXi1W/H7caMbXhMxhye75Xb7nS8+XIzVpVB78MoVeLI61R8OUe9cFqYMPNm44gdpEji4zW3A+NaL/cUXnJ6bGtR8m9Mor3CUIhOn5qkT/3XxMnzTm190+IUj3B94MsmiJGowmcVZ1xKIEgvSaFcPOfn+q9T8515y+B1H/IJbmrwSzsxUcTGL+kkJWwlNoDzWaLQB4I333vX+I3JMj+p1yjTWYnG/x5M8BepFzMgEfvTS1Vupkt8+N/dbejb1stEm92nL04vpWj+6eCWrsUyjOJ9jeq6U11QRcT2xur2u34OenjaIYC2SlHVN5QIeCWXsK4mFgf74uUu3yiFXW4AGKyjI0lCg4Vqn24WaRJsEzyYwX7Qn+hwpUTNkQ6B9p188VphcatfTxUtr4aqBeV4bpLFIlAGQAOi3zN2WCF1QYmxlSwrlq6CHR/oiSXRfCisqFXqOB4N6EiYIebe//lXz7/54kpnk7EO9mDvtDgRRlE+JIrkw6mIhJNw6saW6GEE86k1NH7rj9Cv0on3f3/3pxasXuSRDpLPSdGLTeGtZTxOH5iamDw+GkFtrlveNxwvuRhIyhglWmpExhW6lSn7h4kUAGJ98YTA+U7n9tccOTS7deOzG+fMIJygKhmHNzSIU6mEWX33i0ZnL58ePz1dGR0uVsYaRN2lLCqUlkHg4ymz1/VSWe0+dPjXCnDhO27hdpZEP/3Dx2s5V8q+Ynzs5SvrgjuRKxYnqvjTob19/zI8CRLFSNVdljrA4CEzlxMF91XFv+/K/rCw+0m1sBb0h0qVFcSgsiVSC9EajCd/Nqw8df8tM4aAevwBnszNJRQgi9aLipanyweLIQrOzY99tVGfSa1+Xm//YWFmeCBYsi0umcZr0Mp7oIq8zSAws+ujqn8TWQ+n6grdxA9sodnGamamBksjEKD7/lYPzrF5555mZkM+k3XsP8RQ7gzYZOiyecEb6KXdKHk8YEvl7569E6vyFCz/23W40mqtbvWNjcpZulqOzrrGwsB0PWizDVBCad1PTZIhpXILDVsbFNTBwI9SaPs8S2YvNMDKVAsD6HUfH3dJYrd6Am3jrycoHpxKvqjVdl2nlybGJaT9xTG3Osv1cWkEi34ZKwbgQq3q9sRP/5KdOnYoFavSG3nZjxCCTRUoKMsUWH2JBS1B0sBNB6gyGxRRMXSHdpcTAnhRFMbRpokDpBMbdhGIFN1fMDUsFHyHCEktDg7IhsZpAWYITIobDYtDFJPTDVKmdeoogAFeqkBh1r5BGYVFPCphYMlVIMTzKSYVoBqWqH2VtgakV77cH4+PFnFuxY4lpjBGkQi01w5RLuLm11F6uVVUn8gr1I4TnVeNyMVlM3QtemDTKq+v2ZReWwkAptRMl7Suq1aqOBQWMJ2cKx+a16lxrOQ16jRA05FXLFc9OGQyytsyQYR46dKc88mKJZ5qRMWg1u0gAN1yRYcJDZdYbLbiZwv7Y9iYqMgxpUtun9/kmrw+Gjt+lvTStY9gMWJ3KEOxGo7ETT5GvlJDzAK+fn883Jg4MX33ojheNXPztS+tLwFUcId1wLUv304BlbA3uDI7/6vToRMNYNGt/bhau2UErBGlyxpRSCMHNPfHI44dvP7Hu4yCBZbn2ABcyZSHfjDTKKE9ACwxKgCO5sw/Pgs2HDDZAHXEq4wdOe+5I0GlzvzZotIqYY6qZmWa3wrTfMk4crXSnyoVy3/Ka3baPSMtw87iPhIJnRQgSgvc5x7m8ly95jjVgsJYNUbQZNhPGdUoEoJ055N90YJ9tWJphOKOjk8RM1554dNiuITPBOCoZ2GYkYcBlaO2rzpy5VyB9s+2HG6tJbTMWyDClVKovjFarCTd3YnxkTLIW1dSp2+9698de/P5PzDz/JZjmB9drWb1OcpkAFMqdOeTf9NePrH3UQbhhtZ9I89kNS18Xjg5KCyIUlgdewaKhk3a7g4XrLJI0YgUlUSHW8qzcyYRlNAOz5GJ4VpxLjiQTHDJpW8VycX+hCIvlTUUVo4gJCkjtRndFITVcMjeuHDDCgzYsWqQTmokPvTF7JJfTu2mKUdC71n347yTyraXfj1uLgkBi0X5fny1FJw9gWzvZCPC5mzRSDZ1YWJOpkDjDPKUAjGem1S7vl6s1EnNLpzEgtdOx+7FqB+HmdHHSw6Xy0K6rzpAjbtr2cWOURfVzFh9Ra2uDx35any4VkpZrapxkboJMN7pnPxgqOFRE3SgPN8EECAS2glx/w+0+ZPcrrNnNR8vVfC/HAVkhAwQS7XTs5dij/WB+o5u89LYSJKWrtRZNFfAuqczkwNYe6yasoaHNld7zbNmZLhfW67aL67Ysx3gjpUks/YgpqeCZ3HX6pIl5mAjbyvbjJdr8k/rj/wRL7RVWXLtUDzQECIHajc7p+QsXYcCfGE5cHL40N/fl6ROvtJCmUJgOt/2UpVaOiyxMBBc6GYRaownVQsEjniuDTGy0skwodZMX6N13z7/laPzGA4wrEgHqK4SzNMviepxEgwEwpIfwNWqXGsYDNExKm8Izp1++/+grTcOOmJU1V7X2FVQgtJxozKmt2w3XLr348NTIsaI9W7Kd1IX+UAkGMYOn9xtOnz7zrle7L7nHbPQ5QYgg8JGWbQeVKMazY6O9fuJpqQtfgYDsTsNY5RSxlN9u19ZrE/vGp6fGWdbYX479IQuDYQkTg+IB0i7x06888OvHSmgLP95q/X4xudA1eZAKLuHp/yy37SvYflhrdwQxDQN7hArLSCuSKJEq0k0VFkgPlchTDXIAaBdir7DCrNGcR4/ThZag9G0n+u1DhQu+sbQwQAkeARuI1AShyTjkjxRNVZ1dqT9S6CqCEM+ZmDGh1NNiow2P2BS5hXzQHxIeKzaQgTfSmBy1/bHcbQ7qbWV2hkBwFAAUduGQf6X7eQi13zq6OX/44lzxv48cFe5ozgoC0FBAhW8zjEkSZJuLmy2/hRUyjTHt8IwaLRfz6GVVOV0iGCN4MiyzCu8ddOIitpI+ilPUZVPL5A340K9VX/Lz9Mj7NZjWhpJg5TgcoV0aBv3Jdedsm46GzBwzY5oVtjoOEjFXEiswkUZJGLOh3wvaG7bJXdyoGtnYvmiiqtdR7nK7wNWT7ucn33HnsQmj6+a8US/nJNiTJhN8mAz5WMIPUXsG41lJjcwBJJDVpaB2afT37w9fftebn/8CLI3NkNh5GAOrPdAIQooU81zTO8jICna9/19/0t38+9PRw9oU4wvDeka3I95N9PPf8a/yy2+efct0K3+P69qWs+Cf54JQoKYgdgJScQZCcol8hZTUQCDlY6l2cfRH1tphLoshG7m+nWHcyudMDHHMGhktTznvOE1e+1IYv+t/ilN/lgtuHOwsFWZHFaGSc/LkB5Q3WxqpGs5S17aZHMeMASiQGvFgUAnOhYMLg8bWiGruL/vFmEiATFO7OejdrMXR44l+0uMZrlzqmcLKNGACZBjH0u6Plk/YiENAK6m0bRiVB84Ot3St02fyybu1Fcl/b5HeCkK14ZQlBwxRDIAIF4nV/M/C9aW4WI3PXm+E7QSDNUDCBUC7F/u/Gt7sI4P3V+RgfDza6tjdoSRUSogkFomMUlGnxWrTVzMEKZwbghcPiZVjEp5Sxo2WvxLL822Mt+OSqQqWZgqlAtA0TWY9cxinZj3ZXm933FhXJkEKAcjdi/0/j16h6Hj5vujONxT1quOtD5QCBCjDJJWAtwbJfgFzCD2qCQVZERUMAE3ZFsZPLsRHbW5NmFKAE8bbHGVDo5QagZFwTWKq692MJXGtUqXrkTUEXlBKol0e6//HI1fONQEWG3Eg4mK5qKOM0OW28U83tH9fJmOdEEKsqhKlCnM6nB334pToShH0pLahKe86U3jhIesOlx+eNHMjSNO4iTWIeRPIVqVITGbHfkqzRMNp4uRjinZmPPAsnPL4uAjuvqt8f999+Gzmp+ZDj11bWG+L/H4ktDtLBowKXBX6ohrGYj0Av5OtdvWt7RZ809yxfS8eE2OHUHXc9GIZ80QkKIxUQjSonird/qqJiec3e4VWQ/TbvtIRQdJHVr3R2M3YNzbakTNZC8mDN+Tf/9uF2nYbvmZzu6kXx95zW4QCQ7g4tLCx3F32qp16stKhm/UWfEt+Io2GY06Wny6WlGKNQSuwQh8GuqMmzhw6+qqx6besZbmNxbP9Tg0ZIkQQqZ3srtzEX99/7a/vh6eThCwK9yAVyAA0ACrUoax3WUMCP+mi/ed95wN5vB4Zx/olShRBmm2lZpHwmCRBFmZa5ngYQxbLJANqohFH6w53raR9d0mmapJOTCEr7rl1p32kkC1BWUZUmfBkjz5wxXjhC8/2s4yxk1X35VNZxYumnJwz1TyuHip0YDJ3465T0uuBXoDEoNfDn+DYJMnUZmc45hhDLZ7RSMaERg1X489UVu+77z74GvGS+Yplvb2CqmdSNFkvhX8j6f0Oh6NzjdtSspQZl+tSyV2t5M8uxng5NGsrFLu20LCZZMfTDi6ZhyvJnfMnbvpd/J/zD9f0lmU7QWZpkdrXwv5Fx18mjOQ01DbM7lAA/ATHDhl+vK3HeQ/yTm4AYJt/s2peXlY2cIrhWdgybEnVGLiWn0FE+fXcYMxoMFjiZjbkWSYUqJ/cQ/7wE5c1eWLW6F4ajE6E3N8IP/m7K/A98NJUD0lr1h1PhL7K1AlGtwNzkzW9SrLtcw4Ivm8UdtB95y7fdw4AFr/P20EHg2Sk11VjDhgKm4JtqV6quBKCQcpA7UDsnZeAtmkQs8FP0tQYNQKWq+dk0BqI7TBJFKAd6JzuBqrRHBP+UF3VCmFRp8gvbrRayMZxEiKuACFAz8HYgmcdCX0/i5uDTgJGM5JxJjr+CtfSUGpYPjd3O2EoSdRAd9Y2GGy0+1PFTctdoW7U4ykDhSigHXiK7LiFtbZXqFZy3LDUVJZWNbpUqV452wlC0Q617bjwlZ7UczD2Vyyut/Ij45VpcyDpsC/OdQy/FTNFF7vuV8cy3z8Et44zZ+YQAFJKAgJQAOjsuQvwnLFnz549e/bs2bPn/wHi4rpt4Sd5MAAAAABJRU5ErkJggg==",
+        "source": {
+          "label": "Fallout 2",
+          "url": "https://fallout.wiki/wiki/HN_Needler_Cartridge_(Fallout_2)"
+        },
+        "warnings": [],
+        "consumable": true,
+        "description": "Обычные игольчатые боеприпасы HN. Количество учитывается поштучно: одна единица запаса означает одну иглу.",
+        "rulesVersion": 3
+      },
+      "reference": {
+        "originalName": "HN Needler Cartridge",
+        "caliber": "HN Needler Cartridge",
+        "armorClassModifier": "-10%",
+        "damageResistanceModifier": "0%",
+        "damageMultiplier": "1",
+        "batchPrice": 250,
+        "batchSize": 30,
+        "sourceCostPerRound": "$8.33",
+        "batchWeight": 1,
+        "compatibleWeapons": "Needler Pistol",
+        "sourceUrl": "https://fallout.wiki/wiki/HN_Needler_Cartridge_(Fallout_2)",
+        "imageUrl": "https://images.fallout.wiki/0/05/HNNeedlerCartridge.png",
+        "imageSha256": "613a42bb8af12c91b0b472df8ebb2974bb4ca8c16eeff78e9c39d93eb720854b",
+        "imageSize": [
+          82,
+          71
+        ],
+        "imageBytes": 4036
+      }
+    },
+    {
+      "item": {
+        "id": "fo2-ammo-needler-hn-ap",
+        "name": "Иглы HN AP",
+        "category": "ammo",
+        "categoryLabel": "Боеприпасы",
+        "stats": {
+          "damage": null,
+          "damageFormula": null,
+          "apCost": null,
+          "range": null,
+          "rangeFormula": null,
+          "rangeBonus": null,
+          "ammo": null,
+          "magazine": null,
+          "minStrength": null,
+          "damageType": "Норма",
+          "modifiers": "Fallout 2: КБ цели -10%; сопротивление урону цели 0%; множитель урона ×2.",
+          "armorClass": null,
+          "resistances": null,
+          "weight": "1 фунт / 10 шт.",
+          "price": "30 / шт.",
+          "reloadAp": 2,
+          "slots": null,
+          "effect": "Совместимость: Игольчатый пистолет."
+        },
+        "image": "data:image/png;base64,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",
+        "source": {
+          "label": "Fallout 2",
+          "url": "https://fallout.wiki/wiki/HN_Needler_Cartridge_(Fallout_2)"
+        },
+        "warnings": [],
+        "consumable": true,
+        "description": "Бронебойные игольчатые боеприпасы HN AP. Количество учитывается поштучно: одна единица запаса означает одну иглу.",
+        "rulesVersion": 3
+      },
+      "reference": {
+        "originalName": "HN AP Needler Cartridge",
+        "caliber": "AP",
+        "armorClassModifier": "-10%",
+        "damageResistanceModifier": "0%",
+        "damageMultiplier": "2",
+        "batchPrice": 300,
+        "batchSize": 10,
+        "sourceCostPerRound": "$30",
+        "batchWeight": 1,
+        "compatibleWeapons": "Needler Pistol",
+        "sourceUrl": "https://fallout.wiki/wiki/HN_Needler_Cartridge_(Fallout_2)",
+        "imageUrl": "https://images.fallout.wiki/4/4d/HNAPNeedler_Cartridge.png",
+        "imageSha256": "f11a1515965bf9611870f3034c33a9af59e8d29fb3e094e77c11cc022413a29c",
+        "imageSize": [
+          80,
+          67
+        ],
+        "imageBytes": 4133
+      }
+    },
+    {
+      "item": {
+        "id": "fo2-ammo-micro-fusion",
+        "name": "Микроядерная батарея",
+        "category": "ammo",
+        "categoryLabel": "Боеприпасы",
+        "stats": {
+          "damage": null,
+          "damageFormula": null,
+          "apCost": null,
+          "range": null,
+          "rangeFormula": null,
+          "rangeBonus": null,
+          "ammo": null,
+          "magazine": null,
+          "minStrength": null,
+          "damageType": "По оружию",
+          "modifiers": "Fallout 2: КБ цели 0%; сопротивление урону цели 0%; множитель урона ×1.",
+          "armorClass": null,
+          "resistances": null,
+          "weight": "5 фунтов / 50 шт.",
+          "price": "20 / шт.",
+          "reloadAp": 2,
+          "slots": null,
+          "effect": "Совместимость: Лазерная винтовка, её модификации, лазер Гатлинга, плазменная винтовка, турбоплазменная винтовка, импульсная винтовка YK42B."
+        },
+        "image": "data:image/png;base64,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",
+        "source": {
+          "label": "Fallout 2",
+          "url": "https://fallout.wiki/wiki/Micro_Fusion_Cell_(Fallout_2)"
+        },
+        "warnings": [],
+        "consumable": true,
+        "description": "Микроядерные элементы питания для тяжёлого энергетического оружия. Количество учитывается поштучно: одна единица запаса означает один заряд.",
+        "rulesVersion": 3
+      },
+      "reference": {
+        "originalName": "Micro Fusion Cell",
+        "caliber": "Energy Weapons",
+        "armorClassModifier": "0%",
+        "damageResistanceModifier": "0%",
+        "damageMultiplier": "1",
+        "batchPrice": 1000,
+        "batchSize": 50,
+        "sourceCostPerRound": "$20",
+        "batchWeight": 5,
+        "compatibleWeapons": "Gatling Laser Laser Rifle Laser Rifle (Ext. Cap.) Plasma Rifle Turbo Plasma Rifle YK42B pulse rifle",
+        "sourceUrl": "https://fallout.wiki/wiki/Micro_Fusion_Cell_(Fallout_2)",
+        "imageUrl": "https://images.fallout.wiki/5/56/DCELLS.png",
+        "imageSha256": "383d73c01157aec5232d9632cdd5d0127c5a8a3027a58af52a07804bed3cca71",
+        "imageSize": [
+          47,
+          61
+        ],
+        "imageBytes": 1505
+      }
+    },
+    {
+      "item": {
+        "id": "fo2-ammo-small-energy",
+        "name": "Малая энергетическая батарея",
+        "category": "ammo",
+        "categoryLabel": "Боеприпасы",
+        "stats": {
+          "damage": null,
+          "damageFormula": null,
+          "apCost": null,
+          "range": null,
+          "rangeFormula": null,
+          "rangeBonus": null,
+          "ammo": null,
+          "magazine": null,
+          "minStrength": null,
+          "damageType": "По оружию",
+          "modifiers": "Fallout 2: КБ цели 0%; сопротивление урону цели 0%; множитель урона ×1.",
+          "armorClass": null,
+          "resistances": null,
+          "weight": "3 фунта / 40 шт.",
+          "price": "10 / шт.",
+          "reloadAp": 2,
+          "slots": null,
+          "effect": "Совместимость: Лазерный и плазменный пистолеты, их модификации, импульсный пистолет YK32, бластер пришельцев, силовой кастет, электрокнут, «Потрошитель»."
+        },
+        "image": "data:image/png;base64,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",
+        "source": {
+          "label": "Fallout 2",
+          "url": "https://fallout.wiki/wiki/Small_Energy_Cell_(Fallout_2)"
+        },
+        "warnings": [],
+        "consumable": true,
+        "description": "Малые энергетические элементы питания для оружия. Количество учитывается поштучно: одна единица запаса означает один заряд.",
+        "rulesVersion": 3
+      },
+      "reference": {
+        "originalName": "Small Energy Cell",
+        "caliber": "Energy Weapons",
+        "armorClassModifier": "0%",
+        "damageResistanceModifier": "0%",
+        "damageMultiplier": "1",
+        "batchPrice": 400,
+        "batchSize": 40,
+        "sourceCostPerRound": "$10",
+        "batchWeight": 3,
+        "compatibleWeapons": "Alien Blaster Cattle Prod Laser Pistol Magneto-Laser Pistol Mega Power Fist Plasma pistol Plasma Pistol (Ext. Cap.) Power Fist Ripper Super Cattle Prod YK32 pulse pistol",
+        "sourceUrl": "https://fallout.wiki/wiki/Small_Energy_Cell_(Fallout_2)",
+        "imageUrl": "https://images.fallout.wiki/e/ed/CCELLS.png",
+        "imageSha256": "f940fd64cce2855e1b618648763c6b4ab949006e3e7509610a190f74c79934a9",
+        "imageSize": [
+          54,
+          62
+        ],
+        "imageBytes": 1752
+      }
+    }
+  ],
+  "bottleCaps": {
+    "id": "book-afb8a1f7ce1a",
+    "category": "currency",
+    "categoryLabel": "Крышки и валюта",
+    "consumable": false,
+    "image": "data:image/png;base64,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",
+    "reference": {
+      "originalName": "Bottle Caps",
+      "sourceUrl": "https://fallout.wiki/wiki/Bottle_Cap_(Fallout_2)",
+      "imageUrl": "https://images.fallout.wiki/0/0d/Botlcaps.png",
+      "imageSha256": "d4b78ded7fd2cfd93604327d1b3750c362f8d6caa9592a6d585c8f3ad8401911",
+      "imageSize": [
+        68,
+        58
+      ],
+      "imageBytes": 2257
+    }
+  }
+}

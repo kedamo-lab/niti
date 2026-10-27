@@ -43,11 +43,17 @@
       if (perk && !seen.has(perk.id)) { perks.push({id:perk.id,rank:Math.max(1,Math.min(perk.ranks.max,integer(entry.rank) || 1))}); seen.add(perk.id); }
     }
     const training = Object.fromEntries(SKILLS.map(id => [id, String(typeof source.training?.[id] === 'string' ? source.training[id] : sheet['skill_'+id] || '').slice(0,40)]));
-    return {version:1,traits,traitsLocked:source.traitsLocked === true,perks,training,thiefSkills:[...new Set(Array.isArray(source.thiefSkills) ? source.thiefSkills.filter(id => SKILLS.includes(id)) : [])].slice(0,2),thiefSubtype:['Взломщик','Скрытник','Карманник','Минёр'].includes(source.thiefSubtype) ? source.thiefSubtype : ''};
+    const startingLevel=levelForXP(Math.max(0,integer(sheet.experience) || 0)),previous=source.progress || {};
+    const progress={characterKey:typeof previous.characterKey==='string' ? previous.characterKey.slice(0,220) : '',sessionXP:bounded(previous.sessionXP,0,Number.MAX_SAFE_INTEGER) ? previous.sessionXP : 0,observedLevel:bounded(previous.observedLevel,1,15) ? previous.observedLevel : startingLevel,acknowledgedLevel:bounded(previous.acknowledgedLevel,1,15) ? previous.acknowledgedLevel : startingLevel,perkPromptBudget:bounded(previous.perkPromptBudget,0,5) ? previous.perkPromptBudget : 0};
+    return {version:1,traits,traitsLocked:source.traitsLocked === true,perks,training,thiefSkills:[...new Set(Array.isArray(source.thiefSkills) ? source.thiefSkills.filter(id => SKILLS.includes(id)) : [])].slice(0,2),thiefSubtype:['Взломщик','Скрытник','Карманник','Минёр'].includes(source.thiefSubtype) ? source.thiefSubtype : '',progress};
   }
   function validMeta(value) {
     if (!value || typeof value!=='object' || Array.isArray(value) || value.version!==1 || typeof value.traitsLocked!=='boolean') return false;
-    if (Object.keys(value).length!==7 || !['version','traits','traitsLocked','perks','training','thiefSkills','thiefSubtype'].every(key => Object.hasOwn(value,key))) return false;
+    if (![7,8].includes(Object.keys(value).length) || !['version','traits','traitsLocked','perks','training','thiefSkills','thiefSubtype'].every(key => Object.hasOwn(value,key)) || Object.keys(value).some(key=>!['version','traits','traitsLocked','perks','training','thiefSkills','thiefSubtype','progress'].includes(key))) return false;
+    if (Object.hasOwn(value,'progress')) {
+      const progress=value.progress;
+      if (!progress || typeof progress!=='object' || Array.isArray(progress) || Object.keys(progress).length!==5 || !['characterKey','sessionXP','observedLevel','acknowledgedLevel','perkPromptBudget'].every(key=>Object.hasOwn(progress,key)) || typeof progress.characterKey!=='string' || progress.characterKey.length>220 || !bounded(progress.sessionXP,0,Number.MAX_SAFE_INTEGER) || !bounded(progress.observedLevel,1,15) || !bounded(progress.acknowledgedLevel,1,15) || !bounded(progress.perkPromptBudget,0,5)) return false;
+    }
     if (!Array.isArray(value.traits) || value.traits.length>2 || new Set(value.traits).size!==value.traits.length || !value.traits.every(id => TRAITS.some(trait => trait.id===id))) return false;
     if (!Array.isArray(value.perks) || value.perks.length>PERKS.length || new Set(value.perks.map(p=>p?.id)).size!==value.perks.length || !value.perks.every(entry => entry && typeof entry==='object' && Object.keys(entry).length===2 && Object.hasOwn(entry,'id') && Object.hasOwn(entry,'rank') && PERKS.some(perk=>perk.id===entry.id && bounded(entry.rank,1,perk.ranks.max)))) return false;
     if (!value.training || typeof value.training!=='object' || Array.isArray(value.training) || Object.keys(value.training).length!==SKILLS.length || !SKILLS.every(id => typeof value.training[id]==='string' && value.training[id].length<=40)) return false;
