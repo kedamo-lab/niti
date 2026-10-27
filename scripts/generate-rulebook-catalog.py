@@ -82,7 +82,8 @@ with ZipFile(book)as z:
    i['craftRecipes']=[{'ingredients':r['ingredients'],'result':r['result']}for r in related]
    i['craftable']=True
    i['stats']['effect']='\n'.join(filter(None,[i['stats'].get('effect'),'\n'.join(' + '.join(r['ingredients'])+' → '+r['result']for r in related)]))
-items=extend_catalog(items,root)
+from equipment_art import apply_equipment_art
+items=apply_equipment_art(extend_catalog(items,root),root)
 for i in items:
  if i['category'] in weaponcats:assert i['stats'].get('damageType')
  if i['category'] in weaponcats and i['stats'].get('ammo'):assert i['stats']['reloadAp']==2

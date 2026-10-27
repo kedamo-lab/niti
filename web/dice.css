@@ -6,3 +6,6 @@
 @media(prefers-reduced-motion:reduce){.dice-card{transition:none}}
 
 .dice-history-list{max-height:360px;overflow-y:auto;overscroll-behavior:contain}.dice-card strong{max-width:100%;overflow-wrap:anywhere;font-size:15px}.dice-card>span{max-width:100%;overflow-wrap:anywhere}.dice-picker:has(.dice-card:nth-child(7)) .dice-card strong{line-height:1.5}@media(max-width:680px){.dice-history-list{max-height:320px}.dice-card strong{font-size:13px}}
+
+/* Complete, crisp polyhedral outlines; the front d10 masks only natural overlap. */
+.dice-symbol{overflow:visible;shape-rendering:geometricPrecision}.dice-front-face{fill:var(--paper)}

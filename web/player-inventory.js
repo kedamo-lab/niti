@@ -15,6 +15,7 @@
   let lastOnline = false;
   const quantities = new Map();
   const slotChoices = new Map();
+  let drag = null, pointerGesture = null, deferredPaint = false, suppressClickUntil = 0, suppressItemId = '';
 
   function e(value) {
     return String(value ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
@@ -59,7 +60,9 @@
   }
   function itemImage(item, cls = '') {
     let src = '';
-    const value = typeof item?.image === 'string' ? item.image : '';
+    const art = window.NITI_EQUIPMENT_ART || {};
+    const fallback = art.byCategory?.[item?.category] || (weapon(item) ? art.weapon : item?.category === 'armor' ? art.armor : art.extra);
+    const value = typeof item?.image === 'string' && item.image ? item.image : fallback || '';
     try {
       if (/^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(value)) src = value;
       else if (value) {
@@ -67,7 +70,7 @@
         if (url.origin === location.origin && ['https:', 'http:', 'file:'].includes(url.protocol)) src = value;
       }
     } catch { /* An invalid illustration does not affect the item. */ }
-    return src ? `<img class="inv-item-image ${cls}" src="${e(src)}" alt="" loading="lazy">` : `<svg class="inv-item-symbol ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${symbol(item)}</svg>`;
+    return src ? `<img class="inv-item-image ${cls}" src="${e(src)}" alt="" loading="lazy" draggable="false">` : `<svg class="inv-item-symbol ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${symbol(item)}</svg>`;
   }
   function categoryLabel(item) {
     return item.categoryLabel || ({weapon:'Оружие', melee:'Холодное оружие', unarmed:'Рукопашное оружие', light:'Лёгкое оружие', heavy:'Тяжёлое оружие', throwing:'Метательное оружие', thrown:'Метательное оружие', explosive:'Взрывчатка', energy:'Энергетическое оружие', armor:'Броня', medicine:'Медицина', food:'Провизия', ammo:'Боеприпасы', currency:'Крышки и деньги', consumable:'Расходный предмет', tool:'Инструмент', craft:'Материал для крафта', misc:'Предмет'}[item.category]) || 'Предмет';
@@ -87,16 +90,21 @@
     if (!online() && room()?.self && !text) text = 'Показаны последние полученные вещи. Для передачи, экипировки и использования восстанови соединение.';
     return text ? `<div class="inv-notice ${messageKind === 'error' ? 'is-error' : ''}" role="status"><span>${e(text)}</span>${retryOperation && !pending ? button('Повторить запрос', 'retry', !online() ? 'disabled' : '', true) : ''}</div>` : '';
   }
+  function dragAttributes(item, fromSlot = '') {
+    return `draggable="${!blockActions()}" data-inv-drag-item="${e(item.id)}"${fromSlot ? ` data-inv-drag-slot="${fromSlot}"` : ''}`;
+  }
+  function dragHandle() { return '<span class="inv-drag-handle" data-inv-drag-handle aria-hidden="true">⠿</span>'; }
   function slotMarkup(slot, label) {
     const id = equippedId(slot), item = id ? ownItems().find(entry => entry.id === id) : null;
-    return `<div class="inv-equipment-slot inv-equipment-${slot} ${item ? 'is-filled' : ''}"><span class="inv-slot-label">${e(label)}</span><button type="button" class="inv-slot-body" data-inv-action="${item ? 'select' : 'empty-slot'}" data-source="own" data-item-id="${e(item?.id || '')}" data-slot="${slot}" aria-label="${e(item ? label + ': ' + item.name + '. Открыть предмет' : label + ': пусто. Выбрать вещь для слота')}">${item ? itemImage(item) + `<strong>${e(item.name)}</strong>` : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">${slot === 'weapon' ? symbol({category:'weapon'}) : slot === 'armor' ? symbol({category:'armor'}) : '<path d="M4 4h16v16H4Zm8 4v8m-4-4h8"/>'}</svg><small>Пусто</small>`}</button>${item ? button('Снять', 'unequip', `data-slot="${slot}" data-item-id="${e(item.id)}" ${blockActions() ? 'disabled' : ''}`) : ''}</div>`;
+    const placeholder = slot === 'weapon' ? {category:'weapon'} : slot === 'armor' ? {category:'armor'} : {category:'other'};
+    return `<div class="inv-equipment-slot inv-equipment-${slot} ${item ? 'is-filled' : ''}" data-inv-drop-slot="${slot}"><span class="inv-slot-label">${e(label)}</span><button type="button" class="inv-slot-body ${item ? '' : 'is-empty'}" data-inv-action="${item ? 'select' : 'empty-slot'}" data-source="own" data-item-id="${e(item?.id || '')}" data-slot="${slot}" ${item ? dragAttributes(item,slot) : ''} aria-label="${e(item ? label + ': ' + item.name + '. Открыть предмет' : label + ': пусто. Выбрать вещь для слота')}">${item ? itemImage(item) + `<strong>${e(item.name)}</strong>${dragHandle()}` : itemImage(placeholder,'inv-empty-art') + '<small>Перетащи вещь сюда</small>'}</button>${item ? button('Снять', 'unequip', `data-slot="${slot}" data-item-id="${e(item.id)}" ${blockActions() ? 'disabled' : ''}`) : ''}<span class="inv-drop-caption" aria-hidden="true"></span></div>`;
   }
   function bagMarkup() {
     const items = ownItems(), visible = items.slice(0, 64);
-    let cells = visible.map(item => `<button type="button" class="inv-bag-cell is-occupied ${selection?.source === 'own' && selection.id === item.id ? 'is-selected' : ''} ${equippedSlots(item.id).length ? 'is-equipped' : ''}" data-inv-action="select" data-source="own" data-item-id="${e(item.id)}" aria-label="${e(item.name + ', количество ' + item.quantity)}" aria-pressed="${selection?.source === 'own' && selection.id === item.id}" title="${e(item.name)}">${itemImage(item)}<span class="inv-cell-name">${e(item.name)}</span><b>×${Number(item.quantity)}</b>${equippedSlots(item.id).length ? '<i class="inv-equipped-mark" aria-hidden="true">◆</i>' : ''}</button>`).join('');
+    let cells = visible.map(item => `<button type="button" class="inv-bag-cell is-occupied ${selection?.source === 'own' && selection.id === item.id ? 'is-selected' : ''} ${equippedSlots(item.id).length ? 'is-equipped' : ''}" data-inv-action="select" data-source="own" data-item-id="${e(item.id)}" ${dragAttributes(item)} aria-label="${e(item.name + ', количество ' + item.quantity)}" aria-pressed="${selection?.source === 'own' && selection.id === item.id}" title="${e(item.name)}">${itemImage(item)}${dragHandle()}<span class="inv-cell-name">${e(item.name)}</span><b>×${Number(item.quantity)}</b>${equippedSlots(item.id).length ? '<i class="inv-equipped-mark" aria-hidden="true">◆</i>' : ''}</button>`).join('');
     for (let i = visible.length; i < 64; i += 1) cells += `<span class="inv-bag-cell is-empty" aria-hidden="true"><span>${String(i + 1).padStart(2, '0')}</span></span>`;
     const overflow = items.slice(64);
-    return `<div class="inv-bag-heading"><div><span class="eyebrow">ЛИЧНАЯ СУМКА</span><h2>Твои вещи</h2></div><span>${items.length} ${items.length === 1 ? 'группа предметов' : 'групп предметов'}</span></div><div class="inv-bag-grid" aria-label="Сумка с сеткой восемь на восемь">${cells}</div>${overflow.length ? `<div class="inv-overflow"><h3>Остальное снаряжение</h3>${overflow.map(item => `<button type="button" data-inv-action="select" data-source="own" data-item-id="${e(item.id)}">${e(item.name)} <b>×${Number(item.quantity)}</b></button>`).join('')}</div>` : ''}<p class="inv-grid-note">Одинаковые вещи собраны в одну ячейку. Сетка помогает разложить снаряжение; лимит переноски определяет ведущий.</p>`;
+    return `<div class="inv-bag-heading"><div><span class="eyebrow">ЛИЧНАЯ СУМКА</span><h2>Твои вещи</h2></div><span>${items.length} ${items.length === 1 ? 'группа предметов' : 'групп предметов'}</span></div><div class="inv-bag-grid" data-inv-drop-bag aria-label="Сумка с сеткой восемь на восемь">${cells}</div>${overflow.length ? `<div class="inv-overflow"><h3>Остальное снаряжение</h3>${overflow.map(item => `<button type="button" data-inv-action="select" data-source="own" data-item-id="${e(item.id)}" ${dragAttributes(item)}>${dragHandle()}${e(item.name)} <b>×${Number(item.quantity)}</b></button>`).join('')}</div>` : ''}<p class="inv-grid-note">Одинаковые вещи собраны в одну ячейку. Лимит переноски определяет ведущий. Перетаскивание не расходует и не создаёт вещи.</p>`;
   }
   function stashMarkup() {
     const items = sharedItems();
@@ -156,7 +164,7 @@
   }
   function contentMarkup() {
     if (!room()?.self) return disconnectedMarkup();
-    return `${statusMarkup()}<div data-inv-notice>${noticeMarkup()}</div><div class="inv-layout"><section class="panel inv-board"><div class="inv-board-head"><span class="eyebrow">ПРИ ТЕБЕ</span><h2>Экипировка</h2></div><div class="inv-equipment" data-inv-equipment>${SLOTS.map(([slot,label]) => slotMarkup(slot,label)).join('')}</div><div data-inv-bag>${bagMarkup()}</div></section><aside class="panel inv-detail" data-inv-detail tabindex="-1" aria-label="Описание выбранного предмета">${detailsMarkup()}</aside><section class="panel inv-shared" data-inv-stash>${stashMarkup()}</section></div>${legacyMarkup()}`;
+    return `${statusMarkup()}<div data-inv-notice>${noticeMarkup()}</div><div class="inv-layout"><section class="panel inv-board"><div class="inv-board-head"><span class="eyebrow">ПРИ ТЕБЕ</span><h2>Экипировка</h2></div><p class="inv-drag-help" id="invDragStatus" aria-live="polite">Перетащи вещь из сумки в подходящий слот. На телефоне потяни за ⠿. Верни вещь из слота в сумку, чтобы снять её.</p><div class="inv-equipment" data-inv-equipment>${SLOTS.map(([slot,label]) => slotMarkup(slot,label)).join('')}</div><div data-inv-bag>${bagMarkup()}</div></section><aside class="panel inv-detail" data-inv-detail tabindex="-1" aria-label="Описание выбранного предмета">${detailsMarkup()}</aside><section class="panel inv-shared" data-inv-stash>${stashMarkup()}</section></div>${legacyMarkup()}`;
   }
   function page() {
     const heading = typeof head === 'function' ? head('СНАРЯЖЕНИЕ И ОБЩАЯ ДОБЫЧА', 'Инвентарь.', 'Оружие, броня и вещи твоего персонажа. Возьми нужное и верни то, чем не пользуешься.') : '<h1>Инвентарь</h1>';
@@ -169,6 +177,10 @@
     const focused = document.activeElement;
     const focusData = focused?.matches('[data-inv-action]') && root.contains(focused) ? {...focused.dataset} : null;
     const current = room();
+    if (drag) {
+      if (!dragStillValid()) finishDrag(false);
+      else { deferredPaint = true; markDropTargets(); return; }
+    }
     const previous = selection;
     if (selection && !selectedItem()) {
       selection = null;
@@ -209,6 +221,7 @@
       retryOperation = null;
       message = ({take:'Предметы теперь у тебя.', return:'Предметы возвращены в общий тайник.', equip:'Экипировка обновлена.', unequip:'Вещь снята. Она осталась в твоей сумке.', use:'Использование предмета учтено.'})[operation.action] || 'Инвентарь обновлён.';
       messageKind = 'success';
+      return true;
     } catch (error) {
       const status = Number(error.status);
       if (!status || status >= 500) {
@@ -220,6 +233,7 @@
       }
       messageKind = 'error';
       if (typeof window.playerSessionRefresh === 'function') await window.playerSessionRefresh();
+      return false;
     } finally { pending = false; paint(true); }
   }
   function select(source, id, scroll = false) {
@@ -229,9 +243,185 @@
       document.querySelector('[data-inv-detail]')?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block:'start'});
     }
   }
+  function dragStillValid() {
+    const current = room(), item = drag && itemFor('own',drag.itemId);
+    return !!drag && online() && current?.id === drag.roomId && current.self?.id === drag.playerId
+      && !!item && (!drag.fromSlot || equippedId(drag.fromSlot) === drag.itemId)
+      && !!document.getElementById('playerInventoryRoot');
+  }
+  function canDrop(item, slot, fromSlot = '') {
+    if (!item || !SLOTS.some(([id]) => id === slot)) return false;
+    if (slot === 'weapon' && !weapon(item)) return false;
+    if (slot === 'armor' && item.category !== 'armor') return false;
+    const elsewhere = SLOTS.filter(([other]) => other !== slot && other !== fromSlot && equippedId(other) === item.id).length;
+    return Number(item.quantity) > elsewhere;
+  }
+  function dropTarget(node) {
+    if (!node?.closest) return null;
+    const target = node.closest('[data-inv-drop-slot],[data-inv-drop-bag]');
+    return target?.closest('#playerInventoryRoot') ? target : null;
+  }
+  function markDropTargets() {
+    const root = document.getElementById('playerInventoryRoot');
+    if (!root || !drag) return;
+    const item = itemFor('own',drag.itemId);
+    root.classList.add('is-dragging-item');
+    for (const target of root.querySelectorAll('[data-inv-drop-slot]')) {
+      const compatible = canDrop(item,target.dataset.invDropSlot,drag.fromSlot);
+      target.classList.toggle('is-drop-compatible',compatible);
+      target.classList.toggle('is-drop-incompatible',!compatible);
+      const caption = target.querySelector('.inv-drop-caption');
+      if (caption) caption.textContent = compatible ? 'Отпусти здесь' : 'Не подходит';
+    }
+    root.querySelector('[data-inv-drop-bag]')?.classList.toggle('is-drop-compatible',!!drag.fromSlot);
+    const status = root.querySelector('#invDragStatus');
+    if (status) status.textContent = `Переносим: ${item?.name || 'вещь'}. Подходящие слоты подсвечены.${drag.fromSlot ? ' Сумка снимет вещь с экипировки.' : ''}`;
+  }
+  function hoverDropTarget(target) {
+    if (!drag) return;
+    drag.over = target;
+    for (const node of document.querySelectorAll('#playerInventoryRoot .is-drop-active')) node.classList.remove('is-drop-active');
+    if (target) target.classList.add('is-drop-active');
+  }
+  function dragSource(node) {
+    const source = node?.closest?.('[data-inv-drag-item]');
+    return source?.closest('#playerInventoryRoot') && source.dataset.source === 'own' ? source : null;
+  }
+  function capturePointer(source, pointerId) { try { source.setPointerCapture?.(pointerId); } catch { /* Global listeners keep a cancelled or unsupported pointer safe. */ } }
+  function beginDrag(source, mode, x = 0, y = 0) {
+    if (!source || blockActions() || !itemFor('own',source.dataset.invDragItem)) return false;
+    const current = room();
+    drag = {itemId:source.dataset.invDragItem,fromSlot:source.dataset.invDragSlot || '',roomId:current.id,playerId:current.self.id,source,mode,x,y,over:null,frame:0};
+    suppressItemId = drag.itemId;
+    source.classList.add('is-drag-source');
+    document.body.classList.add('inv-dragging');
+    markDropTargets();
+    if (mode === 'pointer') {
+      const item = itemFor('own',drag.itemId), ghost = document.createElement('div');
+      ghost.className = 'inv-drag-ghost'; ghost.setAttribute('aria-hidden','true');
+      ghost.innerHTML = itemImage(item) + `<span>${e(item.name)}</span>`;
+      document.body.append(ghost); drag.ghost = ghost;
+      movePointerDrag(x,y);
+      drag.frame = requestAnimationFrame(scrollDuringDrag);
+    }
+    return true;
+  }
+  function movePointerDrag(x,y) {
+    if (!drag || drag.mode !== 'pointer') return;
+    drag.x = x; drag.y = y;
+    if (drag.ghost) drag.ghost.style.transform = `translate(${Math.max(4,Math.min(innerWidth - 124,x - 60))}px,${Math.max(4,y - 108)}px)`;
+    hoverDropTarget(dropTarget(document.elementFromPoint(x,y)));
+  }
+  function scrollDuringDrag() {
+    if (!drag || drag.mode !== 'pointer') return;
+    const edge = 68;
+    const distance = drag.y < edge ? drag.y - edge : drag.y > innerHeight - edge ? drag.y - (innerHeight - edge) : 0;
+    if (distance) { window.scrollBy(0,Math.sign(distance)*Math.min(13,Math.ceil(Math.abs(distance)/4))); movePointerDrag(drag.x,drag.y); }
+    drag.frame = requestAnimationFrame(scrollDuringDrag);
+  }
+  function finishDrag(repaint = true) {
+    if (pointerGesture) clearTimeout(pointerGesture.timer);
+    if (drag) {
+      if(drag.mode==='pointer')suppressClickUntil=Date.now()+450;
+      cancelAnimationFrame(drag.frame);
+      drag.ghost?.remove();
+      drag.source?.classList.remove('is-drag-source');
+    }
+    drag = null; pointerGesture = null;
+    document.body.classList.remove('inv-dragging');
+    const root = document.getElementById('playerInventoryRoot');
+    root?.classList.remove('is-dragging-item');
+    for (const node of root?.querySelectorAll('.is-drop-compatible,.is-drop-incompatible,.is-drop-active') || []) node.classList.remove('is-drop-compatible','is-drop-incompatible','is-drop-active');
+    const status = root?.querySelector('#invDragStatus');
+    if (status) status.textContent = 'Перетащи вещь из сумки в подходящий слот. На телефоне потяни за ⠿. Верни вещь из слота в сумку, чтобы снять её.';
+    if (deferredPaint && repaint) { deferredPaint = false; paint(); }
+  }
+  function failedDrop(text) {
+    message = text; messageKind = 'error';
+    if (typeof toast === 'function') toast(text);
+    paint();
+  }
+  async function commitDrop(target) {
+    if (!drag) return;
+    const moving = {...drag}, valid = dragStillValid(), item = itemFor('own',moving.itemId);
+    const slot = target?.dataset.invDropSlot;
+    const bag = target?.hasAttribute('data-inv-drop-bag');
+    const allowed = valid && !blockActions() && (slot ? canDrop(item,slot,moving.fromSlot) : bag && !!moving.fromSlot);
+    finishDrag(false); deferredPaint = false; suppressClickUntil = Date.now()+450;
+    if (!valid) {failedDrop('Вещь или игровая комната изменились. Выбери предмет заново.');return;}
+    if (!target) {paint();return;}
+    if (!allowed) {failedDrop(slot ? 'Эта вещь не подходит для слота или все её экземпляры уже экипированы.' : 'Вещь уже лежит в твоей сумке.');return;}
+    selection = {source:'own',id:moving.itemId};
+    if (slot) slotChoices.set(moving.itemId,slot);
+    if (slot === moving.fromSlot || (!moving.fromSlot && slot && equippedId(slot) === moving.itemId)) {paint();return;}
+    if (moving.fromSlot) {
+      // The service confirms each change. If the second request fails, the item
+      // stays owned in the bag and the existing retry control remains available.
+      const removed = await perform({action:'unequip',slot:moving.fromSlot,itemId:moving.itemId});
+      if (!removed || bag) return;
+      if (room()?.id !== moving.roomId || room()?.self?.id !== moving.playerId || !itemFor('own',moving.itemId)) return;
+    }
+    if (slot) await perform({action:'equip',slot,itemId:moving.itemId});
+  }
+  document.addEventListener('dragstart',event => {
+    if (!event.target.closest?.('#playerInventoryRoot')) return;
+    const source = dragSource(event.target);
+    if (pointerGesture || !source || !event.dataTransfer || !beginDrag(source,'native')) {event.preventDefault();return;}
+    event.dataTransfer.effectAllowed = 'move';
+    event.dataTransfer.setData('application/x-niti-owned-item',JSON.stringify({roomId:drag.roomId,playerId:drag.playerId,itemId:drag.itemId}));
+    event.dataTransfer.setData('text/plain',itemFor('own',drag.itemId).name);
+  });
+  document.addEventListener('dragover',event => {
+    if (!drag || drag.mode !== 'native') return;
+    event.preventDefault();
+    const target = dropTarget(event.target), item = itemFor('own',drag.itemId);
+    const accepted = target && (target.dataset.invDropSlot ? canDrop(item,target.dataset.invDropSlot,drag.fromSlot) : !!drag.fromSlot);
+    if (event.dataTransfer) event.dataTransfer.dropEffect = accepted ? 'move' : 'none';
+    hoverDropTarget(target);
+  });
+  document.addEventListener('drop',event => {
+    if (!drag || drag.mode !== 'native') return;
+    event.preventDefault(); void commitDrop(dropTarget(event.target));
+  });
+  document.addEventListener('dragend',() => {if(drag?.mode==='native'){suppressClickUntil=Date.now()+350;finishDrag();}});
+  document.addEventListener('pointerdown',event => {
+    if (!['touch','pen'].includes(event.pointerType) || event.button !== 0) return;
+    const source = dragSource(event.target);
+    if (!source || blockActions()) return;
+    const fromHandle = !!event.target.closest('[data-inv-drag-handle]');
+    pointerGesture = {source,id:event.pointerId,x:event.clientX,y:event.clientY,fromHandle,timer:0};
+    if (fromHandle) capturePointer(source,event.pointerId);
+    else pointerGesture.timer = setTimeout(() => {
+      if (!pointerGesture || pointerGesture.id !== event.pointerId) return;
+      if(beginDrag(source,'pointer',event.clientX,event.clientY)){capturePointer(source,event.pointerId);suppressClickUntil=Date.now()+600;}
+    },330);
+  });
+  document.addEventListener('pointermove',event => {
+    const gesture = pointerGesture;
+    if (!gesture || gesture.id !== event.pointerId) return;
+    if (drag?.mode === 'pointer') {if(event.cancelable)event.preventDefault();movePointerDrag(event.clientX,event.clientY);return;}
+    if (Math.hypot(event.clientX-gesture.x,event.clientY-gesture.y)<6) return;
+    clearTimeout(gesture.timer);
+    if (gesture.fromHandle) {
+      if (beginDrag(gesture.source,'pointer',event.clientX,event.clientY) && event.cancelable) event.preventDefault();
+    } else pointerGesture = null; // A normal vertical swipe keeps scrolling the page.
+  },{passive:false});
+  document.addEventListener('touchmove',event => {if(drag?.mode==='pointer' && event.cancelable)event.preventDefault();},{passive:false});
+  document.addEventListener('pointerup',event => {
+    if (!pointerGesture || event.pointerId !== pointerGesture.id) return;
+    clearTimeout(pointerGesture.timer);
+    if (drag?.mode==='pointer') {if(event.cancelable)event.preventDefault();void commitDrop(dropTarget(document.elementFromPoint(event.clientX,event.clientY)));}
+    else pointerGesture = null;
+  });
+  document.addEventListener('pointercancel',() => {if(pointerGesture || drag?.mode==='pointer')finishDrag();});
+  document.addEventListener('contextmenu',event => {if(drag || (pointerGesture && dragSource(event.target)))event.preventDefault();});
+  document.addEventListener('keydown',event => {if(event.key==='Escape' && (drag || pointerGesture)){finishDrag();event.preventDefault();}});
+  window.addEventListener('hashchange',() => finishDrag(false));
+  window.addEventListener('blur',() => finishDrag());
   document.addEventListener('click', event => {
     const target = event.target.closest('[data-inv-action]');
     if (!target || !target.closest('#playerInventoryRoot')) return;
+    if (Date.now() < suppressClickUntil && target.dataset.invAction === 'select' && target.dataset.itemId === suppressItemId) { event.preventDefault(); return; }
     const action = target.dataset.invAction;
     if (action === 'select') { select(target.dataset.source, target.dataset.itemId, true); return; }
     if (action === 'clear') { selection = null; paint(true); return; }

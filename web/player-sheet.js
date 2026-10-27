@@ -255,6 +255,7 @@
     const result=applyCalculated(sheet);
     updateLegacyProfile(sheet,result);
     if(result.level>progress.observedLevel) {
+      window.dispatchEvent(new CustomEvent('niti:level-up',{detail:{characterKey:key,level:result.level,previousLevel:progress.observedLevel}}));
       progress.observedLevel=result.level;
       if(typeof toast==='function')toast(`Новый уровень: ${result.level}!${freePerks(result) ? ' Доступен выбор перка.' : ' Анкета пересчитана.'}`);
     } else if(result.level<progress.observedLevel) {

@@ -31,7 +31,8 @@ if __name__ == '__main__':
     prefix = 'export const ITEM_CATALOG = '
     separator = ';\nexport const REWARD_ALIASES = '
     raw, aliases = catalog_path.read_text()[len(prefix):].split(separator, 1)
-    items = extend_catalog(json.loads(raw), root)
+    from equipment_art import apply_equipment_art
+    items = apply_equipment_art(extend_catalog(json.loads(raw), root), root)
     encoded = json.dumps(items, ensure_ascii=False, separators=(',', ':'))
     catalog_path.write_text(prefix + encoded + separator + aliases)
     gm = root.parent / 'niti-storydesk/dist/item-catalog.js'

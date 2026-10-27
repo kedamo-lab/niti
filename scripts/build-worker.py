@@ -5,6 +5,7 @@ root = Path(__file__).resolve().parent.parent
 subprocess.run(['python3', str(root/'build-offline.py')], cwd=root, check=True)
 files = [
     'index.html', 'player-app.js', 'player-session.js', 'player-session.css',
+    'player-audio.js', 'player-audio.css', 'navigation-motion.js', 'navigation-motion.css', 'equipment-art.js',
     'rules-character.js', 'player-sheet.js', 'player-sheet.css', 'player-inventory.js', 'player-inventory.css',
     'player.css', 'style.css', 'fallout.css', 'palette.css', 'terminal.js',
     'dice.js', 'dice.css', 'vault-art.svg', 'niti-player-offline.html',
