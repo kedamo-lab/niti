@@ -13,7 +13,7 @@
     ['first_aid', 'Первая помощь'], ['doctor', 'Доктор'], ['sneak', 'Скрытность'],
     ['lockpick', 'Взлом замков'], ['steal', 'Воровство'], ['traps', 'Ловушки'],
     ['science', 'Наука'], ['repair', 'Ремонт'], ['speech', 'Красноречие'],
-    ['barter', 'Торговля'], ['gambling', 'Азартные игры'], ['outdoorsman', 'Скиталец']
+    ['barter', 'Торговля'], ['gambling', 'Азартные игры'], ['outdoorsman', 'Скиталец'], ['scavenging', 'Скважинг']
   ];
   const WEAPON_FIELDS = [
     ['weapon_name', 'Название'], ['weapon_damage', 'Урон'], ['weapon_range', 'Дальность'],
@@ -38,6 +38,9 @@
   let perkDialogSelection = '';
   let promptTimer = 0;
   let progressSignature = '';
+  let specialChoice = '';
+  const SPECIAL_PROMPT_PREFIX = 'niti-player-special-prompt-v1:';
+  const SPECIAL_DESCRIPTIONS = {S:'Физическая сила и требования снаряжения.',P:'Наблюдательность, инициатива и дальность стрельбы.',E:'Выносливость и максимальное здоровье.',C:'Обаяние и общение с окружающими.',I:'Сообразительность, знания и рассуждения.',A:'Ловкость, очки действия и защита.',L:'Удача и случайные события.'};
 
   let rememberedRoom = null;
 
@@ -53,9 +56,8 @@
   }
   function validSheet(value) {
     return !!value && typeof value === 'object' && !Array.isArray(value) && value.version === 1
-      && [FIELD_NAMES.length + 1, FIELD_NAMES.length + 2].includes(Object.keys(value).length)
       && Object.keys(value).every(name => name === 'version' || name === 'rules' || FIELD_SET.has(name))
-      && FIELD_NAMES.every(name => TAG_FIELDS.has(name) ? typeof value[name] === 'boolean' : typeof value[name] === 'string' && value[name].length <= limitFor(name))
+      && FIELD_NAMES.every(name => ['tag_scavenging','skill_scavenging'].includes(name) && !Object.hasOwn(value,name) ? true : TAG_FIELDS.has(name) ? typeof value[name] === 'boolean' : typeof value[name] === 'string' && value[name].length <= limitFor(name))
       && (!Object.hasOwn(value, 'rules') || RULES.validMeta(value.rules));
   }
   function normalizeSheet(value, profile) {
@@ -78,7 +80,7 @@
   }
   function currentSheet() {
     if (typeof player === 'undefined') return normalizeSheet(null, null);
-    if (!validSheet(player.sheet) || !player.sheet.rules) player.sheet = normalizeSheet(player.sheet, player.profile);
+    if (!validSheet(player.sheet) || !player.sheet.rules || !Object.hasOwn(player.sheet,'tag_scavenging') || !Object.hasOwn(player.sheet,'skill_scavenging') || !Object.hasOwn(player.sheet.rules.training || {},'scavenging')) player.sheet = normalizeSheet(player.sheet, player.profile);
     return player.sheet;
   }
   function currentRoom() {
@@ -91,8 +93,31 @@
     const room = currentRoom();
     const armor = room ? equippedItems(room).find(item => item.equippedSlot === 'armor' || item.category === 'armor') || null
       : sheet.armor_name.trim() ? {name:sheet.armor_name,stats:{armorClass:RULES.integer(sheet.armor_ac) || 0}} : null;
-    const sessionXP=room?.self ? room.self.xp || 0 : sheet.rules.progress?.sessionXP || 0;
+    const sessionXP=room?.self ? room.self.xp || 0 : sheet.rules?.progress?.sessionXP || 0;
     return RULES.calculate(sheet, {sessionXP, armor});
+  }
+  function allocationState(sheet=currentSheet(), result=calculation(sheet)) {
+    const invalidFields=SPECIAL_ROWS.filter(([letter])=>!Number.isInteger(result.base[letter]) || result.base[letter]<0 || result.base[letter]>10).map(([,name])=>name);
+    const points=result.points,budget=result.specialBudget,available=Math.max(0,budget-points),growth=Math.max(0,budget-40);
+    const error=invalidFields.length ? 'Каждая базовая характеристика S.P.E.C.I.A.L. должна быть целым числом от 0 до 10.' : points>budget ? `Распределено ${points} из ${budget} доступных очков S.P.E.C.I.A.L. Уменьши базовые характеристики на ${points-budget}.` : '';
+    return {valid:!error,invalidFields,points,budget,available,error,growthAvailable:Math.max(0,growth-Math.max(0,points-40)),creationAvailable:Math.max(0,40-points)};
+  }
+  function showAllocationValidation(sheet=currentSheet(), result=calculation(sheet), focus=false) {
+    const allocation=allocationState(sheet,result),form=document.getElementById('falloutSheetForm');
+    if(!form)return allocation;
+    form.classList.toggle('has-invalid-special',!allocation.valid);
+    for(const [,name] of SPECIAL_ROWS) {
+      const input=document.getElementById('sheet-'+name),invalid=allocation.invalidFields.includes(name);
+      if(input) {input.setAttribute('aria-invalid',String(invalid));input.setAttribute('aria-describedby','sheetSpecialAllocationError');input.closest('.sheet-special')?.classList.toggle('is-invalid',invalid);}
+    }
+    const panel=form.querySelector('[data-special-allocation]');
+    if(panel) {const signature=JSON.stringify([allocation.points,allocation.budget,allocation.invalidFields]);if(panel.dataset.allocationSignature!==signature){panel.outerHTML=allocationMarkup(sheet,result);form.querySelector('[data-special-allocation]').dataset.allocationSignature=signature;}}
+    const submit=form.querySelector('button[type="submit"]');
+    if(submit) {submit.disabled=!allocation.valid;submit.title=allocation.error;}
+    const status=document.getElementById('falloutSheetSaveStatus');
+    if(status && !allocation.valid)status.textContent='Анкета не сохранена. '+allocation.error;
+    if(focus && !allocation.valid)document.getElementById('sheet-'+(allocation.invalidFields[0] || SPECIAL_ROWS[0][1]))?.focus();
+    return allocation;
   }
   function applyCalculated(sheet, result = calculation(sheet)) {
     sheet.level = String(result.level);
@@ -117,7 +142,10 @@
     clearTimeout(saveTimer);
     saveTimer = 0;
     const sheet = currentSheet();
-    const result = applyCalculated(sheet);
+    const result = calculation(sheet);
+    const allocation=showAllocationValidation(sheet,result,showNotice);
+    if(!allocation.valid) {if(showNotice && typeof toast==='function')toast(allocation.error);return false;}
+    applyCalculated(sheet,result);
     updateLegacyProfile(sheet, result);
     const previousLock = sheet.rules.traitsLocked;
     if (showNotice) sheet.rules.traitsLocked = true;
@@ -131,7 +159,7 @@
     return success;
   }
   function syncCharacter(sheet=currentSheet(), result=calculation(sheet)) {
-    if (typeof window.playerSessionSyncCharacter!=='function') return;
+    if (!allocationState(sheet,result).valid || typeof window.playerSessionSyncCharacter!=='function') return;
     Promise.resolve(window.playerSessionSyncCharacter({name:sheet.name,baseXP:result.manualXP,beacon:sheet.rules.traits.includes('beacon')})).catch(()=>{});
   }
   function field(name, label, sheet, options = {}) {
@@ -151,7 +179,11 @@
   function sectionTitle(title, extra = '') { return `<div class="sheet-section-title"><h2>${title}</h2>${extra}</div>`; }
   function specialMarkup(sheet) {
     const result = calculation(sheet);
-    return `<section class="sheet-special-column" aria-label="S.P.E.C.I.A.L.">${SPECIAL_ROWS.map(([letter, name, label]) => `<div class="sheet-special"><span class="sheet-special-letter" aria-hidden="true">${letter}</span><label for="sheet-${name}"><span>${label} · база</span><input class="input sheet-special-input" type="text" inputmode="numeric" maxlength="40" id="sheet-${name}" name="${name}" data-sheet-field="${name}" value="${escapeText(sheet[name])}"></label><output class="sheet-special-effective" data-special-effective="${letter}">${result.special[letter]} итог</output><input class="input sheet-special-mod" readonly aria-readonly="true" id="sheet-${name}_modifier" aria-label="${label}: автоматический модификатор" data-special-mod="${letter}" value="${signed(result.modifiers[letter])}"></div>`).join('')}<p class="sheet-special-hint" data-special-budget>${specialBudget(result)}</p></section>`;
+    return `<section class="sheet-special-column" aria-label="S.P.E.C.I.A.L.">${SPECIAL_ROWS.map(([letter, name, label]) => `<div class="sheet-special"><span class="sheet-special-letter" aria-hidden="true">${letter}</span><label for="sheet-${name}"><span>${label} · база</span><input class="input sheet-special-input" type="text" inputmode="numeric" maxlength="40" id="sheet-${name}" name="${name}" data-sheet-field="${name}" value="${escapeText(sheet[name])}"></label><output class="sheet-special-effective" data-special-effective="${letter}">${result.special[letter]} итог</output><input class="input sheet-special-mod" readonly aria-readonly="true" id="sheet-${name}_modifier" aria-label="${label}: автоматический модификатор" data-special-mod="${letter}" value="${signed(result.modifiers[letter])}"></div>`).join('')}${allocationMarkup(sheet,result)}<p class="sheet-special-hint" data-special-budget>${specialBudget(result)}</p></section>`;
+  }
+  function allocationMarkup(sheet=currentSheet(),result=calculation(sheet)) {
+    const allocation=allocationState(sheet,result);
+    return `<section class="sheet-special-allocation ${allocation.valid ? '' : 'is-invalid'}" data-special-allocation aria-label="Бюджет S.P.E.C.I.A.L."><span>РАСПРЕДЕЛЕНО</span><strong>${allocation.points} <small>/ ${allocation.budget}</small></strong><p>${allocation.valid ? `Свободно: <b>${allocation.available}</b>${allocation.growthAvailable ? ` · за уровни: <b>${allocation.growthAvailable}</b>` : ''}.` : 'Превышение бюджета или неверное значение.'}</p><p id="sheetSpecialAllocationError" class="sheet-special-allocation-error" data-special-allocation-error role="status">${escapeText(allocation.error)}</p>${allocation.valid && allocation.available ? '<button type="button" class="button primary small" data-sheet-special-action="choose">Распределить +1 ↗</button>' : ''}<small>40 начальных очков. На уровнях 4, 8 и 12 добавляется по одному. Бонусы особенностей и перков в этот бюджет не входят.</small></section>`;
   }
   function specialBudget(result) { return `База: ${result.points} / ${result.specialBudget} очков. 40 при создании, +1 за каждый 4-й уровень. Модификатор = итог − 5. Особенности и перки учтены в итоге; каждое значение от 0 до 10.`; }
   function skillBudget(result) { return `Обучение: ${result.trained} / ${result.skillBudget} очков. На 1-м уровне — 4 (до 2 в один навык), затем по 2 за уровень (по 1 в разные). Метка — личная пометка, без автоматического бонуса.`; }
@@ -170,7 +202,7 @@
     const result=calculation(sheet),meta=sheet.rules,used=meta.perks.reduce((sum,p)=>sum+p.rank,0),preview=RULES.PERKS.find(perk=>perk.id===selectedPerk);
     const available=RULES.PERKS.filter(perk=>!meta.perks.some(entry=>entry.id===perk.id) && (!perkSearch || (perk.name+' '+perk.description).toLocaleLowerCase('ru').includes(perkSearch.toLocaleLowerCase('ru'))));
     const previewReasons=preview ? RULES.eligibility(preview,result) : [];
-    return `${sectionTitle('Перки',`<span>${used} / ${result.perkBudget} РАНГОВ</span>`)}<p class="sheet-rules-help">По 1 перку каждые 3 уровня. Требования, число рангов и эффекты — из приложенного списка перков.</p><div class="sheet-selected-list">${meta.perks.map(entry=>{const perk=RULES.PERKS.find(p=>p.id===entry.id);return `<article class="sheet-rule-card"><div><strong>${escapeText(perk.name)} · ${entry.rank}/${perk.ranks.max}</strong><button type="button" class="sheet-rule-remove" data-remove-perk="${entry.id}" aria-label="Убрать ранг перка ${escapeText(perk.name)}">−</button></div><p>${escapeText(perk.description)}</p><small>${escapeText(perk.requirements.text || '')}</small>${entry.rank<perk.ranks.max && used<result.perkBudget && !RULES.eligibility(perk,result,entry.rank+1).length ? `<button type="button" class="sheet-rule-rank" data-add-rank="${entry.id}">Добавить ранг +</button>` : ''}</article>`;}).join('') || '<p class="sheet-rules-help">Перки пока не выбраны.</p>'}</div><details class="sheet-catalog"><summary>Каталог перков · ${RULES.PERKS.length}</summary><label class="sheet-field" for="sheet-perk-search"><span>Поиск по названию и эффекту</span><input class="input" id="sheet-perk-search" data-perk-search value="${escapeText(perkSearch)}" placeholder="Например, ловкость"></label><label class="sheet-field" for="sheet-perk-choice"><span>Перк из правил</span><select class="input" id="sheet-perk-choice" data-perk-choice><option value="">Выбери перк</option>${available.map(perk=>`<option value="${perk.id}" ${perk.id===selectedPerk?'selected':''}>${escapeText(perk.name)} · ур. ${perk.level}</option>`).join('')}</select></label><div class="sheet-rule-preview" aria-live="polite">${preview ? `<p>${escapeText(preview.description)}</p><p><strong>Требования:</strong> ${escapeText(preview.requirements.text || 'Без дополнительных требований')}<br>Уровень ${preview.level}; рангов: ${preview.ranks.max}${preview.ranks.note ? ' · '+escapeText(preview.ranks.note) : ''}</p>${previewReasons.length ? `<p class="sheet-warning">Недоступен: ${previewReasons.map(escapeText).join(', ')}.</p>` : ''}${used>=result.perkBudget ? '<p>Свободных рангов нет. Следующий — на уровне '+(3*(result.perkBudget+1))+'.</p>' : ''}<button class="button" type="button" data-add-perk="${preview.id}" ${previewReasons.length || used>=result.perkBudget ? 'disabled' : ''}>Выбрать перк +</button>` : '<p>Выбери перк, чтобы увидеть эффект и требования.</p>'}</div></details>${field('perks','Личные записи о перках',sheet,{multiline:true,rows:3})}<p class="sheet-rules-help">Постоянные числовые бонусы учтены автоматически. Условные эффекты, преимущество, урон и боевые действия применяются по описанию.</p>`;
+    return `${sectionTitle('Перки',`<span>${used} / ${result.perkBudget} РАНГОВ</span>`)}<p class="sheet-rules-help">По 1 перку каждые 3 уровня. Требования, число рангов и эффекты — из приложенного списка перков.</p><div class="sheet-selected-list">${meta.perks.map(entry=>{const perk=RULES.PERKS.find(p=>p.id===entry.id);return `<article class="sheet-rule-card"><div><strong>${escapeText(perk.name)} · ${entry.rank}/${perk.ranks.max}</strong><small class="sheet-perk-locked">Ранг закреплён</small></div><p>${escapeText(perk.description)}</p><small>${escapeText(perk.requirements.text || '')}</small>${entry.rank<perk.ranks.max && used<result.perkBudget && !RULES.eligibility(perk,result,entry.rank+1).length ? `<button type="button" class="sheet-rule-rank" data-add-rank="${entry.id}">Добавить ранг +</button>` : ''}</article>`;}).join('') || '<p class="sheet-rules-help">Перки пока не выбраны.</p>'}</div><details class="sheet-catalog"><summary>Каталог перков · ${RULES.PERKS.length}</summary><label class="sheet-field" for="sheet-perk-search"><span>Поиск по названию и эффекту</span><input class="input" id="sheet-perk-search" data-perk-search value="${escapeText(perkSearch)}" placeholder="Например, ловкость"></label><label class="sheet-field" for="sheet-perk-choice"><span>Перк из правил</span><select class="input" id="sheet-perk-choice" data-perk-choice><option value="">Выбери перк</option>${available.map(perk=>`<option value="${perk.id}" ${perk.id===selectedPerk?'selected':''}>${escapeText(perk.name)} · ур. ${perk.level}</option>`).join('')}</select></label><div class="sheet-rule-preview" aria-live="polite">${preview ? `<p>${escapeText(preview.description)}</p><p><strong>Требования:</strong> ${escapeText(preview.requirements.text || 'Без дополнительных требований')}<br>Уровень ${preview.level}; рангов: ${preview.ranks.max}${preview.ranks.note ? ' · '+escapeText(preview.ranks.note) : ''}</p>${previewReasons.length ? `<p class="sheet-warning">Недоступен: ${previewReasons.map(escapeText).join(', ')}.</p>` : ''}${used>=result.perkBudget ? '<p>Свободных рангов нет. Следующий — на уровне '+(3*(result.perkBudget+1))+'.</p>' : ''}<button class="button" type="button" data-add-perk="${preview.id}" ${previewReasons.length || used>=result.perkBudget ? 'disabled' : ''}>Выбрать перк +</button>` : '<p>Выбери перк, чтобы увидеть эффект и требования.</p>'}</div></details>${field('perks','Личные записи о перках',sheet,{multiline:true,rows:3})}<p class="sheet-rules-help">Постоянные числовые бонусы учтены автоматически. Условные эффекты, преимущество, урон и боевые действия применяются по описанию.</p>`;
   }
   function statValue(value) { return value === undefined || value === null || value === '' ? '—' : String(value); }
   function equippedItems(room) {
@@ -227,6 +259,66 @@
   function progression(sheet=currentSheet()) {
     if (!sheet.rules.progress) sheet.rules.progress=RULES.normalizeMeta(sheet.rules,sheet).progress;
     return sheet.rules.progress;
+  }
+  const specialPrompts = new Map();
+  function specialPromptKey(sheet=currentSheet()) {return SPECIAL_PROMPT_PREFIX+encodeURIComponent(progression(sheet).characterKey || 'local');}
+  function promptedSpecialBudget(sheet=currentSheet()) {
+    const key=specialPromptKey(sheet);
+    try {const value=Number(localStorage.getItem(key));if(Number.isInteger(value) && value>=0)return Math.max(specialPrompts.get(key) || 0,value);}catch {}
+    return specialPrompts.get(key) || 0;
+  }
+  function rememberSpecialPrompt(sheet,result=calculation(sheet)) {
+    const key=specialPromptKey(sheet),budget=Math.floor(result.level/4);
+    specialPrompts.set(key,Math.max(promptedSpecialBudget(sheet),budget));
+    try {localStorage.setItem(key,String(specialPrompts.get(key)));}catch {}
+  }
+  function specialOptions(result=calculation()) {
+    return SPECIAL_ROWS.map(([letter,name,label])=>({letter,name,label,base:result.base[letter],effective:result.special[letter],reason:result.base[letter]>=10 ? 'Базовое значение уже 10.' : result.special[letter]>=10 ? 'Итог уже 10: бонусы особенностей и перков заполняют предел.' : ''}));
+  }
+  function refreshSpecialDialog() {
+    const dialog=document.querySelector('[data-sheet-special-dialog]');
+    if(!dialog)return;
+    const sheet=currentSheet(),result=calculation(sheet),allocation=allocationState(sheet,result),options=specialOptions(result);
+    dialog.querySelector('[data-special-dialog-count]').textContent=String(allocation.available);
+    dialog.querySelector('[data-special-dialog-help]').textContent=(allocation.creationAvailable ? `Осталось начальных очков: ${allocation.creationAvailable}. ` : '')+`Очков за уровни: ${allocation.growthAvailable}. Нераспределённые очки сохраняются.`;
+    const signature=JSON.stringify([specialChoice,result.base,result.special,allocation.budget,allocation.valid]);
+    if(dialog.dataset.specialChoicesSignature!==signature) {
+      const focused=document.activeElement?.dataset.specialChoice;
+      dialog.querySelector('[data-special-dialog-choices]').innerHTML=options.map(option=>`<button type="button" class="sheet-special-choice ${specialChoice===option.letter ? 'is-selected' : ''}" data-special-choice="${option.letter}" aria-pressed="${specialChoice===option.letter}" ${option.reason || !allocation.valid || !allocation.available ? 'disabled' : ''}><span class="sheet-special-choice-letter">${option.letter}</span><span><strong>${option.label}</strong><small>База ${option.base} → ${Math.min(10,(option.base || 0)+1)} · итог ${option.effective}${option.reason ? '' : ' → '+calculation({...sheet,[option.name]:String(option.base+1)}).special[option.letter]}</small><span>${escapeText(option.reason || SPECIAL_DESCRIPTIONS[option.letter])}</span></span></button>`).join('');
+      dialog.dataset.specialChoicesSignature=signature;
+      if(focused)dialog.querySelector(`[data-special-choice="${focused}"]:not(:disabled)`)?.focus();
+    }
+    const selected=options.find(option=>option.letter===specialChoice),error=dialog.querySelector('[data-special-dialog-error]');
+    error.textContent=allocation.error || (!allocation.available ? 'Все доступные очки уже распределены.' : '');
+    const submit=document.querySelector('#dialogForm button[type="submit"]');
+    if(submit) {submit.disabled=!allocation.valid || !allocation.available || !selected || !!selected.reason;submit.textContent=selected ? '+1 · '+selected.label : 'Выбери характеристику';}
+  }
+  function confirmSpecialChoice() {
+    const sheet=currentSheet(),result=calculation(sheet),allocation=allocationState(sheet,result),option=specialOptions(result).find(entry=>entry.letter===specialChoice);
+    if(!allocation.valid || !allocation.available || !option || option.reason) {refreshSpecialDialog();return;}
+    const previous=sheet[option.name];
+    sheet[option.name]=String(option.base+1);
+    if(!persist()) {sheet[option.name]=previous;applyCalculated(sheet);updateLegacyProfile(sheet);const feedback=document.querySelector('[data-special-dialog-error]');if(feedback)feedback.textContent='Не удалось сохранить повышение. Очко не потрачено; попробуй ещё раз.';return;}
+    const input=document.getElementById('sheet-'+option.name);if(input)input.value=sheet[option.name];
+    specialChoice='';refreshSelectors();updateSessionParts();
+    if(!allocationState().available) {if(typeof closeModal==='function')closeModal();if(typeof toast==='function')toast(option.label+' увеличена на 1. Анкета пересчитана.');clearTimeout(promptTimer);promptTimer=setTimeout(()=>maybePromptPerk(),120);}
+    else refreshSpecialDialog();
+  }
+  function openSpecialDialog() {
+    const sheet=currentSheet(),result=calculation(sheet),allocation=allocationState(sheet,result);
+    if(!allocation.valid || !allocation.available || !document.getElementById('falloutSheetForm') || typeof modal!=='function' || document.getElementById('modalRoot')?.children.length)return false;
+    rememberSpecialPrompt(sheet,result);specialChoice='';
+    modal('Распредели S.P.E.C.I.A.L.',`<div class="sheet-special-dialog" data-sheet-special-dialog><p>Доступно очков: <strong data-special-dialog-count>${allocation.available}</strong>. Выбери, какую базовую характеристику увеличить на 1. Итог и связанные показатели пересчитаются автоматически.</p><p class="sheet-rules-help" data-special-dialog-help></p><div class="sheet-special-choices" data-special-dialog-choices></div><p class="sheet-special-dialog-error" data-special-dialog-error role="status"></p></div>`,confirmSpecialChoice);
+    document.querySelector('#modalRoot .modal')?.classList.add('sheet-special-modal');
+    const later=document.querySelector('#modalRoot .modal-footer [data-player-action="close-modal"]');if(later)later.textContent='Распределить позже';
+    refreshSpecialDialog();
+    document.querySelector('[data-special-choice]:not(:disabled)')?.focus();
+    return true;
+  }
+  function maybePromptSpecial() {
+    const sheet=currentSheet(),result=calculation(sheet),allocation=allocationState(sheet,result);
+    if(allocation.valid && allocation.growthAvailable>0 && Math.floor(result.level/4)>promptedSpecialBudget(sheet))return openSpecialDialog();
+    return false;
   }
   function freePerks(result=calculation()) {
     return Math.max(0,result.perkBudget-result.meta.perks.reduce((sum,entry)=>sum+entry.rank,0));
@@ -290,10 +382,15 @@
   }
   function confirmDialogPerk() {
     const sheet=currentSheet(),result=calculation(sheet),option=perkOptions(result).find(entry=>entry.perk.id===perkDialogSelection);
+    const allocation=allocationState(sheet,result);
+    if(!allocation.valid) {showAllocationValidation(sheet,result);if(typeof toast==='function')toast(allocation.error);return;}
     if(!option || option.reasons.length || !freePerks(result))return;
+    const previous=sheet.rules.perks.map(entry=>({...entry}));
     const selected=sheet.rules.perks.find(entry=>entry.id===option.perk.id);
     if(selected)selected.rank++;else sheet.rules.perks.push({id:option.perk.id,rank:1});
-    applyCalculated(sheet);persist();refreshSelectors();updateSessionParts();
+    applyCalculated(sheet);
+    if(!persist()) {sheet.rules.perks=previous;applyCalculated(sheet);updateLegacyProfile(sheet);const feedback=document.querySelector('[data-perk-dialog-error]');if(feedback)feedback.textContent='Не удалось сохранить выбор. Перк не закреплён; попробуй ещё раз.';refreshPerkDialog();return;}
+    refreshSelectors();updateSessionParts();
     if(!freePerks()) {if(typeof closeModal==='function')closeModal();if(typeof toast==='function')toast('Перк выбран. Постоянные бонусы внесены в анкету.');}
     else {perkDialogSelection='';refreshPerkDialog();}
   }
@@ -303,7 +400,7 @@
     progression(sheet).perkPromptBudget=Math.max(progression(sheet).perkPromptBudget,result.perkBudget);
     if(typeof save==='function')save();
     perkDialogSearch='';perkDialogAvailableOnly=true;perkDialogSelection='';
-    modal('Выбери новый перк',`<div class="sheet-perk-dialog" data-sheet-perk-dialog><p class="sheet-perk-dialog-intro">Уровень ${result.level}. Доступно выборов: <strong data-perk-dialog-count>${freePerks(result)}</strong>. Каждый выбор даёт один ранг перка. Можно выбрать позже — очки сохранятся.</p><div class="sheet-perk-dialog-filters"><label for="perk-dialog-search">Поиск по названию и описанию<input class="input" id="perk-dialog-search" data-perk-dialog-search placeholder="Например, лечение" maxlength="100"></label><label><input type="checkbox" data-perk-dialog-available checked>Только доступные</label></div><div class="sheet-perk-dialog-grid"><div class="sheet-perk-option-list" data-perk-dialog-list aria-label="Список перков"></div><article class="sheet-perk-dialog-preview" data-perk-dialog-preview aria-live="polite"></article></div></div>`,confirmDialogPerk);
+    modal('Выбери новый перк',`<div class="sheet-perk-dialog" data-sheet-perk-dialog><p class="sheet-perk-dialog-intro">Уровень ${result.level}. Доступно выборов: <strong data-perk-dialog-count>${freePerks(result)}</strong>. Каждый выбор даёт один ранг перка. Можно выбрать позже — очки сохранятся.</p><div class="sheet-perk-dialog-filters"><label for="perk-dialog-search">Поиск по названию и описанию<input class="input" id="perk-dialog-search" data-perk-dialog-search placeholder="Например, лечение" maxlength="100"></label><label><input type="checkbox" data-perk-dialog-available checked>Только доступные</label></div><div class="sheet-perk-dialog-grid"><div class="sheet-perk-option-list" data-perk-dialog-list aria-label="Список перков"></div><article class="sheet-perk-dialog-preview" data-perk-dialog-preview aria-live="polite"></article></div><p class="sheet-special-dialog-error" data-perk-dialog-error role="status"></p></div>`,confirmDialogPerk);
     document.querySelector('#modalRoot .modal')?.classList.add('sheet-advancement-modal');
     const later=document.querySelector('#modalRoot .modal-footer [data-player-action="close-modal"]');if(later)later.textContent='Выбрать позже';
     refreshPerkDialog();
@@ -312,9 +409,11 @@
   function maybePromptPerk() {
     if(!document.getElementById('falloutSheetForm'))return;
     if(document.getElementById('modalRoot')?.children.length) {
-      if(!document.querySelector('[data-sheet-perk-dialog]'))promptTimer=setTimeout(()=>maybePromptPerk(),400);
+      const allocation=allocationState(),growth=Math.floor(calculation().level/4);
+      if(!document.querySelector('[data-sheet-perk-dialog]') || (allocation.valid && allocation.growthAvailable>0 && growth>promptedSpecialBudget()))promptTimer=setTimeout(()=>maybePromptPerk(),400);
       return;
     }
+    if(maybePromptSpecial())return;
     const result=calculation(),progress=progression();
     if(freePerks(result) && result.perkBudget>progress.perkPromptBudget)openPerkDialog();
   }
@@ -332,15 +431,17 @@
   function page() {
     const sheet = currentSheet();
     const result=applyCalculated(sheet);
-    queueMicrotask(()=>{processProgress();maybePromptPerk();});
+    queueMicrotask(()=>{updateSessionParts();maybePromptPerk();});
     const heading = typeof head === 'function' ? head('ЛИЧНЫЙ ЛИСТ · ПРАВИЛА ПУСТОШИ', 'Мой персонаж.', 'Характеристики считаются по правилам. Обучение навыкам и текущее здоровье — под твоим контролем.') : '<h1>Мой персонаж.</h1>';
     return heading + `<form class="panel fallout-sheet" id="falloutSheetForm"><div class="sheet-masthead"><div class="sheet-brand"><h2>Fallout</h2><small>ПЕРСОНАЛЬНОЕ ДЕЛО ВЫЖИВШЕГО</small></div><span class="sheet-document-id">S.P.E.C.I.A.L. // 2207<br>АВТОМАТИЧЕСКИЙ РАСЧЁТ ПО ПРАВИЛАМ</span></div><div class="sheet-top"><div class="sheet-identity">${field('name', 'Имя', sheet)}${field('gender', 'Пол', sheet)}${field('age', 'Возраст', sheet, {numeric:true})}</div><div class="sheet-combat-summary">${field('initiative', 'Инициатива · авто', sheet, {readonly:true})}${field('action_points', 'Очки действия · авто', sheet, {readonly:true,after:`<small data-movement-ap>${result.movementAP ? '+'+result.movementAP+' ОД только на передвижение' : 'Общие ОД на ход'}</small>`})}${field('armor_class', 'Класс брони · авто', sheet, {readonly:true})}${experienceMarkup(sheet,result)}${field('level', 'Уровень · авто', sheet, {readonly:true})}<label class="sheet-field" for="sheet-health-current"><span>Здоровье · текущее / максимум</span><span class="sheet-health-control"><input class="input" type="number" step="1" inputmode="numeric" id="sheet-health-current" data-health-current aria-label="Текущее здоровье" value="${result.currentHP===null?'':result.currentHP}"><output data-health-max>/ ${result.maxHP}</output></span><small>Максимум считается; текущее не лечится при повышении уровня.</small></label></div></div><div id="sheetAdvancement">${progressMarkup(sheet,result)}</div><div class="sheet-rule-notices" data-rules-warnings aria-live="polite">${warningsMarkup(result)}</div><div class="sheet-body">${specialMarkup(sheet)}<div class="sheet-notes-column"><section class="sheet-notebox sheet-traits" id="sheetTraits">${traitMarkup(sheet)}</section><section class="sheet-notebox sheet-perks" id="sheetPerks">${perkMarkup(sheet)}</section><section class="sheet-notebox sheet-wounds">${sectionTitle('Ранения')}${field('wounds', '<span class="sr-only">Ранения</span>', sheet, {multiline:true, rows:6})}</section>${legacyNotes()}</div>${skillsMarkup(sheet)}</div><div id="falloutSheetEquipment">${equipmentMarkup(sheet)}</div><details class="sheet-formulas"><summary>Как считается анкета</summary><p>Модификатор S.P.E.C.I.A.L. = итог − 5. Максимум здоровья = 15 + 3 × В + (уровень − 1) × В + бонусы. ОД = 5 + ⌊Л / 2⌋ + бонусы. Инициатива = Восприятие + d20; кубик бросается в игре.</p><p>КБ = КБ экипированной брони + бонус ловкости + постоянные бонусы. Без брони бонус равен ловкости; кожаная куртка — ⌊Л/2⌋, кожаная боевая куртка — ⌊Л/3⌋, кожаная броня — ⌊Л/4⌋, кожаная броня МК2 — ⌊Л/6⌋. «Камикадзе» исключает бонус ловкости к КБ и прибавляет ловкость к инициативе.</p><p>В таблице опыта: 1 — 200; 2 — 400; 3 — 800; 4 — 1400; 5 — 2200; 6 — 3200; 7 — 4400; 8 — 5800; 9 — 7400; 10 — 9100; 11 — 11000; 12 — 13100; 13 — 15400; 14 — 17900; 15 — 20600. Создание начинается с 1-го уровня: при 0–399 XP показан 1-й уровень. Выше 15-го формулы опыта в файле нет.</p><p>Стартовый опыт — уже полученная сумма. «Светоч» делит новый опыт сессии на два; округление в правилах не указано, поэтому сохраняется точная половина. Серверная запись опыта остаётся исходной.</p></details><div class="sheet-footer"><button class="button primary" type="submit">Сохранить анкету ↗</button><button type="button" class="button ghost small sheet-delete-character" data-sheet-progress-action="delete-character">Удалить персонажа</button><span class="sheet-save-status" id="falloutSheetSaveStatus" role="status">Изменения сохраняются автоматически в этом браузере.</span></div><p class="sheet-storage-note">Расчёты — по твоим «Правилам игры» и «Перкам». Лист и последний полученный опыт сохраняются в браузере и входят в резервную копию. Награды приходят с сервера автоматически.</p></form>`;
   }
   function warningsMarkup(result) { return result.warnings.length ? result.warnings.map(text=>`<p class="sheet-warning">${escapeText(text)}</p>`).join('') : '<p class="sheet-rules-help">Постоянные бонусы особенностей и перков учтены в итогах.</p>'; }
   function scheduleSave() {
     const status=document.getElementById('falloutSheetSaveStatus');
-    if(status) status.textContent='Сохраняю изменения…';
+    const allocation=showAllocationValidation();
+    if(status) status.textContent=allocation.valid ? 'Сохраняю изменения…' : 'Анкета не сохранена. '+allocation.error;
     clearTimeout(saveTimer);
+    if(!allocation.valid) {saveTimer=0;return;}
     saveTimer=setTimeout(()=>persist(),400);
   }
   function acceptField(target) {
@@ -367,6 +468,7 @@
   function updateSessionParts() {
     processProgress();
     if(document.querySelector('[data-sheet-perk-dialog]'))refreshPerkDialog();
+    if(document.querySelector('[data-sheet-special-dialog]'))refreshSpecialDialog();
     const form=document.getElementById('falloutSheetForm');
     if(!form) return;
     const sheet=currentSheet(),result=applyCalculated(sheet);
@@ -382,6 +484,7 @@
     const special=form.querySelector('[data-special-budget]');if(special)special.textContent=specialBudget(result);
     const skills=form.querySelector('[data-skill-budget]');if(skills)skills.textContent=skillBudget(result);
     const warnings=form.querySelector('[data-rules-warnings]');if(warnings)warnings.innerHTML=warningsMarkup(result);
+    showAllocationValidation(sheet,result);
     const equipment=document.getElementById('falloutSheetEquipment');
     if(equipment && (currentRoom() || !equipment.contains(document.activeElement))) {const markup=equipmentMarkup(sheet);if(equipment.innerHTML!==markup)equipment.innerHTML=markup;}
     const perkSection=document.getElementById('sheetPerks');
@@ -404,14 +507,14 @@
     if(!meta.traitsLocked && target.dataset.thiefSkill) {const id=target.dataset.thiefSkill;if(target.checked && !meta.thiefSkills.includes(id)){if(meta.thiefSkills.length>=2){target.checked=false;return;}meta.thiefSkills.push(id);}else if(!target.checked)meta.thiefSkills=meta.thiefSkills.filter(key=>key!==id);updateSessionParts();scheduleSave();}
   });
   document.addEventListener('click',event=>{
-    const target=event.target.closest('[data-add-trait],[data-remove-trait],[data-add-perk],[data-remove-perk],[data-add-rank]');
+    const target=event.target.closest('[data-add-trait],[data-remove-trait],[data-add-perk],[data-add-rank]');
     if(!target || !target.closest('#falloutSheetForm'))return;
     const sheet=currentSheet(),meta=sheet.rules,result=calculation(sheet);
     if(target.dataset.addTrait && !meta.traitsLocked && meta.traits.length<2 && RULES.TRAITS.some(trait=>trait.id===target.dataset.addTrait) && !meta.traits.includes(target.dataset.addTrait)){meta.traits.push(target.dataset.addTrait);selectedTrait='';}
     if(target.dataset.removeTrait && !meta.traitsLocked)meta.traits=meta.traits.filter(id=>id!==target.dataset.removeTrait);
     const used=meta.perks.reduce((sum,entry)=>sum+entry.rank,0),addId=target.dataset.addPerk || target.dataset.addRank;
-    if(addId && used<result.perkBudget) {const perk=RULES.PERKS.find(entry=>entry.id===addId),existing=meta.perks.find(entry=>entry.id===addId);if(perk && !RULES.eligibility(perk,result,(existing?.rank || 0)+1).length){if(existing)existing.rank++;else meta.perks.push({id:addId,rank:1});selectedPerk='';}}
-    if(target.dataset.removePerk){const existing=meta.perks.find(entry=>entry.id===target.dataset.removePerk);if(existing && existing.rank>1)existing.rank--;else meta.perks=meta.perks.filter(entry=>entry.id!==target.dataset.removePerk);}
+    if(addId && !allocationState(sheet,result).valid) {showAllocationValidation(sheet,result);if(typeof toast==='function')toast(allocationState(sheet,result).error);return;}
+    if(addId && used<result.perkBudget) {const perk=RULES.PERKS.find(entry=>entry.id===addId),existing=meta.perks.find(entry=>entry.id===addId);if(perk && !RULES.eligibility(perk,result,(existing?.rank || 0)+1).length){const previous=meta.perks.map(entry=>({...entry}));if(existing)existing.rank++;else meta.perks.push({id:addId,rank:1});applyCalculated(sheet);if(!persist()){meta.perks=previous;applyCalculated(sheet);updateLegacyProfile(sheet);if(typeof toast==='function')toast('Не удалось сохранить выбор перка. Попробуй ещё раз.');}else selectedPerk='';refreshSelectors();updateSessionParts();return;}}
     applyCalculated(sheet);refreshSelectors();updateSessionParts();scheduleSave();
   });
   document.addEventListener('submit',event=>{
@@ -422,6 +525,9 @@
     persist(true);
   });
   document.addEventListener('click',event=>{
+    if(event.target.closest('[data-sheet-special-action="choose"]'))openSpecialDialog();
+    const specialOption=event.target.closest('[data-special-choice]');
+    if(specialOption && !specialOption.disabled) {specialChoice=specialOption.dataset.specialChoice;refreshSpecialDialog();}
     const action=event.target.closest('[data-sheet-progress-action]')?.dataset.sheetProgressAction;
     if(action==='choose-perk')openPerkDialog();
     if(action==='open-sheet') {if(location.hash!=='#character')location.hash='character';else document.getElementById('falloutSheetForm')?.scrollIntoView({behavior:'smooth',block:'start'});}
@@ -439,6 +545,7 @@
   window.playerSheetPage = page;
   window.playerSheetValid = validSheet;
   window.playerSheetNormalize = normalizeSheet;
+  window.playerSheetAllocationState = allocationState;
   window.playerSheetRefresh = updateSessionParts;
-  window.playerSheetResetProgress=()=>{clearTimeout(saveTimer);clearTimeout(promptTimer);saveTimer=0;promptTimer=0;progressSignature='';rememberedRoom=null;document.getElementById('sheetProgressNotice')?.remove();};
+  window.playerSheetResetProgress=()=>{const key=specialPromptKey();specialPrompts.delete(key);try{localStorage.removeItem(key);}catch{}clearTimeout(saveTimer);clearTimeout(promptTimer);saveTimer=0;promptTimer=0;progressSignature='';specialChoice='';rememberedRoom=null;document.getElementById('sheetProgressNotice')?.remove();};
 })();

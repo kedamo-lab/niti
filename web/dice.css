@@ -9,3 +9,6 @@
 
 /* Complete, crisp polyhedral outlines; the front d10 masks only natural overlap. */
 .dice-symbol{overflow:visible;shape-rendering:geometricPrecision}.dice-front-face{fill:var(--paper)}
+
+/* A natural one is identified from the unmodified face, in every terminal palette. */
+.dice-card.dice-natural-one>.dice-symbol{color:#ff6c68;filter:drop-shadow(0 0 6px #ff524b99) drop-shadow(0 0 14px #ff524b44)}.dice-face.dice-face-one{color:#ff9b91;border-color:#eb625b;background:#3b1418;box-shadow:0 0 10px #ff524b33}.dice-card.dice-natural-one.selected{border-color:#c76058}.dice-card.dice-natural-one.selected:before{color:#ff8277}

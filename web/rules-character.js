@@ -5,13 +5,13 @@
  */
 (function (root) {
   const SPECIAL = {S:'strength',P:'perception',E:'endurance',C:'charisma',I:'intelligence',A:'agility',L:'luck'};
-  const SKILLS = ['small_guns','big_guns','energy_weapons','unarmed','melee','throwing','first_aid','doctor','sneak','lockpick','steal','traps','science','repair','speech','barter','gambling','outdoorsman'];
+  const SKILLS = ['small_guns','big_guns','energy_weapons','unarmed','melee','throwing','first_aid','doctor','sneak','lockpick','steal','traps','science','repair','speech','barter','gambling','outdoorsman','scavenging'];
   const COMBAT_SKILLS = SKILLS.slice(0, 6);
   const TRAITS = [
     {id:'bruiser',name:'Громила',description:'30% шанс сбить противника с ног. +10 хп. +2 к урону холодного и рукопашного типа оружия. -2 к интеллекту.',effects:{hp:10,special:{I:-2}}},
     {id:'good-natured',name:'Добродушный',description:'Преуспевает в общении, но отстаёт в бою. Броски кубика во время диалога с НПС и игроком всегда с преимуществом, а в бою с помехой. +1 очко навыка.',effects:{skillPoints:1}},
     {id:'liquid-body',name:'Жидкое тело',description:'Вы получаете -3 к урону. Урон в секунду от огня делится на два. Лечащие препараты действуют в два раза хуже.'},
-    {id:'stable',name:'Стабильный',description:'Стабильность, залог успех! Критический промах и критический успех не влияет больше на игру. Теперь это просто попадание и промах. -1 к навыку скважинг.'},
+    {id:'stable',name:'Стабильный',description:'Стабильность, залог успех! Критический промах и критический успех не влияет больше на игру. Теперь это просто попадание и промах. -1 к навыку скважинг.',effects:{skills:{scavenging:-1}}},
     {id:'chemist',name:'Химик',description:' +10 хп. Урон в секунду от плазмы делится на 2. Длительность наркотиков увеличена в три раза. Шанс получить зависимость увеличен. Персонаж всегда нуждается в наркотиках.',effects:{hp:10}},
     {id:'jinxed',name:'Дурной глаз',description:'-4 к классу брони при расчете критического промаха по вам и по противнику. -3 хп, когда вы атакуете противника. -3хп противнику, когда он атакует вас.'},
     {id:'frail',name:'Хилое тело',description:'Легок на подъём. При любом способе избежать урона, лечитесь на 2хп. +2 к классу брони.',effects:{ac:2}},
@@ -42,7 +42,7 @@
       const perk = PERKS.find(candidate => candidate.id === entry?.id);
       if (perk && !seen.has(perk.id)) { perks.push({id:perk.id,rank:Math.max(1,Math.min(perk.ranks.max,integer(entry.rank) || 1))}); seen.add(perk.id); }
     }
-    const training = Object.fromEntries(SKILLS.map(id => [id, String(typeof source.training?.[id] === 'string' ? source.training[id] : sheet['skill_'+id] || '').slice(0,40)]));
+    const training = Object.fromEntries(SKILLS.map(id => [id, String(typeof source.training?.[id] === 'string' ? source.training[id] : sheet['skill_'+id] || (id==='scavenging' ? '0' : '')).slice(0,40)]));
     const startingLevel=levelForXP(Math.max(0,integer(sheet.experience) || 0)),previous=source.progress || {};
     const progress={characterKey:typeof previous.characterKey==='string' ? previous.characterKey.slice(0,220) : '',sessionXP:bounded(previous.sessionXP,0,Number.MAX_SAFE_INTEGER) ? previous.sessionXP : 0,observedLevel:bounded(previous.observedLevel,1,15) ? previous.observedLevel : startingLevel,acknowledgedLevel:bounded(previous.acknowledgedLevel,1,15) ? previous.acknowledgedLevel : startingLevel,perkPromptBudget:bounded(previous.perkPromptBudget,0,5) ? previous.perkPromptBudget : 0};
     return {version:1,traits,traitsLocked:source.traitsLocked === true,perks,training,thiefSkills:[...new Set(Array.isArray(source.thiefSkills) ? source.thiefSkills.filter(id => SKILLS.includes(id)) : [])].slice(0,2),thiefSubtype:['Взломщик','Скрытник','Карманник','Минёр'].includes(source.thiefSubtype) ? source.thiefSubtype : '',progress};
@@ -56,7 +56,7 @@
     }
     if (!Array.isArray(value.traits) || value.traits.length>2 || new Set(value.traits).size!==value.traits.length || !value.traits.every(id => TRAITS.some(trait => trait.id===id))) return false;
     if (!Array.isArray(value.perks) || value.perks.length>PERKS.length || new Set(value.perks.map(p=>p?.id)).size!==value.perks.length || !value.perks.every(entry => entry && typeof entry==='object' && Object.keys(entry).length===2 && Object.hasOwn(entry,'id') && Object.hasOwn(entry,'rank') && PERKS.some(perk=>perk.id===entry.id && bounded(entry.rank,1,perk.ranks.max)))) return false;
-    if (!value.training || typeof value.training!=='object' || Array.isArray(value.training) || Object.keys(value.training).length!==SKILLS.length || !SKILLS.every(id => typeof value.training[id]==='string' && value.training[id].length<=40)) return false;
+    if (!value.training || typeof value.training!=='object' || Array.isArray(value.training) || ![SKILLS.length-1,SKILLS.length].includes(Object.keys(value.training).length) || Object.keys(value.training).some(id=>!SKILLS.includes(id)) || !SKILLS.filter(id=>id!=='scavenging').every(id=>typeof value.training[id]==='string' && value.training[id].length<=40) || (Object.hasOwn(value.training,'scavenging') && (typeof value.training.scavenging!=='string' || value.training.scavenging.length>40))) return false;
     return Array.isArray(value.thiefSkills) && value.thiefSkills.length<=2 && new Set(value.thiefSkills).size===value.thiefSkills.length && value.thiefSkills.every(id=>SKILLS.includes(id)) && ['', 'Взломщик','Скрытник','Карманник','Минёр'].includes(value.thiefSubtype);
   }
   function levelForXP(total) {
@@ -118,7 +118,6 @@
     if(trained>skillBudget) warnings.push(`В обучении навыкам указано ${trained} очков при доступных ${skillBudget}; проверь прежние записи с ведущим.`);
     if(!agilityArmor.known && !has('kamikaze')) warnings.push('Для этой брони в правилах не указан делитель ловкости: показан КБ самой брони и постоянные бонусы.');
     if(has('one-handed')) warnings.push('«Однорукий»: бонус зависит от оружия и рук; учитывай его при броске (+1 для подходящего лёгкого оружия, −3 для двуручного).');
-    if(has('stable')) warnings.push('«Стабильный»: «скважинг» отсутствует среди навыков PDF; штраф −1 показан в описании.');
     if(has('thief') && (!meta.thiefSubtype || meta.thiefSkills.length!==2)) warnings.push('Для «Вора» выбери подтип и два навыка с бонусом +1.');
     if(meta.perks.reduce((sum,entry)=>sum+entry.rank,0)>Math.floor(level/3)) warnings.push('Выбрано больше рангов перков, чем получено за уровни.');
     for(const entry of meta.perks) for(const note of PERKS.find(perk=>perk.id===entry.id)?.effects?.notes || []) warnings.push(note);
