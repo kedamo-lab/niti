@@ -156,3 +156,5 @@ body.inv-dragging,body.inv-dragging *{cursor:grabbing!important;-webkit-user-sel
 .inv-recovery .inv-result{margin-top:12px;box-shadow:none}.inv-result.is-compact .inv-result-head output{font-size:29px}
 @media(max-width:680px){.inv-result{padding:16px 14px}.inv-result-head strong{font-size:15px}.inv-result-head output{font-size:33px}.inv-result-die{min-width:42px;padding:6px 8px}.inv-recovery{padding:14px 12px}.inv-result>.button{width:100%;justify-content:center}}
 @media print{.inv-results{display:none!important}}
+
+.inv-native-no-art{display:grid;place-items:center;align-content:center;gap:8px;min-width:0;color:var(--muted);padding:8px;text-align:center}.inv-native-no-art svg{width:40px;max-width:80%;height:40px;opacity:.65}.inv-native-no-art small{font-size:10px;line-height:1.6;max-width:110px}.inv-bag-cell .inv-native-no-art{position:absolute;inset:3px 3px 22px;gap:0;padding:1px}.inv-bag-cell .inv-native-no-art svg{width:23px;height:23px}.inv-bag-cell .inv-native-no-art small{display:none}.inv-stash-image .inv-native-no-art{padding:3px}.inv-stash-image .inv-native-no-art small{display:none}

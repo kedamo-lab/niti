@@ -72,70 +72,6 @@ def default_ammo(pid,name,cat):
     if pid in {40,61,69,87,103,148}:return 'МиниБат'
     return None
 
-def art_id(pid,name,cat,old):
-    n=name.casefold(); names={re.sub(r'[^а-яa-z0-9]','',x['name'].casefold().replace('ё','е')):x['id'] for x in old.values()}
-    key=re.sub(r'[^а-яa-z0-9]','',n.replace('ё','е'))
-    if key in names:return names[key]
-    if cat=='ammo':
-        if pid in {1,2,3}:return 'fo2-ammo-223-fmj'
-        if pid in {4,5,10}:return 'fo2-ammo-762mm'
-        if pid in {6,7,27}:return 'fo2-ammo-44-fmj'
-        if pid in {8,9}:return 'fo2-ammo-45'
-        if pid in {11,12,13,14,26}:return 'fo2-ammo-12ga'
-        if pid in {19,20,21,22,24}:return 'fo2-ammo-9mm'
-        if pid in {23}:return 'fo2-ammo-micro-fusion'
-        if pid in {28}:return 'fo2-ammo-small-energy'
-        if pid in {29}:return 'fo2-ammo-flamer-fuel'
-        if pid in {25}:return 'fo2-ammo-needler-hn'
-        if pid in {33}:return 'fo2-ammo-bb'
-        return 'fo2-ammo-rocket-ap' if pid==32 else 'fo2-ammo-rocket-explosive'
-    if cat=='currency':return 'fo2-ammo-small-energy'
-    if cat=='armor':return 'docx-t09-r%02d' % (0 if pid in {113,114} else 1 if pid<=117 else 3 if pid<=119 else 5 if pid<=124 or pid==394 else 8 if pid<=126 else 10)
-    if cat=='unarmed':return 'docx-t01-r17' if pid==40 else 'docx-t02-r02' if pid in {36,37} else 'docx-t02-r01'
-    if cat=='melee':
-        if 'лазер' in n:return 'docx-t07-r01'
-        if 'электро' in n:return 'docx-t01-r18'
-        if 'пил' in n:return 'docx-t01-r17'
-        if 'молот' in n or 'кувалд' in n:return 'docx-t01-r14'
-        if 'копье' in n or 'копьё' in n:return 'docx-t01-r12'
-        if 'ключ' in n:return 'docx-t01-r08'
-        if 'фомка' in n:return 'docx-t01-r09'
-        if any(x in n for x in ['палк','труб','кий','кия','дубин','вантуз']):return 'docx-t01-r16'
-        if pid>=514:return 'docx-t06-r05'
-        return 'docx-t01-r05'
-    if cat=='heavy':
-        if 'огнем' in n:return 'docx-t05-r06'
-        if 'ракет' in n or 'гранат' in n:return 'docx-t05-r08'
-        if pid in {190,191,193}:return 'docx-t05-r04'
-        return 'docx-t05-r01'
-    if cat=='energy':return 'docx-t07-r09' if 'плазм' in n else 'docx-t07-r07' if 'винтов' in n else 'docx-t07-r01'
-    if cat=='light':
-        if 'дробов' in n or 'двуствол' in n:return 'docx-t04-r30'
-        if 'обрез' in n:return 'docx-t04-r28'
-        if 'снайпер' in n or 'винтов' in n:return 'docx-t04-r22'
-        if 'автомат' in n:return 'docx-t04-r24'
-        if n.startswith('пп') or 'пулемет' in n:return 'docx-t04-r11'
-        if 'револьвер' in n or 'питон' in n:return 'docx-t04-r05'
-        return 'docx-t04-r02'
-    if cat in {'throwing','explosive'}:return 'docx-t06-r01' if pid==214 else 'docx-t06-r04' if pid==211 else 'docx-t01-r10' if pid==213 else 'docx-t01-r04' if pid in {62,63} else 'docx-t06-r02'
-    if cat=='medicine':return 'book-ac7cac72072b' if pid in {222,223,230,302,343} else 'book-27140ece2559' if pid in {224,225} else 'book-f61f860eb2cc' if pid in {226,227,335} else 'book-e82fdda67ae6' if pid in {221,228,229,231,232,233,444} else 'book-84ee96228316'
-    if cat=='food':return 'book-1242a76c45d1' if pid in {237,246,292,323} else 'book-6289c3deade8' if pid in {234,235,236,297} else 'book-43a548f2834c' if pid in {315,328,442} else 'book-066c1a6a8bab'
-    if pid in {47,91,408,409}:return 'book-59816ce83b34' if pid==409 else 'book-84ee96228316'
-    if 'отмыч' in n:return 'book-177093adb5dd'
-    if 'верев' in n:return 'book-78425f6da181'
-    if 'дров' in n:return 'book-f3f99ee10136'
-    if 'клык' in n or 'хвост' in n:return 'book-2a8e6345fb1c'
-    if 'батар' in n or 'ячейк' in n:return 'fo2-ammo-micro-fusion'
-    if 'части' in n or 'модуль' in n or 'двигател' in n or 'запчаст' in n:return 'book-4a5a3a2ffe59'
-    if 'бутыл' in n:return 'book-5f1a8ee60cfa'
-    if 'тряп' in n:return 'book-1c138514c152'
-    if 'лист' in n or 'зол' in n:return 'book-27417081b467'
-    if 'шкур' in n:return 'book-daefa00ce309'
-    if cat=='craft':return 'book-3ef9496f1da0'
-    if cat=='book':return 'book-de12993bad9b'
-    if cat=='quest':return 'book-e875a9d7911e'
-    return 'book-c0eca9e22988'
-
 def mechanical_fit(root,ranges):
     program="const fs=require('fs'),vm=require('vm');const ctx={window:{}};vm.createContext(ctx);vm.runInContext(fs.readFileSync('web/equipment-rules.js','utf8'),ctx);const input=JSON.parse(fs.readFileSync(0,'utf8'));process.stdout.write(JSON.stringify(input.map(x=>ctx.window.EquipmentRules.fromRange(x[0],x[1]))));"
     result=subprocess.run(['node','-e',program],input=json.dumps(ranges),text=True,capture_output=True,cwd=root,check=True)
@@ -143,6 +79,7 @@ def mechanical_fit(root,ranges):
 
 def extend_catalog(items,root):
     source=json.loads((root/'olympus-catalog-source.json').read_text())
+    native_art=json.loads((root/'olympus-art-source.json').read_text())
     result=copy.deepcopy([i for i in items if not str(i['id']).startswith('olympus-')]);old={i['id']:i for i in result}
     # Add executable formulas without changing the retained book's displayed damage.
     old_estimates={'docx-t05-r01':'4d6','docx-t05-r02':'4d6','docx-t05-r03':'5d6','docx-t05-r04':'5d6','docx-t05-r05':'6d6','docx-t05-r06':'6d6','docx-t05-r07':'8d6','docx-t05-r08':'6d8'}
@@ -225,11 +162,11 @@ def extend_catalog(items,root):
         label=LABELS[cat];description=f'{label}: {name}. Предмет Olympus 2207, прототип №{pid}.'
         adapt['note']=' '.join(notes)
         if adapt['estimatedFields'] and not adapt['note']:adapt['note']='Отмеченные параметры назначены для настольной кампании; мастер может изменить их перед выдачей.'
-        imageID=art_id(pid,name,cat,old)
-        if imageID not in old or not old[imageID].get('image'):raise ValueError('Missing representative art '+imageID)
-        provenance={'game':'Olympus 2207','label':'Olympus 2207','url':source['textSource']['url'],'prototype':pid,'nativeName':native_name,'numericSource':source['numericSources']['armor' if cat=='armor' else 'weapons'] if str(pid) in source['armorFacts'] or str(pid) in facts else source['textSource']['url'] if original else None,'statsStatus':'adapted-with-confirmed-source-values' if original else 'campaign-adaptation','art':{'game':'Fallout 2','match':'representative','catalogId':imageID,'note':'Прозрачная иллюстрация-аналоги из Fallout 2; это не извлечённый спрайт Olympus.'}}
+        art=native_art['images'][f'olympus-{pid}']
+        if art['metadata']['pid']!=pid:raise ValueError('Incorrect native artwork for '+name)
+        provenance={'game':'Olympus 2207','label':'Olympus 2207','url':source['textSource']['url'],'prototype':pid,'nativeName':native_name,'numericSource':source['numericSources']['armor' if cat=='armor' else 'weapons'] if str(pid) in source['armorFacts'] or str(pid) in facts else source['textSource']['url'] if original else None,'statsStatus':'adapted-with-confirmed-source-values' if original else 'campaign-adaptation','art':{'game':'Olympus 2207','match':'original','version':native_art['source']['version'],'sourceUrl':native_art['source']['sourceUrl'],'installerSha256':native_art['source']['sha256'],'palettePath':native_art['palettePath'],'paletteSha256':native_art['paletteSha256'],**art['metadata'],'note':'В оригинальных ресурсах игры у этого предмета нет отдельного изображения (blank.frm).' if art['metadata']['nativeBlank'] else 'Оригинальный инвентарный спрайт Olympus 2207: первый кадр FRM, исходная палитра и прозрачность игры.'}}
         consumable=cat in {'ammo','medicine','food','explosive'} or (cat=='throwing' and pid not in {62,63,213,217,218})
-        item={'id':f'olympus-{pid}','olympusPid':pid,'name':name,'category':cat,'categoryLabel':label,'stats':s,'image':old[imageID]['image'],'source':provenance,'description':description,'originalGameStats':original,'adaptation':adapt,'consumable':consumable,'rulesVersion':4,'warnings':[]}
+        item={'id':f'olympus-{pid}','olympusPid':pid,'name':name,'category':cat,'categoryLabel':label,'stats':s,'image':art['image'],'source':provenance,'description':description,'originalGameStats':original,'adaptation':adapt,'consumable':consumable,'rulesVersion':4,'warnings':[]}
         if adapt['estimatedFields']:
             fieldnames={'damageFormula':'урон','armorClass':'класс брони','apCost':'стоимость ОД','ammo':'боеприпас','healingFormula':'лечение','radiationReduction':'снижение радиации'}
             item['warnings'].append('Настольная адаптация: '+', '.join(fieldnames.get(k,k) for k in adapt['estimatedFields'])+'. Мастер может изменить параметры перед выдачей.')

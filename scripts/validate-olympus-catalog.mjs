@@ -24,8 +24,13 @@ for(const item of items){
   if(!item.id.startsWith('olympus-'))continue;
   assert(R.validateEquipmentStats(item.stats).valid,item.id+': stats schema');
   assert(/^data:image\/(png|webp);base64,/.test(item.image),item.id+': bundled art');
-  assert.equal(item.source.art.match,'representative','Do not misrepresent fallback art.');
-  assert(item.source.art.catalogId && byID.has(item.source.art.catalogId));
+  assert.equal(item.source.art.match,'original','Use genuine Olympus inventory art.');
+  assert.equal(item.source.art.game,'Olympus 2207');
+  assert.equal(item.source.art.pid,item.olympusPid);
+  assert.equal((item.source.art.inventoryFid >>> 24)&15,7);
+  assert(item.source.art.frmPath.startsWith('art/inven/'));
+  assert.equal(createHash('sha256').update(Buffer.from(item.image.split(',')[1],'base64')).digest('hex'),item.source.art.imageSha256);
+  assert.equal(item.source.art.frame.transparentIndex,0);
   for(const key of item.adaptation.estimatedFields)assert(item.warnings.length>0,item.id+': estimated fields disclosed');
   const original=item.originalGameStats;
   if(original.damageMin!==undefined){
