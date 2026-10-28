@@ -9,7 +9,7 @@ function validPlayer(s){return !!s&&s.kind==='niti-player'&&s.version===1&&(s.sh
 let player=initial(),storageOK=true;try{const raw=localStorage.getItem(PLAYER_KEY);if(raw){const data=JSON.parse(raw);if(validPlayer(data))player=data;}}catch{storageOK=false;}
 const copyPlayerValue=value=>JSON.parse(JSON.stringify(value));
 function characterSnapshot(value){return {profile:copyPlayerValue(value.profile),...(value.sheet?{sheet:copyPlayerValue(value.sheet)}:{})};}
-let persistedCharacter=characterSnapshot(player);
+let persistedCharacter=characterSnapshot(player),resetCharacterStorage=false;
 let view=location.hash.slice(1)||'home',lastFocus=null;
 const pages=[['home','На связи'],['session','Игровая сессия'],['character','Мой персонаж'],['inventory','Инвентарь'],['notes','Мои заметки'],['dice','Кубики'],['help','Справка']];
 function icon(key){const shapes={home:'<path d="m3 11 9-8 9 8v10h-6v-7H9v7H3Z"/>',character:'<circle cx="12" cy="7" r="4"/><path d="M4 22v-3a8 8 0 0 1 16 0v3"/>',notes:'<path d="M5 3h14v18H5zM9 7h6m-6 5h6m-6 5h3"/>',dice:'<path d="m12 2 9 5v10l-9 5-9-5V7Zm0 0L7 15h10L12 2ZM3 7l14 8-5 7-5-7 14-8"/>',help:'<circle cx="12" cy="12" r="10"/><path d="M9 8a3 3 0 0 1 6 0c0 3-3 2-3 5m0 3v1"/>'};return `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${shapes[key]||shapes.home}</svg>`;}
@@ -27,6 +27,7 @@ function characterSaveError(candidate=player){
   return '';
 }
 function playerArchiveState(){
+  if(!resetCharacterStorage)syncStoredItemEffects();
   const error=characterSaveError();
   if(!error)return {data:player,error:''};
   // Keep an invalid edit on screen while notes and received XP can still be saved.
@@ -60,11 +61,31 @@ window.playerRulesDamageContext=item=>{
   return {strength:result.special.S,bonus:result.damageBonus+(['melee','unarmed'].includes(item?.category)?result.meleeDamageBonus:0),healthKnown:result.currentHP!==null,healingMultiplier:result.healingMultiplier};
 };
 function storedItemReceipts(){try{const data=JSON.parse(localStorage.getItem(PLAYER_KEY));return validPlayer(data)?data.sheet?.rules?.itemEffects || []:[];}catch{return[];}}
+function syncStoredItemEffects(){
+  let stored;
+  try{stored=JSON.parse(localStorage.getItem(PLAYER_KEY));if(!validPlayer(stored))return false;}catch{return false;}
+  const incoming=stored.sheet?.rules?.itemEffects || [],known=persistedCharacter.sheet?.rules?.itemEffects || [];
+  const fresh=incoming.some(id=>!known.includes(id));
+  const floor=[...new Set([...incoming,...known,...(player.sheet?.rules?.itemEffects || [])])].slice(0,5000);
+  if(!floor.length)return false;
+  if(!persistedCharacter.sheet)persistedCharacter.sheet=playerSheetNormalize(null,persistedCharacter.profile);
+  if(!player.sheet)player.sheet=playerSheetNormalize(null,player.profile);
+  if(!player.sheet.rules)player.sheet.rules=PlayerCharacterRules.normalizeMeta(null,player.sheet);
+  persistedCharacter.sheet.rules.itemEffects=[...floor];player.sheet.rules.itemEffects=[...floor];
+  // A receipt unknown to this tab means another tab committed the corresponding HP.
+  if(fresh && stored.sheet){
+    persistedCharacter.sheet.health=stored.sheet.health;persistedCharacter.profile.hp=stored.profile.hp;
+    player.sheet.health=stored.sheet.health;player.profile.hp=stored.profile.hp;
+  }
+  return fresh;
+}
+window.addEventListener('storage',event=>{if(event.key===PLAYER_KEY && !resetCharacterStorage && syncStoredItemEffects() && view==='character')render();});
 window.playerItemEffectApplied=outcome=>{
   const key=itemEffectKey(outcome);
   return !!key && (persistedCharacter.sheet?.rules?.itemEffects?.includes(key) || storedItemReceipts().includes(key));
 };
 function applyConfirmedItemEffect(outcome){
+  syncStoredItemEffects();
   const key=itemEffectKey(outcome),room=window.playerSessionSnapshot?.();
   if(!key || outcome?.kind!=='healing')return {applied:false,error:'Открой сессию владельца этого лечения.'};
   if(window.playerItemEffectApplied(outcome))return {applied:true,duplicate:true,message:'Это лечение уже учтено.'};
@@ -93,7 +114,7 @@ function modifier(n){return n-5>=0?'+'+(n-5):String(n-5);}
 function home(){const p=player.profile;return playerSessionSummary()+head('ЛИЧНОЕ ПРОСТРАНСТВО УЧАСТНИКА','Твоя история ещё впереди.','Персонаж, заметки и кубики. Всё под рукой во время игры.')+`<div class="player-home-grid"><section class="panel player-welcome"><div class="panel-header"><h2 class="panel-title">Терминал игрока</h2><span class="tag">OLYMPUS 2207</span></div><div class="player-vault"><img src="vault-art.svg" alt="Ретрофутуристический терминал рядом с гермодверью"></div><div class="player-welcome-body"><div class="player-kicker">ГОТОВ К СЛЕДУЮЩЕМУ ХОДУ</div><h2 class="player-title">История открывается за столом.</h2><p>Здесь хранятся твои записи и инструменты для игры. Добавляй то, что узнал во время встречи, и возвращайся к заметкам перед следующей.</p><div class="player-home-actions"><a class="button primary" href="#dice">Бросить кубик ↗</a><a class="button ghost" href="#notes">Сделать заметку ↗</a></div></div></section><section class="panel player-profile-summary"><div class="panel-header"><h2 class="panel-title">Мой персонаж</h2><a class="text-button" href="#character">Заполнить ↗</a></div><div class="player-profile-summary-body"><div class="player-summary-label">ИМЯ В АРХИВЕ</div><h2 class="player-summary-name">${esc(p.name)||'Пока без имени'}</h2><p class="muted">${esc(p.concept)||'Перенеси имя и характеристики из своего игрового листа.'}</p><div class="player-summary-stats">${SPECIAL.map(([k,n])=>`<div class="player-summary-stat" title="${n}"><small>${k}</small><strong>${p.special[k]}</strong></div>`).join('')}</div><p class="player-local-notice">${player.notes.length} личных заметок. Записи видны только в твоём браузере.</p></div></section></div><div class="player-tools"><a class="panel" href="#character">${icon('character')}<strong>Твой персонаж</strong><span>Характеристики, навыки и состояние.</span><b>↗</b></a><a class="panel" href="#notes">${icon('notes')}<strong>Твоя память</strong><span>Имена, обещания и собственные наблюдения.</span><b>↗</b></a><a class="panel" href="#dice">${icon('dice')}<strong>Твой шанс</strong><span>d4, d6, d8, d10, d12, d20 и d100.</span><b>↗</b></a></div><div class="banner"><strong>Личный архив.</strong> У каждого участника свои записи. Для переноса на другое устройство скачай копию данных в разделе «Справка».</div>`;}
 function inputField(name,label,value='',type='input'){return `<div class="field"><label class="field-label" for="p-${name}">${label}</label>${type==='textarea'?`<textarea class="textarea" id="p-${name}" name="${name}" rows="4" maxlength="30000">${esc(value)}</textarea>`:`<input class="input" id="p-${name}" name="${name}" maxlength="300" value="${esc(value)}">`}</div>`;}
 function character(){return playerSheetPage();}
-window.playerClearCharacter=()=>{const notes=player.notes;window.playerSheetResetProgress?.();player=initial();player.notes=notes;persistedCharacter=characterSnapshot(player);save();closeModal();render();window.dispatchEvent(new CustomEvent('niti:character-cleared'));};
+window.playerClearCharacter=()=>{const notes=player.notes;window.playerSheetResetProgress?.();player=initial();player.notes=notes;persistedCharacter=characterSnapshot(player);resetCharacterStorage=true;save();resetCharacterStorage=false;closeModal();render();window.dispatchEvent(new CustomEvent('niti:character-cleared'));};
 function notes(){return head('ТО, ЧТО ТЫ УЖЕ ЗНАЕШЬ','Мои заметки.','Записывай события, договорённости и вопросы, которые хочешь задать на следующей встрече.')+`<section class="panel player-notes-form"><form id="noteForm">${inputField('noteTitle','КОРОТКИЙ ЗАГОЛОВОК')}${inputField('noteText','ЗАПИСЬ','','textarea')}<button class="button primary" type="submit">Добавить заметку ↗</button></form></section><div class="player-note-list">${player.notes.map(n=>`<article class="panel player-note"><div class="card-top"><span class="muted">${esc(new Date(n.date).toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'}))}</span><div class="player-note-actions">${btn('Изменить','edit-note','ghost small',`data-id="${esc(n.id)}"`)}${btn('×','delete-note','ghost small',`data-id="${esc(n.id)}" aria-label="Удалить заметку"`)}</div></div><h2 class="card-title">${esc(n.title)||'Заметка'}</h2><p class="prewrap">${esc(n.text)}</p></article>`).join('')||'<div class="empty-state"><h3>Чистая страница.</h3><p>Первая запись появится здесь после сохранения.</p></div>'}</div>`;}
 function help(){return head('ПАМЯТКА УЧАСТНИКА','Всегда под рукой.','Личные инструменты и сохранения для твоей игры.')+`<div class="player-help-grid"><section class="panel"><h2 class="card-title">Проверки</h2><p>Характеристика: <strong>1d20 + (SPECIAL − 5)</strong>.<br>Навык: <strong>1d20 + значение навыка</strong>.</p><p>Навык и характеристика одновременно не складываются. Итог сравнивается с порогом, который задаёт ведущий. Особенности и снаряжение учитывайте по правилам вашей группы.</p><p class="muted">Кубики показывают результат броска. Условия успеха определяются за столом.</p></section><section class="panel"><h2 class="card-title">Цвет и экран</h2><p>В верхней панели доступны 10 оттенков терминала. Кнопка «ЭЛТ» включает и отключает декоративные полосы экрана.</p><p>Настройки сохраняются для этого браузера.</p></section><section class="panel"><h2 class="card-title">Личные сохранения</h2><p>Анкета и заметки хранятся на этом устройстве. С комнатой синхронизируются имя, исходный опыт и влияние особенности «Светоч», чтобы мастер мог повышать уровень. Миссия, полученный опыт и вещи хранятся на сервере. История кубиков ведётся отдельно.</p><p>Очистка данных браузера удаляет локальные записи. Скачай резервную копию перед переносом на другое устройство.</p><div class="player-data-actions">${btn('↓ Скачать мои данные','backup','primary')}${btn('↥ Восстановить копию','restore','ghost')}</div></section><section class="panel"><h2 class="card-title">Без интернета</h2><p>Скачай терминал одним HTML-файлом. Для переноса персонажа и заметок также сохрани и восстанови резервную копию.</p><a href="niti-player-offline.html" download class="button ghost">↙ Скачать офлайн-версию</a></section></div>`;}
 function render(){if(!pages.some(([id])=>id===view))view='home';$('#nav').innerHTML=pages.map(([id,name])=>`<a class="nav-item ${id===view?'active':''}" href="#${id}" ${id===view?'aria-current="page"':''}>${icon(id)}<span>${name}</span></a>`).join('');const name=pages.find(([id])=>id===view)[1];$('#crumb').textContent=name;document.title=name+' · Нити — игрок';$('#workspace').innerHTML=({home,session:playerSessionPage,character,inventory:playerInventoryPage,notes,dice:dicePage,help}[view])();$('#saveStatus').textContent=storageOK?'● Личные записи в браузере':'! Не сохранено · скачай копию';window.nitiAnimateNavigation?.(view);window.NitiDesign?.render(view);}
