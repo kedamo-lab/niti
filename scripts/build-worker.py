@@ -4,6 +4,7 @@ import json, shutil, subprocess, re
 root = Path(__file__).resolve().parent.parent
 subprocess.run(['python3', str(root/'build-offline.py')], cwd=root, check=True)
 files = [
+    'storydesk-design.css','storydesk-design.js','brand-mark.svg','equipment-rules.js',
     'index.html', 'player-app.js', 'player-session.js', 'player-session.css',
     'player-audio.js', 'player-audio.css', 'navigation-motion.js', 'navigation-motion.css', 'equipment-art.js',
     'rules-character.js', 'player-sheet.js', 'player-sheet.css', 'player-inventory.js', 'player-inventory.css',
@@ -15,7 +16,7 @@ assets = {name: {'type': types[Path(name).suffix]+'; charset=utf-8', 'body': (ro
 asset_module = 'const assets = '+json.dumps(assets, ensure_ascii=False, separators=(',',':'))+';\n'
 (root/'worker/assets.js').write_text('export '+asset_module)
 modules = []
-for name in ['item-catalog.js', 'legacy-item-stats.js', 'inventory.js', 'api.js']:
+for name in ['equipment-rules.js','item-catalog.js', 'legacy-item-stats.js', 'inventory.js', 'api.js']:
     module = (root/'worker'/name).read_text()
     module = re.sub(r"(?m)^import[\s\S]*?from ['\"][^'\"]+['\"];?\n", '', module)
     modules.append(module)

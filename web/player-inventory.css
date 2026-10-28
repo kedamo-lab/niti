@@ -131,3 +131,28 @@ body.inv-dragging,body.inv-dragging *{cursor:grabbing!important;-webkit-user-sel
 @media(max-width:680px){.inv-drag-help{font-size:9px;margin:-7px 0 15px}.inv-equipment{gap:8px;grid-template-columns:1.08fr 1.08fr .94fr}.inv-equipment-weapon,.inv-equipment-armor{min-height:232px}.inv-equipment-slot{padding:12px 6px 9px}.inv-slot-body{padding:12px 0;gap:10px}.inv-slot-body>.inv-item-image{height:108px}.inv-slot-body>strong{font-size:8px}.inv-slot-body.is-empty>small{font-size:7px}.inv-equipment-extra1 .inv-slot-body>.inv-item-image,.inv-equipment-extra2 .inv-slot-body>.inv-item-image{height:42px}.inv-detail-art{height:190px;min-height:160px}.inv-bag-cell>.inv-item-image{height:78%}.inv-drag-handle{width:19px;height:19px;font-size:15px;bottom:0;left:0}.inv-slot-body>.inv-drag-handle{width:23px;height:24px;font-size:20px}.inv-drop-caption{font-size:7px;inset:auto 2px 4px;padding:2px}.inv-equipment-weapon:before,.inv-equipment-armor:before{inset:33px 6px 38px}}
 @media(prefers-reduced-motion:reduce){.inv-equipment-slot{transition:none}.inv-drag-ghost{will-change:auto}}
 @media print{.inv-drag-help,.inv-drag-handle,.inv-drop-caption,.inv-drag-ghost{display:none!important}}
+/* Confirmed rolls stay visible after the last consumable leaves the pack. */
+.inv-results{display:grid;gap:14px;margin:0 0 24px;min-width:0}
+.inv-result{border:1px solid var(--terminal-accent);border-radius:8px;background:radial-gradient(ellipse at top right,var(--terminal-tint),transparent 65%),var(--paper);padding:20px;min-width:0;overflow-wrap:anywhere;box-shadow:0 10px 28px #0002}
+.inv-result-head{display:flex;justify-content:space-between;align-items:center;gap:18px}
+.inv-result-head>div{display:grid;gap:8px;min-width:0}
+.inv-result-head strong{font-family:var(--sans);font-size:17px;color:var(--terminal-bright);line-height:1.5}
+.inv-result-head output{font-family:var(--mono);font-size:38px;line-height:1.2;font-weight:600;color:var(--terminal-bright);flex:0 0 auto}
+.inv-result-dice{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:17px}
+.inv-result-die{display:grid;justify-items:center;gap:3px;min-width:47px;padding:7px 10px 8px;border:1px solid var(--line);border-radius:6px;background:var(--terminal-dark);color:var(--terminal-bright)}
+.inv-result-die small{font-size:8px;line-height:1.4;color:var(--muted)}
+.inv-result-die b{font-size:18px;line-height:1.3;font-weight:500}
+.inv-result-die.is-natural-one{color:#ff8178;border-color:#df5d58;background:#8f24252b;box-shadow:inset 0 0 16px #ff52431c,0 0 12px #ff524326}
+.inv-result-die.is-natural-one small{color:#ffaaa2}
+.inv-result-modifier{font-family:var(--mono);font-size:16px;color:var(--terminal-accent);padding:8px}
+.inv-result-fixed{font-size:11px;color:var(--muted)}
+.inv-result-rule,.inv-result-hint{font-size:10px!important;line-height:1.9!important;color:var(--muted)!important;margin:12px 0 0!important}
+.inv-result-rule{font-family:var(--mono);color:var(--terminal-accent)!important}
+.inv-result>.button{margin-top:15px;min-height:40px}
+.inv-result-applied{display:block;margin-top:14px;font-size:11px;line-height:1.8;color:var(--green)}
+.inv-recovery{padding:17px 19px;border:1px dashed var(--line);border-radius:8px}
+.inv-recovery summary{font-size:12px;color:var(--terminal-accent);line-height:1.8;cursor:pointer}
+.inv-recovery>p{font-size:11px!important;line-height:1.9!important;color:var(--muted)!important;margin:12px 0 16px!important}
+.inv-recovery .inv-result{margin-top:12px;box-shadow:none}.inv-result.is-compact .inv-result-head output{font-size:29px}
+@media(max-width:680px){.inv-result{padding:16px 14px}.inv-result-head strong{font-size:15px}.inv-result-head output{font-size:33px}.inv-result-die{min-width:42px;padding:6px 8px}.inv-recovery{padding:14px 12px}.inv-result>.button{width:100%;justify-content:center}}
+@media print{.inv-results{display:none!important}}

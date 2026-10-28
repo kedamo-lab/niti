@@ -1,4 +1,4 @@
-import { InventoryError, inventoryEnsure, inventoryItems, inventoryEquipment, inventoryHistory, inventoryApply, inventoryDeleteCharacter } from './inventory.js';
+import { InventoryError, inventoryStatsPatch, inventoryEnsure, inventoryItems, inventoryEquipment, inventoryHistory, inventoryApply, inventoryDeleteCharacter } from './inventory.js';
 import { ITEM_CATALOG } from './item-catalog.js';
 // Durable, capability-based session API. Only explicitly public mission fields
 // and announced rewards ever enter this service; the GM module stays elsewhere.
@@ -114,7 +114,7 @@ function publicItems(input, state) {
     }
     const catalogId = item?.catalogId == null || item.catalogId === '' ? null : key(item.catalogId);
     if (catalogId && !ITEM_CATALOG.some(entry => entry.id === catalogId)) throw new ApiError(400, 'Предмет не найден в каталоге.');
-    return { id: key(item?.id), name: text(item.name, 180), quantity: integer(item.quantity, 1, 9999), recipientId, ...(catalogId ? { catalogId } : {}) };
+    return { id: key(item?.id), name: text(item.name, 180), quantity: integer(item.quantity, 1, 9999), recipientId, ...(catalogId ? { catalogId } : {}), ...(Object.hasOwn(item,'stats') ? {stats:inventoryStatsPatch(item.stats)} : {}) };
   });
 }
 
@@ -363,7 +363,7 @@ async function route(request, env, pathname) {
       const outcome = await inventoryApply(state, auth, input);
       return { ...outcome, auth };
     });
-    return { duplicate: !!mutation.duplicate, room: roomView(mutation.row, mutation.state, mutation.auth) };
+    return { duplicate: !!mutation.duplicate, ...(mutation.outcome?{outcome:mutation.outcome}:{}), room: roomView(mutation.row, mutation.state, mutation.auth) };
   }
   if (action === 'mission' && request.method === 'POST') {
     const input = await body(request);

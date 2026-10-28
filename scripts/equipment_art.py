@@ -24,6 +24,8 @@ if __name__ == '__main__':
     separator = ';\nexport const REWARD_ALIASES = '
     raw, aliases = target.read_text()[len(prefix):].split(separator, 1)
     items = apply_equipment_art(json.loads(raw), root)
+    from olympus_catalog import extend_catalog as extend_olympus_catalog
+    items = extend_olympus_catalog(items, root)
     encoded = json.dumps(items, ensure_ascii=False, separators=(',', ':'))
     target.write_text(prefix + encoded + separator + aliases)
     (root.parent / 'niti-storydesk/dist/item-catalog.js').write_text('window.NITI_ITEM_CATALOG = ' + encoded + ';\n')

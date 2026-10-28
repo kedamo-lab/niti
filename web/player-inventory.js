@@ -13,6 +13,8 @@
   let lastRevision = -1;
   let lastRoomId = '';
   let lastOnline = false;
+  let latestOutcome = null;
+  let applyingEffect = false;
   const quantities = new Map();
   const slotChoices = new Map();
   let drag = null, pointerGesture = null, deferredPaint = false, suppressClickUntil = 0, suppressItemId = '';
@@ -110,15 +112,18 @@
     const items = sharedItems();
     return `<div class="inv-stash-heading"><div><span class="eyebrow">ДОСТУПНО ВСЕЙ ГРУППЕ</span><h2>Общий тайник</h2></div><span class="tag">${items.length} ГРУПП ПРЕДМЕТОВ</span></div><p class="inv-stash-intro">Возьми вещь себе — она уйдёт из тайника. Вернёшь обратно — её сможет взять другой участник.</p><div class="inv-stash-list">${items.length ? items.map(item => `<button type="button" class="inv-stash-item ${selection?.source === 'shared' && selection.id === item.id ? 'is-selected' : ''}" data-inv-action="select" data-source="shared" data-item-id="${e(item.id)}" aria-pressed="${selection?.source === 'shared' && selection.id === item.id}"><span class="inv-stash-image">${itemImage(item)}</span><span class="inv-stash-copy"><strong>${e(item.name)}</strong><small>${e(categoryLabel(item))}</small></span><b>×${Number(item.quantity)}</b><span class="inv-stash-arrow" aria-hidden="true">↗</span></button>`).join('') : '<div class="inv-empty-stash"><span aria-hidden="true">◇</span><h3>Тайник пока пуст.</h3><p>Найденные предметы появятся здесь после выдачи ведущим или возврата другим игроком.</p></div>'}</div>`;
   }
+  function damageTypeLabel(value) {
+    return ({normal:'Норма',laser:'Лазер',fire:'Огонь',plasma:'Плазма',electric:'Электричество',emp:'ЭМИ',explosive:'Взрыв',explosion:'Взрыв'})[value] || value;
+  }
   function stat(label, value, suffix = '') {
     const known = value !== null && value !== undefined && value !== '';
     return `<div><dt>${label}</dt><dd class="${known ? '' : 'is-unknown'}">${known ? e(value) + suffix : 'Не указано'}</dd></div>`;
   }
-  function armorStats(value) {
+  function armorStats(value, prefix = '', suffix = '') {
     if (!value || typeof value !== 'object') return '';
-    const keys = [['normal', 'Норма'], ['laser', 'Лазер'], ['fire', 'Огонь'], ['plasma', 'Плазма'], ['electric', 'Электро'], ['explosion', 'Взрыв'], ['explosive', 'Взрыв']];
+    const keys = [['normal', 'Норма'], ['laser', 'Лазер'], ['fire', 'Огонь'], ['plasma', 'Плазма'], ['electric', 'Электро'], ['emp', 'ЭМИ'], ['explosion', 'Взрыв'], ['explosive', 'Взрыв']];
     const seen = new Set();
-    return keys.filter(([key, label]) => Object.hasOwn(value, key) && !seen.has(label) && seen.add(label)).map(([key,label]) => stat(label, value[key])).join('');
+    return keys.filter(([key, label]) => Object.hasOwn(value, key) && !seen.has(label) && seen.add(label)).map(([key,label]) => stat(prefix + label, value[key], suffix)).join('');
   }
   function rangeStats(stats) {
     if (stats.rangeFormula !== 'perception') return stat('Дальность', stats.range);
@@ -140,12 +145,14 @@
     const slot = slotChoices.get(item.id) || defaultSlot;
     const actionDisabled = blockActions() ? 'disabled' : '';
     let statRows = '';
-    if (weapon(item)) statRows += stat('Урон', stats.damage) + stat('Стоимость действия', stats.apCost, ' ОД') + rangeStats(stats) + stat('Боеприпасы', stats.ammo) + stat('Магазин', stats.magazine) + stat('Минимальная СИЛ', stats.minStrength) + stat('Тип урона', stats.damageType) + stat('Перезарядка', stats.reloadAp, ' ОД');
-    if (item.category === 'armor') statRows += stat('Класс брони', stats.armorClass) + armorStats(stats.resistances);
+    if (weapon(item)) statRows += stat('Урон', stats.damageFormula || stats.damage) + stat('Стоимость действия', stats.apCost, ' ОД') + rangeStats(stats) + stat('Боеприпасы', stats.ammo) + stat('Магазин', stats.magazine) + stat('Минимальная СИЛ', stats.minStrength) + stat('Тип урона', damageTypeLabel(stats.damageType)) + stat('Перезарядка', stats.reloadAp, ' ОД');
+    if (item.category === 'armor') statRows += stat('Класс брони', stats.armorClass) + armorStats(stats.resistances, 'Защита · ') + armorStats(stats.damageThresholds, 'Порог · ') + armorStats(stats.resistancePercent, 'Сопротивление · ', '%');
+    if (stats.healingFormula) statRows += stat('Восстановление здоровья', stats.healingFormula);
+    if (stats.radiationReduction != null) statRows += stat('Снижение радиации', stats.radiationReduction);
     if (!weapon(item) && item.category !== 'armor') {
       statRows += stat('Стоимость использования', stats.apCost, ' ОД');
       if (stats.damage != null && stats.damage !== '') statRows += stat('Урон', stats.damage);
-      if (stats.damageType != null && stats.damageType !== '') statRows += stat('Тип урона', stats.damageType);
+      if (stats.damageType != null && stats.damageType !== '') statRows += stat('Тип урона', damageTypeLabel(stats.damageType));
     }
     if (stats.weight != null) statRows += stat('Вес', stats.weight);
     if (stats.price != null) statRows += stat('Стоимость', stats.price);
@@ -153,7 +160,51 @@
     const effects = [...new Set([stats.modifiers, stats.effect, item.effect].filter(value => typeof value === 'string' && value.trim()))].join('\n');
     const source = item.sourceLabel || (typeof item.source === 'string' ? item.source : item.source?.label || (item.source?.table != null ? `Прикреплённый каталог · таблица ${item.source.table}${item.source.row != null ? ', строка ' + item.source.row : ''}` : ''));
     const warnings = Array.isArray(item.warnings) ? item.warnings.filter(value => typeof value === 'string') : [];
-    return `<div class="inv-detail-top"><span class="eyebrow">${shared ? 'В ОБЩЕМ ТАЙНИКЕ' : 'ПРИНАДЛЕЖИТ ТЕБЕ'}</span>${button('×', 'clear', 'aria-label="Закрыть описание предмета"')}</div><div class="inv-detail-art">${itemImage(item)}</div><span class="inv-detail-category">${e(categoryLabel(item))}</span><h2 class="inv-detail-name">${e(item.name)}</h2><div class="inv-detail-amount"><span>Количество</span><strong>×${Number(item.quantity)}</strong></div>${selectedSlots.length ? `<p class="inv-owned-status">В экипировке: ${selectedSlots.map(([,label]) => e(label)).join(', ')}</p>` : ''}<dl class="inv-stats">${statRows}</dl>${effects ? `<div class="inv-item-effects"><span class="eyebrow">ОСОБЕННОСТИ</span><p>${e(effects)}</p></div>` : ''}${item.description ? `<p class="inv-item-description">${e(item.description)}</p>` : ''}<div class="inv-detail-actions"><label class="inv-quantity-label" for="invQuantity">КОЛИЧЕСТВО ДЛЯ ПЕРЕДАЧИ<input class="input" id="invQuantity" type="number" inputmode="numeric" min="1" max="${Number(item.quantity)}" step="1" value="${quantity}" ${actionDisabled}></label>${button(shared ? 'Взять себе ↗' : 'Вернуть в тайник ↙', shared ? 'take' : 'return', actionDisabled, true)}${Number(item.quantity) > 1 ? button(shared ? 'Взять всё' : 'Сложить всё', shared ? 'take-all' : 'return-all', `${actionDisabled} data-inv-all="true"`) : ''}${!shared ? `<div class="inv-equip-actions"><label for="invEquipSlot" class="field-label">СЛОТ ЭКИПИРОВКИ<select class="input" id="invEquipSlot" ${actionDisabled}>${slots.map(([id,label]) => `<option value="${id}" ${slot === id ? 'selected' : ''}>${label}</option>`).join('')}</select></label>${button('Экипировать', 'equip', actionDisabled)}</div>${selectedSlots.length ? `<div class="inv-remove-slots">${selectedSlots.map(([slotId,label]) => button('Снять · ' + label, 'unequip', `data-slot="${slotId}" data-item-id="${e(item.id)}" ${actionDisabled}`)).join('')}</div>` : ''}${button(consumable(item) ? 'Использовать 1 шт.' : 'Использовать предмет', 'use', actionDisabled)}<p class="inv-action-hint">${consumable(item) ? 'Использование расходует одну вещь из твоего запаса. Эффект применяется по правилам вашей группы.' : 'Использование отмечается в сессии. Урон, ОД и специальные эффекты применяются по правилам вашей группы.'}</p>` : '<p class="inv-action-hint">Использовать и экипировать предмет сможет только тот, кто забрал его себе.</p>'}</div>${source ? `<p class="inv-source">${e(source)}</p>` : ''}${warnings.length ? `<details class="inv-catalog-notes"><summary>Примечания каталога</summary>${warnings.map(value => `<p>${e(value)}</p>`).join('')}</details>` : ''}<p class="inv-unknown-note">«Не указано» означает, что в прикреплённом каталоге нет этого значения. Его может уточнить ведущий.</p>`;
+    return `<div class="inv-detail-top"><span class="eyebrow">${shared ? 'В ОБЩЕМ ТАЙНИКЕ' : 'ПРИНАДЛЕЖИТ ТЕБЕ'}</span>${button('×', 'clear', 'aria-label="Закрыть описание предмета"')}</div><div class="inv-detail-art">${itemImage(item)}</div><span class="inv-detail-category">${e(categoryLabel(item))}</span><h2 class="inv-detail-name">${e(item.name)}</h2><div class="inv-detail-amount"><span>Количество</span><strong>×${Number(item.quantity)}</strong></div>${selectedSlots.length ? `<p class="inv-owned-status">В экипировке: ${selectedSlots.map(([,label]) => e(label)).join(', ')}</p>` : ''}<dl class="inv-stats">${statRows}</dl>${effects ? `<div class="inv-item-effects"><span class="eyebrow">ОСОБЕННОСТИ</span><p>${e(effects)}</p></div>` : ''}${item.description ? `<p class="inv-item-description">${e(item.description)}</p>` : ''}<div class="inv-detail-actions"><label class="inv-quantity-label" for="invQuantity">КОЛИЧЕСТВО ДЛЯ ПЕРЕДАЧИ<input class="input" id="invQuantity" type="number" inputmode="numeric" min="1" max="${Number(item.quantity)}" step="1" value="${quantity}" ${actionDisabled}></label>${button(shared ? 'Взять себе ↗' : 'Вернуть в тайник ↙', shared ? 'take' : 'return', actionDisabled, true)}${Number(item.quantity) > 1 ? button(shared ? 'Взять всё' : 'Сложить всё', shared ? 'take-all' : 'return-all', `${actionDisabled} data-inv-all="true"`) : ''}${!shared ? `<div class="inv-equip-actions"><label for="invEquipSlot" class="field-label">СЛОТ ЭКИПИРОВКИ<select class="input" id="invEquipSlot" ${actionDisabled}>${slots.map(([id,label]) => `<option value="${id}" ${slot === id ? 'selected' : ''}>${label}</option>`).join('')}</select></label>${button('Экипировать', 'equip', actionDisabled)}</div>${selectedSlots.length ? `<div class="inv-remove-slots">${selectedSlots.map(([slotId,label]) => button('Снять · ' + label, 'unequip', `data-slot="${slotId}" data-item-id="${e(item.id)}" ${actionDisabled}`)).join('')}</div>` : ''}${weapon(item) && window.EquipmentRules?.weaponFormula(stats) ? button('Бросить урон', 'roll-damage', actionDisabled, true) : ''}${!weapon(item) || consumable(item) ? button(stats.healingFormula ? 'Использовать · восстановить здоровье' : consumable(item) ? 'Использовать 1 шт.' : 'Использовать предмет', 'use', actionDisabled) : ''}<p class="inv-action-hint">${stats.healingFormula ? 'Расходуется 1 предмет. Подтверждённое лечение переносится в здоровье анкеты и ограничивается его максимумом.' : weapon(item) ? 'Бросок считает урон одного попадания. Попадание, ОД и расход патронов учитываются за столом.' : consumable(item) ? 'Использование расходует одну вещь из твоего запаса. Отложенные и временные эффекты учитываются по описанию предмета.' : 'Использование отмечается в сессии; специальные эффекты применяются по описанию.'}</p>` : '<p class="inv-action-hint">Использовать и экипировать предмет сможет только тот, кто забрал его себе.</p>'}</div>${source ? `<p class="inv-source">${e(source)}</p>` : ''}${item.adaptation?.note ? `<p class="inv-source">${e(item.adaptation.note)}</p>` : ''}${item.overriddenFields?.length ? '<p class="inv-source">Характеристики этого экземпляра настроены мастером.</p>' : ''}${warnings.length ? `<details class="inv-catalog-notes"><summary>Примечания каталога</summary>${warnings.map(value => `<p>${e(value)}</p>`).join('')}</details>` : ''}<p class="inv-unknown-note">«Не указано» означает, что в прикреплённом каталоге нет этого значения. Его может уточнить ведущий.</p>`;
+  }
+  function damageContext(item) {
+    try {
+      const context = typeof window.playerRulesDamageContext === 'function' ? window.playerRulesDamageContext(item) : {};
+      return {strength:Number.isInteger(context?.strength) ? Math.max(0,Math.min(10,context.strength)) : 0, bonus:Number.isInteger(context?.bonus) ? Math.max(-1000,Math.min(1000,context.bonus)) : 0, healthKnown:context?.healthKnown === true};
+    } catch { return {strength:0,bonus:0,healthKnown:false}; }
+  }
+  function effectApplied(outcome) {
+    try { return typeof window.playerItemEffectApplied === 'function' && window.playerItemEffectApplied(outcome) === true; }
+    catch { return false; }
+  }
+  function availableOutcomes() {
+    const current=room(), results=new Map();
+    for(const entry of current?.inventoryHistory || []) {
+      const outcome=entry?.outcome;
+      if(outcome && ['damage','healing'].includes(outcome.kind) && outcome.playerId===current?.self?.id && outcome.operationId) results.set(outcome.operationId,outcome);
+    }
+    if(latestOutcome?.roomId===current?.id && latestOutcome.outcome.playerId===current?.self?.id) results.set(latestOutcome.outcome.operationId,latestOutcome.outcome);
+    return [...results.values()];
+  }
+  function outcomeMarkup(outcome, compact=false) {
+    const healing=outcome.kind==='healing', applied=healing && effectApplied(outcome);
+    const total=Number(outcome.total), validTotal=Number.isFinite(total);
+    const dice=(Array.isArray(outcome.rolls)?outcome.rolls:[]).filter(die=>Number.isInteger(die?.sides)&&Number.isInteger(die?.value)).map(die=>`<span class="inv-result-die ${die.value===1?'is-natural-one':''}" title="d${die.sides}: ${die.value}"><small>d${die.sides}</small><b>${die.value}</b></span>`).join('');
+    const modifiers=[Number(outcome.modifier)||0,Number(outcome.strengthBonus)||0,Number(outcome.bonus)||0].filter(Boolean).map(n=>(n>0?'+':'−')+Math.abs(n)).join(' ');
+    return `<article class="inv-result ${healing?'is-healing':'is-damage'} ${compact?'is-compact':''}" data-outcome-id="${e(outcome.operationId)}"><div class="inv-result-head"><div><span class="eyebrow">${healing?'ВОССТАНОВЛЕНИЕ':'БРОСОК УРОНА'}</span><strong>${e(outcome.itemName||'Предмет')}</strong></div><output aria-label="${healing?'Лечение':'Урон'}: ${validTotal?total:'неизвестно'}">${validTotal?e(total):'—'}</output></div><div class="inv-result-dice">${dice}${modifiers?`<span class="inv-result-modifier">${e(modifiers)}</span>`:''}${!dice&&!modifiers?`<span class="inv-result-fixed">Фиксированный эффект</span>`:''}</div><p class="inv-result-rule">${e(outcome.formula||'')}${!healing&&outcome.damageType?' · '+e(damageTypeLabel(outcome.damageType)):''}${healing&&outcome.radiationReduction?' · Радиация −'+e(outcome.radiationReduction):''}</p>${healing?applied?'<span class="inv-result-applied">✓ Здоровье в анкете обновлено</span>':button('Применить лечение к анкете', 'apply-healing', `data-operation-id="${e(outcome.operationId)}" ${applyingEffect?'disabled':''}`,true):'<p class="inv-result-hint">Урон до защиты цели. ОД и патроны не списываются.</p>'}</article>`;
+  }
+  function resultsMarkup() {
+    const outcomes=availableOutcomes(), recent=latestOutcome?.roomId===room()?.id ? outcomes.find(outcome=>outcome.operationId===latestOutcome.outcome.operationId) : null;
+    const recoverable=outcomes.filter(outcome=>outcome.kind==='healing'&&!effectApplied(outcome)&&outcome!==recent).reverse();
+    if(!recent&&!recoverable.length)return '';
+    return `<section class="inv-results" aria-label="Результаты использования снаряжения" aria-live="polite">${recent?outcomeMarkup(recent):''}${recoverable.length?`<details class="inv-recovery" ${recent?'':'open'}><summary>Ожидает переноса в анкету: ${recoverable.length}</summary><p>Это подтверждённые применения предметов. Перенеси лечение один раз; новый предмет не расходуется.</p>${recoverable.map(outcome=>outcomeMarkup(outcome,true)).join('')}</details>`:''}</section>`;
+  }
+  async function applyHealing(outcome, repaint=true) {
+    if(!outcome || outcome.playerId!==room()?.self?.id || effectApplied(outcome))return;
+    if(typeof window.playerApplyConfirmedItemEffect!=='function') {message='Лечение подтверждено. Открой анкету и повтори перенос здоровья.';messageKind='error';if(repaint)paint(true);return;}
+    applyingEffect=true;
+    try {
+      const result=await window.playerApplyConfirmedItemEffect(outcome);
+      if(!effectApplied(outcome) && result!==true && result?.applied!==true) {
+        message=typeof result?.error==='string'?result.error:typeof result?.message==='string'?result.message:'Не удалось сохранить здоровье. Укажи текущее здоровье в анкете и повтори перенос лечения.';messageKind='error';
+      } else {message='Лечение применено к анкете.';messageKind='success';}
+    } catch(error) {message=error?.message||'Не удалось сохранить здоровье. Подтверждённое лечение можно применить повторно без траты предмета.';messageKind='error';}
+    finally {applyingEffect=false;if(repaint)paint(true);}
   }
   function legacyMarkup() {
     const text = typeof player !== 'undefined' ? player.profile?.inventory : '';
@@ -164,7 +215,7 @@
   }
   function contentMarkup() {
     if (!room()?.self) return disconnectedMarkup();
-    return `${statusMarkup()}<div data-inv-notice>${noticeMarkup()}</div><div class="inv-layout"><section class="panel inv-board"><div class="inv-board-head"><span class="eyebrow">ПРИ ТЕБЕ</span><h2>Экипировка</h2></div><p class="inv-drag-help" id="invDragStatus" aria-live="polite">Перетащи вещь из сумки в подходящий слот. На телефоне потяни за ⠿. Верни вещь из слота в сумку, чтобы снять её.</p><div class="inv-equipment" data-inv-equipment>${SLOTS.map(([slot,label]) => slotMarkup(slot,label)).join('')}</div><div data-inv-bag>${bagMarkup()}</div></section><aside class="panel inv-detail" data-inv-detail tabindex="-1" aria-label="Описание выбранного предмета">${detailsMarkup()}</aside><section class="panel inv-shared" data-inv-stash>${stashMarkup()}</section></div>${legacyMarkup()}`;
+    return `${statusMarkup()}<div data-inv-notice>${noticeMarkup()}</div><div data-inv-results>${resultsMarkup()}</div><div class="inv-layout"><section class="panel inv-board"><div class="inv-board-head"><span class="eyebrow">ПРИ ТЕБЕ</span><h2>Экипировка</h2></div><p class="inv-drag-help" id="invDragStatus" aria-live="polite">Перетащи вещь из сумки в подходящий слот. На телефоне потяни за ⠿. Верни вещь из слота в сумку, чтобы снять её.</p><div class="inv-equipment" data-inv-equipment>${SLOTS.map(([slot,label]) => slotMarkup(slot,label)).join('')}</div><div data-inv-bag>${bagMarkup()}</div></section><aside class="panel inv-detail" data-inv-detail tabindex="-1" aria-label="Описание выбранного предмета">${detailsMarkup()}</aside><section class="panel inv-shared" data-inv-stash>${stashMarkup()}</section></div>${legacyMarkup()}`;
   }
   function page() {
     const heading = typeof head === 'function' ? head('СНАРЯЖЕНИЕ И ОБЩАЯ ДОБЫЧА', 'Инвентарь.', 'Оружие, броня и вещи твоего персонажа. Возьми нужное и верни то, чем не пользуешься.') : '<h1>Инвентарь</h1>';
@@ -192,6 +243,7 @@
     }
     const channel = root.querySelector('.inv-channel'); if (channel) channel.outerHTML = statusMarkup();
     root.querySelector('[data-inv-notice]').innerHTML = noticeMarkup();
+    const results = root.querySelector('[data-inv-results]'); if (results) results.innerHTML = resultsMarkup();
     root.querySelector('[data-inv-equipment]').innerHTML = SLOTS.map(([slot,label]) => slotMarkup(slot,label)).join('');
     root.querySelector('[data-inv-bag]').innerHTML = bagMarkup();
     root.querySelector('[data-inv-stash]').innerHTML = stashMarkup();
@@ -219,8 +271,14 @@
       if (data?.room?.self) cachedRoom = data.room;
       else if (data?.self) cachedRoom = data;
       retryOperation = null;
-      message = ({take:'Предметы теперь у тебя.', return:'Предметы возвращены в общий тайник.', equip:'Экипировка обновлена.', unequip:'Вещь снята. Она осталась в твоей сумке.', use:'Использование предмета учтено.'})[operation.action] || 'Инвентарь обновлён.';
-      messageKind = 'success';
+      if (data?.outcome && ['damage','healing'].includes(data.outcome.kind)) {
+        latestOutcome = {roomId:room()?.id, outcome:data.outcome};
+        if (data.outcome.kind === 'healing') await applyHealing(data.outcome, false);
+      }
+      if(data?.outcome?.kind !== 'healing') {
+        message = ({take:'Предметы теперь у тебя.', return:'Предметы возвращены в общий тайник.', equip:'Экипировка обновлена.', unequip:'Вещь снята. Она осталась в твоей сумке.', use:'Использование предмета учтено.', 'roll-damage':'Урон рассчитан.'})[operation.action] || 'Инвентарь обновлён.';
+        messageKind = 'success';
+      }
       return true;
     } catch (error) {
       const status = Number(error.status);
@@ -426,6 +484,12 @@
     if (action === 'select') { select(target.dataset.source, target.dataset.itemId, true); return; }
     if (action === 'clear') { selection = null; paint(true); return; }
     if (action === 'retry') { void perform(null,true); return; }
+    if (action === 'apply-healing') {
+      if (applyingEffect) return;
+      const outcome=availableOutcomes().find(entry=>entry.operationId===target.dataset.operationId && entry.kind==='healing');
+      if(outcome) void applyHealing(outcome);
+      return;
+    }
     if (action === 'empty-slot') {
       const slot = target.dataset.slot;
       const candidates = ownItems().filter(item => slot === 'weapon' ? weapon(item) : slot === 'armor' ? item.category === 'armor' : true);
@@ -448,7 +512,14 @@
       const slot = document.getElementById('invEquipSlot')?.value;
       if (slot) void perform({action,itemId:item.id,slot});
     }
-    if (action === 'use') void perform({action,itemId:item.id,quantity:1});
+    if (action === 'roll-damage') {
+      const context=damageContext(item);
+      void perform({action,itemId:item.id,strength:context.strength,bonus:context.bonus});
+    }
+    if (action === 'use') {
+      if(item.stats?.healingFormula && !damageContext(item).healthKnown) {message='Сначала укажи текущее здоровье в анкете, чтобы лечение можно было сохранить.';messageKind='error';paint(true);return;}
+      void perform({action,itemId:item.id,quantity:1});
+    }
   });
   document.addEventListener('input', event => {
     if (event.target.id !== 'invQuantity' || !selection) return;

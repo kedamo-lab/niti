@@ -84,6 +84,8 @@ with ZipFile(book)as z:
    i['stats']['effect']='\n'.join(filter(None,[i['stats'].get('effect'),'\n'.join(' + '.join(r['ingredients'])+' → '+r['result']for r in related)]))
 from equipment_art import apply_equipment_art
 items=apply_equipment_art(extend_catalog(items,root),root)
+from olympus_catalog import extend_catalog as extend_olympus_catalog
+items=extend_olympus_catalog(items,root)
 for i in items:
  if i['category'] in weaponcats:assert i['stats'].get('damageType')
  if i['category'] in weaponcats and i['stats'].get('ammo'):assert i['stats']['reloadAp']==2

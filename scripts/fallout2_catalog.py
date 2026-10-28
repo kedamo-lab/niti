@@ -33,6 +33,8 @@ if __name__ == '__main__':
     raw, aliases = catalog_path.read_text()[len(prefix):].split(separator, 1)
     from equipment_art import apply_equipment_art
     items = apply_equipment_art(extend_catalog(json.loads(raw), root), root)
+    from olympus_catalog import extend_catalog as extend_olympus_catalog
+    items = extend_olympus_catalog(items, root)
     encoded = json.dumps(items, ensure_ascii=False, separators=(',', ':'))
     catalog_path.write_text(prefix + encoded + separator + aliases)
     gm = root.parent / 'niti-storydesk/dist/item-catalog.js'

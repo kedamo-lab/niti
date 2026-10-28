@@ -375,7 +375,7 @@
       if (!snapshot || data.room.revision >= snapshot.revision) snapshot = data.room;
       connection = 'live'; connectionMessage = ''; lastSuccess = Date.now();
       updateMounted();
-      return snapshot;
+      return {room:snapshot,outcome:data.outcome || null,duplicate:!!data.duplicate};
     } catch (error) {
       if (error.code === 'CHARACTER_DELETED' && access === credential) forgetDeletedCharacter(credential);
       if (error.status === 409 || error.status === 403) await refresh();
