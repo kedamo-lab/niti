@@ -11,6 +11,7 @@
   let access = readAccess(), snapshot = null, connection = 'idle', connectionMessage = '', lastSuccess = 0;
   let pollingTimer = 0, requestInFlight = null, joining = false, leavePrompt = false;
   let characterSyncTimer = 0, characterSyncInFlight = false, characterSyncWanted = null, characterSyncLast = '';
+  let personaSyncTimer=0,personaSyncInFlight=false,personaSyncWanted=null,personaSyncLast='',personaSyncError='';
   let requestedRoom = roomFromValue(new URLSearchParams(location.search).get('room') || '');
 
   function safeText(value) {
@@ -95,15 +96,15 @@
   }
   function roomMarkup(room) {
     const self = room.self || { name: access?.name || '', xp: 0, inventory: [] };
-    return `<div class="session-room-bar"><div><span class="eyebrow">ОБЩАЯ ИГРОВАЯ КОМНАТА</span><h2>${safeText(room.name)}</h2><span class="session-player-label">Ты: ${safeText(self.name)}</span></div><div class="session-room-controls">${statusMarkup()}<button type="button" class="button ghost small" data-session-action="refresh">Обновить</button></div></div>${errorMarkup()}<div class="session-grid"><div class="session-main-column">${missionMarkup(room)}${eventsMarkup(room.events)}</div><aside class="session-side-column"><section class="panel session-experience"><span class="eyebrow">ТВОЙ ОПЫТ В СЕССИИ</span><div class="session-xp-number"><strong data-session-xp>${safeText(self.xp || 0)}</strong><span>XP</span></div><p>Начисляет ведущий за задания и повышение уровня. Опыт автоматически учитывается в анкете.</p><small>Награды сохраняются и приходят, даже если ты временно не в сети. Учитываются события после твоего вступления.</small></section><section class="panel session-inventory"><div class="panel-header"><h2 class="panel-title">Полученное снаряжение</h2></div>${itemList(self.inventory, 'Личные награды ещё не выданы.', 'data-session-personal-items')}<p class="session-card-hint"><a class="text-button" href="#inventory">Открыть инвентарь и экипировку ↗</a></p></section><section class="panel session-inventory"><div class="panel-header"><h2 class="panel-title">Общий тайник</h2><span class="tag">НА ГРУППУ</span></div>${itemList(room.sharedItems, 'Общая добыча пока не найдена.', 'data-session-shared-items')}<p class="session-card-hint"><a class="text-button" href="#inventory">Забрать вещи из тайника ↗</a></p></section><section class="panel session-party"><div class="panel-header"><h2 class="panel-title">Участники</h2><span class="badge">${room.players?.length || 0}</span></div><ul>${(room.players || []).map(member => `<li><span class="session-member-initial" aria-hidden="true">${safeText((member.name || '?').slice(0, 1))}</span><strong>${safeText(member.name)}</strong>${member.id === self.id ? '<small>ТЫ</small>' : ''}</li>`).join('')}</ul><p class="session-card-hint">Список вошедших в сессию; он не показывает присутствие в сети.</p></section></aside></div><div class="session-access-bar"><p>Доступ к этому персонажу сохранён в браузере. Скачай его для переноса на другое устройство.</p><div><button type="button" class="button ghost small" data-session-action="export">↓ Сохранить доступ</button><button type="button" class="button ghost small" data-session-action="leave">Отключиться</button></div></div>${leavePrompt ? `<div class="session-disconnect-confirm" role="alert"><p>Отключить этот браузер от сессии? Персонаж и награды останутся в комнате. Для возвращения сохрани доступ.</p><div><button type="button" class="button ghost small" data-session-action="export">Сохранить доступ</button><button type="button" class="button ghost small" data-session-action="leave-cancel">Остаться</button><button type="button" class="button danger small" data-session-action="leave-confirm">Отключиться</button></div></div>` : ''}`;
+    return `<div class="session-room-bar"><div><span class="eyebrow">ОБЩАЯ ИГРОВАЯ КОМНАТА</span><h2>${safeText(room.name)}</h2><span class="session-player-label">Игрок: ${safeText(self.ownerName || 'Не указано')} · Персонаж: ${safeText(self.name)}</span></div><div class="session-room-controls">${statusMarkup()}<button type="button" class="button ghost small" data-session-action="refresh">Обновить</button></div></div>${errorMarkup()}<div class="session-grid"><div class="session-main-column">${missionMarkup(room)}${eventsMarkup(room.events)}</div><aside class="session-side-column"><section class="panel session-experience"><span class="eyebrow">ТВОЙ ОПЫТ В СЕССИИ</span><div class="session-xp-number"><strong data-session-xp>${safeText(self.xp || 0)}</strong><span>XP</span></div><p>Начисляет ведущий за задания и повышение уровня. Опыт автоматически учитывается в анкете.</p><small>Награды сохраняются и приходят, даже если ты временно не в сети. Учитываются события после твоего вступления.</small></section><section class="panel session-inventory"><div class="panel-header"><h2 class="panel-title">Полученное снаряжение</h2></div>${itemList(self.inventory, 'Личные награды ещё не выданы.', 'data-session-personal-items')}<p class="session-card-hint"><a class="text-button" href="#inventory">Открыть инвентарь и экипировку ↗</a></p></section><section class="panel session-inventory"><div class="panel-header"><h2 class="panel-title">Общий тайник</h2><span class="tag">НА ГРУППУ</span></div>${itemList(room.sharedItems, 'Общая добыча пока не найдена.', 'data-session-shared-items')}<p class="session-card-hint"><a class="text-button" href="#inventory">Забрать вещи из тайника ↗</a></p></section><section class="panel session-party"><div class="panel-header"><h2 class="panel-title">Участники</h2><span class="badge">${room.players?.length || 0}</span></div><ul>${(room.players || []).map(member => `<li><span class="session-member-initial" aria-hidden="true">${safeText((member.name || '?').slice(0, 1))}</span><strong>${safeText(member.name)}</strong>${member.id === self.id ? '<small>ТЫ</small>' : ''}</li>`).join('')}</ul><p class="session-card-hint">Список вошедших в сессию; он не показывает присутствие в сети.</p></section></aside></div><div class="session-access-bar"><p>Доступ к этому персонажу сохранён в браузере. Скачай его для переноса на другое устройство.</p><div><button type="button" class="button ghost small" data-session-action="export">↓ Сохранить доступ</button><button type="button" class="button ghost small" data-session-action="leave">Отключиться</button></div></div>${leavePrompt ? `<div class="session-disconnect-confirm" role="alert"><p>Отключить этот браузер от сессии? Персонаж и награды останутся в комнате. Для возвращения сохрани доступ.</p><div><button type="button" class="button ghost small" data-session-action="export">Сохранить доступ</button><button type="button" class="button ghost small" data-session-action="leave-cancel">Остаться</button><button type="button" class="button danger small" data-session-action="leave-confirm">Отключиться</button></div></div>` : ''}`;
   }
   function joinMarkup() {
     if (!ONLINE) return `<section class="panel session-offline"><div class="eyebrow">ЛИЧНЫЕ ИНСТРУМЕНТЫ ДОСТУПНЫ</div><h2>Сессия работает в интернете.</h2><p>Открой онлайн-терминал по приглашению ведущего, чтобы получать миссии и награды. Персонаж, заметки и кубики в этом файле работают без соединения.</p></section>`;
     const roomId = currentRoomId();
     const profileName = typeof player !== 'undefined' ? player.profile?.name || '' : '';
-    const defaultName = access?.roomId === roomId ? access.name : profileName;
+    const defaultName = access?.roomId === roomId ? access.name : '';
     const existingDifferent = access && requestedRoom && access.roomId !== requestedRoom;
-    return `<div class="session-join-grid"><section class="panel session-join-card"><div class="eyebrow">ПРИСОЕДИНИТЬСЯ К ИСТОРИИ</div><h2>Сигнал от ведущего.</h2><p>Вставь ссылку-приглашение и укажи имя персонажа. Миссии и награды будут появляться в этом терминале.</p>${existingDifferent ? '<div class="session-notice">Открыто приглашение в другую комнату. Личные заметки и лист персонажа сохранятся. Доступ к прежней комнате останется в этом браузере.</div>' : ''}<form id="playerSessionJoinForm"><div class="field"><label class="field-label" for="player-session-room">ССЫЛКА ИЛИ КОД КОМНАТЫ</label><input class="input" id="player-session-room" name="room" value="${safeText(roomId)}" autocomplete="off" spellcheck="false" required maxlength="500" placeholder="Вставь приглашение ведущего"></div><div class="field"><label class="field-label" for="player-session-name">ИМЯ ПЕРСОНАЖА</label><input class="input" id="player-session-name" name="name" value="${safeText(defaultName || '')}" autocomplete="nickname" required maxlength="80" placeholder="Как тебя зовут в этой истории?"></div><div class="session-join-actions"><button type="submit" class="button primary" data-session-action="join-submit" ${joining ? 'disabled' : ''}>${joining ? 'Подключаем…' : 'Войти в сессию ↗'}</button><span class="session-form-feedback" data-session-form-feedback role="status">${safeText(connectionMessage)}</span></div></form><div class="session-restore-control"><button type="button" class="text-button" data-session-action="import">↥ Восстановить доступ к персонажу</button>${existingDifferent ? '<button type="button" class="text-button" data-session-action="return-current">Вернуться в прежнюю комнату</button>' : ''}</div></section><section class="panel session-join-info"><div class="session-signal-art" aria-hidden="true"><span>⌁</span><i></i><i></i><i></i></div><h2>Одна группа.<br>Общая история.</h2><ul><li><strong>Миссия и варианты действий</strong><span>Всё, что ведущий открыл для вашей группы.</span></li><li><strong>Опыт и добыча</strong><span>Появляются после подтверждённого результата.</span></li><li><strong>Твои записи остаются твоими</strong><span>Текст анкеты и заметки остаются в браузере. Имя и данные для расчёта опыта синхронизируются с мастером.</span></li></ul></section></div>`;
+    return `<div class="session-join-grid"><section class="panel session-join-card"><div class="eyebrow">ПРИСОЕДИНИТЬСЯ К ИСТОРИИ</div><h2>Сигнал от ведущего.</h2><p>Вставь ссылку-приглашение и укажи имя игрока. Миссии и награды будут появляться в этом терминале.</p>${existingDifferent ? '<div class="session-notice">Открыто приглашение в другую комнату. Личные заметки и лист персонажа сохранятся. Доступ к прежней комнате останется в этом браузере.</div>' : ''}<form id="playerSessionJoinForm"><div class="field"><label class="field-label" for="player-session-room">ССЫЛКА ИЛИ КОД КОМНАТЫ</label><input class="input" id="player-session-room" name="room" value="${safeText(roomId)}" autocomplete="off" spellcheck="false" required maxlength="500" placeholder="Вставь приглашение ведущего"></div><div class="field"><label class="field-label" for="player-session-name">ИМЯ ИГРОКА</label><input class="input" id="player-session-name" name="name" value="${safeText(defaultName || '')}" autocomplete="nickname" required maxlength="80" placeholder="Твоё имя или ник"></div><div class="session-join-actions"><button type="submit" class="button primary" data-session-action="join-submit" ${joining ? 'disabled' : ''}>${joining ? 'Подключаем…' : 'Войти в сессию ↗'}</button><span class="session-form-feedback" data-session-form-feedback role="status">${safeText(connectionMessage)}</span></div></form><div class="session-restore-control"><button type="button" class="text-button" data-session-action="import">↥ Восстановить доступ к персонажу</button>${existingDifferent ? '<button type="button" class="text-button" data-session-action="return-current">Вернуться в прежнюю комнату</button>' : ''}</div></section><section class="panel session-join-info"><div class="session-signal-art" aria-hidden="true"><span>⌁</span><i></i><i></i><i></i></div><h2>Одна группа.<br>Общая история.</h2><ul><li><strong>Миссия и варианты действий</strong><span>Всё, что ведущий открыл для вашей группы.</span></li><li><strong>Опыт и добыча</strong><span>Появляются после подтверждённого результата.</span></li><li><strong>Твои записи остаются твоими</strong><span>Личная анкета и заметки остаются в браузере. Отряд видит только арт, имя, возраст, пол персонажа и имя игрока.</span></li></ul></section></div>`;
   }
   function contentMarkup() {
     if (!ONLINE) return joinMarkup();
@@ -201,7 +202,7 @@
     const name = String(fields.get('name') || '').trim();
     const roomInput = form.elements.room, nameInput = form.elements.name;
     roomInput.setCustomValidity(roomId ? '' : 'Вставь приглашение ведущего или полный код комнаты.');
-    nameInput.setCustomValidity(name && name.length <= 80 ? '' : 'Укажи имя персонажа (до 80 символов).');
+    nameInput.setCustomValidity(name && name.length <= 80 ? '' : 'Укажи имя игрока (до 80 символов).');
     if (!form.reportValidity()) return;
     let nextAccess = access?.roomId === roomId ? access : null;
     if (!nextAccess) {
@@ -356,6 +357,43 @@
       if (characterSyncWanted) { clearTimeout(characterSyncTimer); characterSyncTimer = setTimeout(drainCharacterSync, 350); }
     }
   }
+  function syncPersona(persona) {
+    if(!ONLINE || !hasCurrentAccess() || !snapshot?.self)return;
+    const clean={name:String(persona.name || '').slice(0,80),age:String(persona.age || '').slice(0,40),gender:String(persona.gender || '').slice(0,80),portrait:typeof persona.portrait==='string'?persona.portrait:''};
+    const signature=JSON.stringify([access.roomId,snapshot.self.id,clean]);
+    if(signature===personaSyncLast || signature===personaSyncWanted?.signature)return;
+    personaSyncWanted={credential:access,persona:clean,signature};clearTimeout(personaSyncTimer);personaSyncTimer=setTimeout(drainPersonaSync,350);
+  }
+  function adoptPersona(persona){
+    if(!hasCurrentAccess() || !snapshot?.self)return;
+    const clean={name:String(persona.name || '').slice(0,80),age:String(persona.age || '').slice(0,40),gender:String(persona.gender || '').slice(0,80),portrait:typeof persona.portrait==='string'?persona.portrait:''};
+    personaSyncLast=JSON.stringify([access.roomId,snapshot.self.id,clean]);
+  }
+  async function drainPersonaSync(){
+    if(personaSyncInFlight || !personaSyncWanted)return;
+    const next=personaSyncWanted;personaSyncWanted=null;
+    if(access!==next.credential || !hasCurrentAccess())return;
+    personaSyncInFlight=true;
+    try{
+      const data=await api('/'+encodeURIComponent(next.credential.roomId)+'/persona',{method:'POST',token:next.credential.playerToken,body:{persona:next.persona}});
+      if(access!==next.credential)return;
+      personaSyncLast=next.signature;personaSyncError='';
+      if(data.room && (!snapshot || data.room.revision>=snapshot.revision))snapshot=data.room;
+      updateMounted();
+    }catch(error){
+      if(access===next.credential && error.code==='CHARACTER_DELETED')forgetDeletedCharacter(next.credential);
+      else if(access===next.credential && personaSyncError!==error.message){personaSyncError=error.message;notify('Досье отряда пока не обновилось. '+error.message);}
+    }finally{personaSyncInFlight=false;if(personaSyncWanted){clearTimeout(personaSyncTimer);personaSyncTimer=setTimeout(drainPersonaSync,350);}}
+  }
+  async function setOwnerName(value){
+    const name=String(value || '').trim();if(!name || name.length>80)throw new Error('Укажи имя игрока или ник до 80 символов.');
+    if(!ONLINE || !hasCurrentAccess() || !snapshot?.self)throw new Error('Подключись к игровой сессии.');
+    const credential=access;
+    const data=await api('/'+encodeURIComponent(credential.roomId)+'/persona',{method:'POST',token:credential.playerToken,body:{persona:{ownerName:name}}});
+    if(access!==credential)throw new Error('Сессия изменилась. Открой нужную комнату.');
+    if(data.room && (!snapshot || data.room.revision>=snapshot.revision))snapshot=data.room;
+    access.name=name;writeAccess(access);updateMounted();return {room:snapshot};
+  }
   async function deleteCharacter() {
     if (!access) { window.playerClearCharacter?.(); notifySession(); notify('Анкета удалена. Личные заметки сохранены.'); return; }
     if (!ONLINE || !hasCurrentAccess()) throw new Error('Для удаления персонажа из комнаты открой его онлайн-терминал.');
@@ -390,6 +428,9 @@
   window.playerSessionStats = stats;
   window.playerSessionRefresh = refresh;
   window.playerSessionSyncCharacter = syncCharacter;
+  window.playerSessionSyncPersona = syncPersona;
+  window.playerSessionAdoptPersona = adoptPersona;
+  window.playerSessionSetOwnerName = setOwnerName;
   window.playerDeleteCharacter = deleteCharacter;
   setTimeout(() => { if (requestedRoom && location.hash !== '#session') location.hash = 'session'; refresh(); }, 0);
 })();

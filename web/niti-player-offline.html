@@ -171,6 +171,21 @@ a,button,input,textarea,select{font-family:var(--sans)}button:focus-visible,a:fo
 .sheet-special-allocation{grid-column:1/-1;min-width:0;display:grid;gap:8px;border:1px solid var(--green);background:var(--terminal-tint);padding:12px;margin-top:5px;align-self:start}.sheet-special-allocation>span{font-size:8px;letter-spacing:.8px;color:var(--terminal-accent)}.sheet-special-allocation>strong{font-size:25px;line-height:1.3;color:var(--terminal-bright);font-weight:600}.sheet-special-allocation>strong small{font-size:15px;color:var(--muted);font-weight:400}.sheet-special-allocation p{font-size:10px;line-height:1.8;margin:0;overflow-wrap:anywhere}.sheet-special-allocation>small{font-size:8px;line-height:1.9;color:var(--muted)}.sheet-special-allocation .button{width:100%;white-space:normal;font-size:10px;min-height:39px;padding:9px}.sheet-special-allocation-error:empty{display:none}.sheet-special-allocation.is-invalid,.sheet-special.is-invalid,.fallout-sheet .input[aria-invalid=true]{border-color:#dfa26d}.sheet-special-allocation-error,.sheet-special-dialog-error{color:#e9ad7b;font-size:11px;line-height:1.8;overflow-wrap:anywhere}.has-invalid-special .sheet-save-status{color:#e9ad7b}.sheet-special-dialog>p{font-size:12px;line-height:1.9}.sheet-special-dialog>p strong{color:var(--terminal-bright)}.sheet-special-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.sheet-special-choice{display:flex;align-items:center;gap:12px;min-width:0;text-align:left;padding:14px 12px;background:var(--card);color:var(--ink);border:1px solid var(--line)}.sheet-special-choice-letter{flex:0 0 31px;font-weight:700;font-size:32px;color:var(--green);text-align:center}.sheet-special-choice>span:last-child{display:grid;gap:5px;min-width:0}.sheet-special-choice strong{font-size:13px;color:var(--terminal-bright);line-height:1.6}.sheet-special-choice small{font-size:10px;color:var(--terminal-accent);line-height:1.7}.sheet-special-choice>span>span{font-size:10px;color:var(--muted);line-height:1.8;overflow-wrap:anywhere}.sheet-special-choice.is-selected,.sheet-special-choice:hover:not(:disabled){border-color:var(--green);background:var(--terminal-tint)}.sheet-special-choice.is-selected{box-shadow:inset 3px 0 0 var(--green)}.sheet-special-modal .modal-footer{flex-wrap:wrap}.sheet-special-modal .modal-footer .button{white-space:normal}.sheet-perk-locked{display:inline-block;font-size:8px;color:var(--terminal-accent);border:1px solid var(--line);padding:2px 5px;line-height:1.7;margin-top:4px}.sheet-rule-card>div .sheet-perk-locked{margin-left:auto}
 @media(max-width:680px){.sheet-special-allocation{padding:14px;gap:9px}.sheet-special-allocation>span{font-size:9px}.sheet-special-allocation>strong{font-size:27px}.sheet-special-allocation p{font-size:11px}.sheet-special-allocation>small{font-size:10px}.sheet-special-allocation .button{font-size:11px;min-height:42px}.sheet-special-choices{grid-template-columns:1fr;gap:8px}.sheet-special-choice{padding:12px}.sheet-special-choice strong{font-size:14px}.sheet-special-choice small,.sheet-special-choice>span>span{font-size:11px}.sheet-special-dialog>p{font-size:11px}.sheet-special-modal .modal-footer>.button{min-height:42px;flex:1;font-size:11px}.sheet-special-modal .modal-header h2{font-size:20px}}
 @media print{.sheet-special-allocation .button,.sheet-perk-locked{display:none!important}.sheet-special-allocation{break-inside:avoid}}
+
+/* Dedicated photo row: its 10x15 frame never borrows width from sheet fields. */
+.sheet-portrait-panel{display:grid;grid-template-columns:150px minmax(0,1fr);gap:25px;align-items:center;min-width:0;padding:20px;margin:0 0 23px;border:1px solid var(--line);background:var(--paper)}
+.sheet-portrait-frame{position:relative;width:150px;height:225px;aspect-ratio:2/3;min-width:0;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;border:1px solid var(--terminal-accent);background:var(--card);box-shadow:inset 0 0 0 5px var(--paper);isolation:isolate}
+.sheet-portrait-frame:before,.sheet-portrait-frame:after{content:'';position:absolute;z-index:2;pointer-events:none;width:15px;height:15px;border-color:var(--green);border-style:solid}
+.sheet-portrait-frame:before{left:5px;top:5px;border-width:2px 0 0 2px}.sheet-portrait-frame:after{right:5px;bottom:5px;border-width:0 2px 2px 0}
+.sheet-portrait-frame>img{position:absolute;inset:0;display:block;width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain;object-position:center;filter:none;mix-blend-mode:normal}
+.sheet-portrait-frame>svg{width:66px;height:85px;color:var(--muted);opacity:.7}.sheet-portrait-frame>span:not(.sheet-portrait-format){font-size:8px;letter-spacing:1.5px;color:var(--muted)}
+.sheet-portrait-format{position:absolute;bottom:10px;left:10px;z-index:3;font-size:8px;letter-spacing:1px;padding:3px 6px;color:var(--green);background:var(--paper);border:1px solid var(--line)}
+.sheet-portrait-copy{min-width:0;align-self:center}.sheet-portrait-copy>.eyebrow{font-size:8px;color:var(--terminal-accent);letter-spacing:1.3px}.sheet-portrait-copy>h2{margin:9px 0 10px;font:600 21px/1.3 var(--sans);color:var(--terminal-bright);letter-spacing:-.3px}.sheet-portrait-copy>p{font-size:11px;line-height:1.9;max-width:480px;color:var(--muted);margin:0 0 16px}.sheet-portrait-copy>small{display:block;font-size:9px;line-height:1.8;color:var(--muted);margin:12px 0 0}.sheet-portrait-actions{display:flex;gap:10px;flex-wrap:wrap}.sheet-portrait-actions .button{white-space:normal;line-height:1.7;min-height:38px}.sheet-portrait-actions .button:disabled{opacity:.5;cursor:default}
+.sheet-portrait-file{display:none!important}.sheet-portrait-copy>.sheet-portrait-status{min-height:38px;font-size:10px;line-height:1.8;color:var(--green);margin:12px 0 0;max-width:550px}.sheet-portrait-status.is-error{color:var(--terminal-accent)}
+.sheet-special-effective{display:grid;place-items:center;justify-self:center;width:27px;height:27px;min-width:27px;min-height:27px;border:1px solid var(--line);border-radius:50%;font-size:11px!important;line-height:1;background:var(--card);overflow:hidden}
+@media(max-width:680px){.sheet-portrait-panel{padding:15px;gap:18px;grid-template-columns:120px minmax(0,1fr);align-items:start}.sheet-portrait-frame{width:120px;height:180px}.sheet-portrait-copy>h2{font-size:18px;line-height:1.45}.sheet-portrait-copy>.eyebrow{font-size:7px;line-height:1.8}.sheet-portrait-copy>p{font-size:10px;margin-bottom:12px;line-height:1.8}.sheet-portrait-actions{gap:8px}.sheet-portrait-actions .button{font-size:10px;width:100%;padding:8px}.sheet-portrait-copy>small{font-size:8px}.sheet-portrait-copy>.sheet-portrait-status{font-size:9px}.sheet-special-effective{flex:0 0 27px;align-self:center}}
+@media(max-width:420px){.sheet-portrait-panel{grid-template-columns:minmax(0,1fr);padding:17px;gap:16px}.sheet-portrait-frame{width:150px;height:225px;justify-self:center}.sheet-portrait-copy{text-align:center}.sheet-portrait-actions{justify-content:center}.sheet-portrait-actions .button{width:auto;flex:1 1 100px}.sheet-portrait-copy>p{max-width:none}.sheet-portrait-copy>.sheet-portrait-status{min-height:34px}}
+@media print{.sheet-portrait-panel{display:grid;grid-template-columns:100px minmax(0,1fr);padding:12px;gap:18px;break-inside:avoid}.sheet-portrait-frame{width:100px;height:150px}.sheet-portrait-actions,.sheet-portrait-copy>small,.sheet-portrait-status{display:none!important}.sheet-portrait-copy{text-align:left}.sheet-portrait-frame img{print-color-adjust:exact}.sheet-portrait-format{font-size:6px}}
 </style><style>/* The equipment and 8×8 pack follow the supplied inventory sheet. */
 #playerInventoryRoot{min-width:0}
 .inv-stats .inv-range-rule{font-size:9px;line-height:1.8}.inv-stats .inv-range-rule dd{color:var(--terminal-accent)}
@@ -338,7 +353,14 @@ body.inv-dragging,body.inv-dragging *{cursor:grabbing!important;-webkit-user-sel
 .nav-item{transition:background-color .18s ease,color .18s ease,border-color .18s ease}
 @media(prefers-reduced-motion:reduce){.niti-navigation-active{will-change:auto}.nav-item{transition:none}}
 @media print{.niti-navigation-active{transform:none!important;opacity:1!important}}
-</style><style>/* NITI / Olympus 2207 — a calm instrument panel inside an old-world chassis. */
+</style><style>/* Public Fallout dossiers: a fixed portrait frame, clear ownership, no sheet columns. */
+.squad-room-heading{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:0 0 22px;margin-bottom:22px;border-bottom:1px solid var(--line);min-width:0}.squad-room-heading>div{display:grid;gap:8px;min-width:0}.squad-room-heading .eyebrow{overflow-wrap:anywhere}.squad-archive-status{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:11px;line-height:1.7}.squad-archive-status:before{content:'';width:5px;height:5px;flex:0 0 5px;border-radius:50%;background:var(--green);box-shadow:0 0 9px var(--terminal-glow)}.squad-room-heading>.tag{flex:0 0 auto;font-size:9px}.squad-owner-settings{display:grid;grid-template-columns:minmax(0,1fr) minmax(230px,1fr);gap:28px;padding:23px;margin-bottom:26px;min-width:0;background:linear-gradient(110deg,var(--terminal-tint),var(--card))}.squad-owner-settings>div{min-width:0}.squad-owner-settings h2{font:650 17px/1.6 var(--sans);color:var(--terminal-bright);margin:8px 0 7px;letter-spacing:-.2px}.squad-owner-settings p{color:var(--muted);font-size:11px;line-height:1.85;margin:0}.squad-owner-settings form{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:10px 12px;min-width:0}.squad-owner-settings label{display:grid;gap:7px;min-width:0}.squad-owner-settings label>span{font-size:10px;color:var(--muted);line-height:1.6}.squad-owner-settings .input{width:100%;min-width:0;font-size:13px;min-height:43px}.squad-owner-settings .button{min-height:43px;font-size:11px;white-space:normal;line-height:1.6}.squad-owner-settings .squad-owner-feedback{grid-column:1/-1;min-height:1.85em;color:var(--green);font-size:10px;overflow-wrap:anywhere}.squad-owner-feedback.is-error{color:var(--terminal-accent)!important}.squad-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr));gap:20px;align-items:stretch}.squad-card{position:relative;display:flex;flex-direction:column;min-width:0;overflow:hidden;padding:19px 20px 22px;background:linear-gradient(155deg,color-mix(in srgb,var(--card) 93%,var(--green)),var(--paper) 90%);box-shadow:0 8px 24px #00000012}.squad-card.is-own{border-color:color-mix(in srgb,var(--green) 65%,var(--line))}.squad-card-top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-bottom:17px;color:var(--muted);font:9px/1.8 var(--niti-mono,monospace);letter-spacing:.8px;min-height:35px}.squad-own-badge{color:var(--green);font-size:8px;text-align:right;letter-spacing:.3px}.squad-dossier-stamp{font-size:9px;letter-spacing:2px;color:var(--terminal-accent);opacity:.75}.squad-portrait{position:relative;display:grid;place-items:center;width:180px;max-width:100%;aspect-ratio:2/3;margin:0 auto 21px;flex:0 0 auto;border:1px solid var(--line);outline:1px solid color-mix(in srgb,var(--line) 50%,transparent);outline-offset:5px;background:radial-gradient(ellipse at 50% 30%,var(--terminal-tint),var(--paper) 80%);overflow:hidden;isolation:isolate}.squad-portrait>img{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:contain;object-position:center;filter:none;image-rendering:auto}.squad-portrait:after{content:'';position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 20px #00000012;z-index:1}.squad-portrait-corner{position:absolute;inset:7px;border-top:1px solid #e7f7d517;border-bottom:1px solid #e7f7d517;pointer-events:none;z-index:2}.squad-no-portrait{display:grid;place-items:center;align-content:center;gap:14px;position:absolute;inset:0;padding:12px;color:var(--muted)}.squad-no-portrait>svg{display:block;width:100px;height:150px;max-width:90%;stroke-width:1.15;opacity:.5}.squad-no-portrait>span{font-size:9px;line-height:1.8;letter-spacing:.3px;text-align:center}.squad-card-info{display:flex;flex-direction:column;flex:1;min-width:0}.squad-card h2{font:650 21px/1.45 var(--sans);color:var(--terminal-bright);letter-spacing:-.3px;margin:0 0 17px;overflow-wrap:anywhere}.squad-card dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;margin:0 0 20px;padding:15px 0;border-top:1px dashed var(--line);border-bottom:1px dashed var(--line)}.squad-card dl>div{min-width:0}.squad-card dt{color:var(--muted);font-size:10px;line-height:1.8;margin-bottom:5px}.squad-card dd{color:var(--ink);font-size:13px;line-height:1.7;margin:0;overflow-wrap:anywhere}.squad-owner{display:flex;align-items:flex-start;gap:11px;margin-top:auto;min-width:0}.squad-owner-icon{display:grid;place-items:center;width:31px;height:35px;flex:0 0 31px;color:var(--terminal-accent);border:1px solid var(--line);background:var(--terminal-tint)}.squad-owner-icon svg{display:block;width:20px;height:23px;stroke-width:1.25}.squad-owner>div{display:grid;gap:4px;min-width:0}.squad-owner>div>span{font:8px/1.6 var(--niti-mono,monospace);color:var(--muted);letter-spacing:1px}.squad-owner strong{font-size:12px;font-weight:500;color:var(--green);line-height:1.8;overflow-wrap:anywhere}.squad-own-link{display:block;font-size:10px;margin-top:17px;align-self:flex-start;line-height:1.8}.squad-archive-note{font-size:11px;line-height:1.9;color:var(--muted);margin:22px 0 0;max-width:700px}.squad-empty{grid-column:1/-1;text-align:center;padding:35px 24px}.squad-empty h2{font:650 25px/1.5 var(--sans);color:var(--terminal-bright);margin:12px 0}.squad-empty p{color:var(--muted);font-size:12px;line-height:1.9;max-width:460px;margin:0 auto 22px}.squad-connect{position:relative;padding:32px;max-width:760px;min-width:0;overflow:hidden}.squad-connect-mark{float:right;width:95px;height:143px;margin:2px 0 15px 25px;color:var(--green);opacity:.45}.squad-connect-mark svg{display:block;width:100%;height:100%;stroke-width:1.2}.squad-connect h2{font:650 28px/1.5 var(--sans);letter-spacing:-.6px;color:var(--terminal-bright);margin:13px 0}.squad-connect p{font-size:13px;line-height:1.95;color:var(--muted);max-width:470px;margin:0 0 23px}.squad-connect .button{font-size:12px}
+@media(min-width:1500px){.squad-grid{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}.squad-portrait{width:190px}}
+@media(max-width:1000px){.squad-owner-settings{grid-template-columns:1fr;gap:19px}.squad-owner-settings form{grid-template-columns:minmax(0,1fr) auto}.squad-grid{gap:17px}.squad-card{padding:18px}.squad-card h2{font-size:20px}}
+@media(max-width:680px){.squad-room-heading{align-items:flex-start;gap:12px;padding-bottom:19px;margin-bottom:18px}.squad-room-heading>.tag{font-size:8px}.squad-room-heading .eyebrow{font-size:8px;line-height:1.9}.squad-archive-status{font-size:10px;line-height:1.8}.squad-owner-settings{padding:20px 17px;margin-bottom:21px;gap:17px}.squad-owner-settings h2{font-size:17px}.squad-owner-settings p{font-size:11px}.squad-owner-settings form{grid-template-columns:1fr;gap:11px}.squad-owner-settings .input{font-size:16px}.squad-owner-settings .button{justify-self:start;min-height:41px;font-size:11px}.squad-owner-settings .squad-owner-feedback{font-size:10px;min-height:1.8em}.squad-grid{grid-template-columns:1fr;gap:18px}.squad-card{padding:19px 20px 22px}.squad-portrait{width:180px;margin-bottom:22px}.squad-card h2{font-size:22px}.squad-card-top{font-size:9px}.squad-card dd{font-size:13px}.squad-owner strong{font-size:13px}.squad-own-link{font-size:11px}.squad-archive-note{font-size:10px}.squad-connect{padding:25px 19px}.squad-connect-mark{width:62px;height:93px;margin-left:15px}.squad-connect h2{font-size:24px}.squad-connect p{font-size:12px;clear:both}.squad-connect .button{font-size:11px}.squad-empty{padding:28px 18px}.squad-empty h2{font-size:23px}.squad-empty p{font-size:11px}}
+@media print{.squad-owner-settings,.squad-own-link,.squad-archive-note{display:none!important}.squad-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.squad-card{break-inside:avoid;box-shadow:none}.squad-portrait{width:100px}}
+</style>
+<style>/* NITI / Olympus 2207 — a calm instrument panel inside an old-world chassis. */
 :root{
   --sans:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
   --serif:var(--sans);
@@ -798,6 +820,7 @@ document.addEventListener('toggle',event=>{if(event.target.matches?.('.dice-opti
   let access = readAccess(), snapshot = null, connection = 'idle', connectionMessage = '', lastSuccess = 0;
   let pollingTimer = 0, requestInFlight = null, joining = false, leavePrompt = false;
   let characterSyncTimer = 0, characterSyncInFlight = false, characterSyncWanted = null, characterSyncLast = '';
+  let personaSyncTimer=0,personaSyncInFlight=false,personaSyncWanted=null,personaSyncLast='',personaSyncError='';
   let requestedRoom = roomFromValue(new URLSearchParams(location.search).get('room') || '');
 
   function safeText(value) {
@@ -882,15 +905,15 @@ document.addEventListener('toggle',event=>{if(event.target.matches?.('.dice-opti
   }
   function roomMarkup(room) {
     const self = room.self || { name: access?.name || '', xp: 0, inventory: [] };
-    return `<div class="session-room-bar"><div><span class="eyebrow">ОБЩАЯ ИГРОВАЯ КОМНАТА</span><h2>${safeText(room.name)}</h2><span class="session-player-label">Ты: ${safeText(self.name)}</span></div><div class="session-room-controls">${statusMarkup()}<button type="button" class="button ghost small" data-session-action="refresh">Обновить</button></div></div>${errorMarkup()}<div class="session-grid"><div class="session-main-column">${missionMarkup(room)}${eventsMarkup(room.events)}</div><aside class="session-side-column"><section class="panel session-experience"><span class="eyebrow">ТВОЙ ОПЫТ В СЕССИИ</span><div class="session-xp-number"><strong data-session-xp>${safeText(self.xp || 0)}</strong><span>XP</span></div><p>Начисляет ведущий за задания и повышение уровня. Опыт автоматически учитывается в анкете.</p><small>Награды сохраняются и приходят, даже если ты временно не в сети. Учитываются события после твоего вступления.</small></section><section class="panel session-inventory"><div class="panel-header"><h2 class="panel-title">Полученное снаряжение</h2></div>${itemList(self.inventory, 'Личные награды ещё не выданы.', 'data-session-personal-items')}<p class="session-card-hint"><a class="text-button" href="#inventory">Открыть инвентарь и экипировку ↗</a></p></section><section class="panel session-inventory"><div class="panel-header"><h2 class="panel-title">Общий тайник</h2><span class="tag">НА ГРУППУ</span></div>${itemList(room.sharedItems, 'Общая добыча пока не найдена.', 'data-session-shared-items')}<p class="session-card-hint"><a class="text-button" href="#inventory">Забрать вещи из тайника ↗</a></p></section><section class="panel session-party"><div class="panel-header"><h2 class="panel-title">Участники</h2><span class="badge">${room.players?.length || 0}</span></div><ul>${(room.players || []).map(member => `<li><span class="session-member-initial" aria-hidden="true">${safeText((member.name || '?').slice(0, 1))}</span><strong>${safeText(member.name)}</strong>${member.id === self.id ? '<small>ТЫ</small>' : ''}</li>`).join('')}</ul><p class="session-card-hint">Список вошедших в сессию; он не показывает присутствие в сети.</p></section></aside></div><div class="session-access-bar"><p>Доступ к этому персонажу сохранён в браузере. Скачай его для переноса на другое устройство.</p><div><button type="button" class="button ghost small" data-session-action="export">↓ Сохранить доступ</button><button type="button" class="button ghost small" data-session-action="leave">Отключиться</button></div></div>${leavePrompt ? `<div class="session-disconnect-confirm" role="alert"><p>Отключить этот браузер от сессии? Персонаж и награды останутся в комнате. Для возвращения сохрани доступ.</p><div><button type="button" class="button ghost small" data-session-action="export">Сохранить доступ</button><button type="button" class="button ghost small" data-session-action="leave-cancel">Остаться</button><button type="button" class="button danger small" data-session-action="leave-confirm">Отключиться</button></div></div>` : ''}`;
+    return `<div class="session-room-bar"><div><span class="eyebrow">ОБЩАЯ ИГРОВАЯ КОМНАТА</span><h2>${safeText(room.name)}</h2><span class="session-player-label">Игрок: ${safeText(self.ownerName || 'Не указано')} · Персонаж: ${safeText(self.name)}</span></div><div class="session-room-controls">${statusMarkup()}<button type="button" class="button ghost small" data-session-action="refresh">Обновить</button></div></div>${errorMarkup()}<div class="session-grid"><div class="session-main-column">${missionMarkup(room)}${eventsMarkup(room.events)}</div><aside class="session-side-column"><section class="panel session-experience"><span class="eyebrow">ТВОЙ ОПЫТ В СЕССИИ</span><div class="session-xp-number"><strong data-session-xp>${safeText(self.xp || 0)}</strong><span>XP</span></div><p>Начисляет ведущий за задания и повышение уровня. Опыт автоматически учитывается в анкете.</p><small>Награды сохраняются и приходят, даже если ты временно не в сети. Учитываются события после твоего вступления.</small></section><section class="panel session-inventory"><div class="panel-header"><h2 class="panel-title">Полученное снаряжение</h2></div>${itemList(self.inventory, 'Личные награды ещё не выданы.', 'data-session-personal-items')}<p class="session-card-hint"><a class="text-button" href="#inventory">Открыть инвентарь и экипировку ↗</a></p></section><section class="panel session-inventory"><div class="panel-header"><h2 class="panel-title">Общий тайник</h2><span class="tag">НА ГРУППУ</span></div>${itemList(room.sharedItems, 'Общая добыча пока не найдена.', 'data-session-shared-items')}<p class="session-card-hint"><a class="text-button" href="#inventory">Забрать вещи из тайника ↗</a></p></section><section class="panel session-party"><div class="panel-header"><h2 class="panel-title">Участники</h2><span class="badge">${room.players?.length || 0}</span></div><ul>${(room.players || []).map(member => `<li><span class="session-member-initial" aria-hidden="true">${safeText((member.name || '?').slice(0, 1))}</span><strong>${safeText(member.name)}</strong>${member.id === self.id ? '<small>ТЫ</small>' : ''}</li>`).join('')}</ul><p class="session-card-hint">Список вошедших в сессию; он не показывает присутствие в сети.</p></section></aside></div><div class="session-access-bar"><p>Доступ к этому персонажу сохранён в браузере. Скачай его для переноса на другое устройство.</p><div><button type="button" class="button ghost small" data-session-action="export">↓ Сохранить доступ</button><button type="button" class="button ghost small" data-session-action="leave">Отключиться</button></div></div>${leavePrompt ? `<div class="session-disconnect-confirm" role="alert"><p>Отключить этот браузер от сессии? Персонаж и награды останутся в комнате. Для возвращения сохрани доступ.</p><div><button type="button" class="button ghost small" data-session-action="export">Сохранить доступ</button><button type="button" class="button ghost small" data-session-action="leave-cancel">Остаться</button><button type="button" class="button danger small" data-session-action="leave-confirm">Отключиться</button></div></div>` : ''}`;
   }
   function joinMarkup() {
     if (!ONLINE) return `<section class="panel session-offline"><div class="eyebrow">ЛИЧНЫЕ ИНСТРУМЕНТЫ ДОСТУПНЫ</div><h2>Сессия работает в интернете.</h2><p>Открой онлайн-терминал по приглашению ведущего, чтобы получать миссии и награды. Персонаж, заметки и кубики в этом файле работают без соединения.</p></section>`;
     const roomId = currentRoomId();
     const profileName = typeof player !== 'undefined' ? player.profile?.name || '' : '';
-    const defaultName = access?.roomId === roomId ? access.name : profileName;
+    const defaultName = access?.roomId === roomId ? access.name : '';
     const existingDifferent = access && requestedRoom && access.roomId !== requestedRoom;
-    return `<div class="session-join-grid"><section class="panel session-join-card"><div class="eyebrow">ПРИСОЕДИНИТЬСЯ К ИСТОРИИ</div><h2>Сигнал от ведущего.</h2><p>Вставь ссылку-приглашение и укажи имя персонажа. Миссии и награды будут появляться в этом терминале.</p>${existingDifferent ? '<div class="session-notice">Открыто приглашение в другую комнату. Личные заметки и лист персонажа сохранятся. Доступ к прежней комнате останется в этом браузере.</div>' : ''}<form id="playerSessionJoinForm"><div class="field"><label class="field-label" for="player-session-room">ССЫЛКА ИЛИ КОД КОМНАТЫ</label><input class="input" id="player-session-room" name="room" value="${safeText(roomId)}" autocomplete="off" spellcheck="false" required maxlength="500" placeholder="Вставь приглашение ведущего"></div><div class="field"><label class="field-label" for="player-session-name">ИМЯ ПЕРСОНАЖА</label><input class="input" id="player-session-name" name="name" value="${safeText(defaultName || '')}" autocomplete="nickname" required maxlength="80" placeholder="Как тебя зовут в этой истории?"></div><div class="session-join-actions"><button type="submit" class="button primary" data-session-action="join-submit" ${joining ? 'disabled' : ''}>${joining ? 'Подключаем…' : 'Войти в сессию ↗'}</button><span class="session-form-feedback" data-session-form-feedback role="status">${safeText(connectionMessage)}</span></div></form><div class="session-restore-control"><button type="button" class="text-button" data-session-action="import">↥ Восстановить доступ к персонажу</button>${existingDifferent ? '<button type="button" class="text-button" data-session-action="return-current">Вернуться в прежнюю комнату</button>' : ''}</div></section><section class="panel session-join-info"><div class="session-signal-art" aria-hidden="true"><span>⌁</span><i></i><i></i><i></i></div><h2>Одна группа.<br>Общая история.</h2><ul><li><strong>Миссия и варианты действий</strong><span>Всё, что ведущий открыл для вашей группы.</span></li><li><strong>Опыт и добыча</strong><span>Появляются после подтверждённого результата.</span></li><li><strong>Твои записи остаются твоими</strong><span>Текст анкеты и заметки остаются в браузере. Имя и данные для расчёта опыта синхронизируются с мастером.</span></li></ul></section></div>`;
+    return `<div class="session-join-grid"><section class="panel session-join-card"><div class="eyebrow">ПРИСОЕДИНИТЬСЯ К ИСТОРИИ</div><h2>Сигнал от ведущего.</h2><p>Вставь ссылку-приглашение и укажи имя игрока. Миссии и награды будут появляться в этом терминале.</p>${existingDifferent ? '<div class="session-notice">Открыто приглашение в другую комнату. Личные заметки и лист персонажа сохранятся. Доступ к прежней комнате останется в этом браузере.</div>' : ''}<form id="playerSessionJoinForm"><div class="field"><label class="field-label" for="player-session-room">ССЫЛКА ИЛИ КОД КОМНАТЫ</label><input class="input" id="player-session-room" name="room" value="${safeText(roomId)}" autocomplete="off" spellcheck="false" required maxlength="500" placeholder="Вставь приглашение ведущего"></div><div class="field"><label class="field-label" for="player-session-name">ИМЯ ИГРОКА</label><input class="input" id="player-session-name" name="name" value="${safeText(defaultName || '')}" autocomplete="nickname" required maxlength="80" placeholder="Твоё имя или ник"></div><div class="session-join-actions"><button type="submit" class="button primary" data-session-action="join-submit" ${joining ? 'disabled' : ''}>${joining ? 'Подключаем…' : 'Войти в сессию ↗'}</button><span class="session-form-feedback" data-session-form-feedback role="status">${safeText(connectionMessage)}</span></div></form><div class="session-restore-control"><button type="button" class="text-button" data-session-action="import">↥ Восстановить доступ к персонажу</button>${existingDifferent ? '<button type="button" class="text-button" data-session-action="return-current">Вернуться в прежнюю комнату</button>' : ''}</div></section><section class="panel session-join-info"><div class="session-signal-art" aria-hidden="true"><span>⌁</span><i></i><i></i><i></i></div><h2>Одна группа.<br>Общая история.</h2><ul><li><strong>Миссия и варианты действий</strong><span>Всё, что ведущий открыл для вашей группы.</span></li><li><strong>Опыт и добыча</strong><span>Появляются после подтверждённого результата.</span></li><li><strong>Твои записи остаются твоими</strong><span>Личная анкета и заметки остаются в браузере. Отряд видит только арт, имя, возраст, пол персонажа и имя игрока.</span></li></ul></section></div>`;
   }
   function contentMarkup() {
     if (!ONLINE) return joinMarkup();
@@ -988,7 +1011,7 @@ document.addEventListener('toggle',event=>{if(event.target.matches?.('.dice-opti
     const name = String(fields.get('name') || '').trim();
     const roomInput = form.elements.room, nameInput = form.elements.name;
     roomInput.setCustomValidity(roomId ? '' : 'Вставь приглашение ведущего или полный код комнаты.');
-    nameInput.setCustomValidity(name && name.length <= 80 ? '' : 'Укажи имя персонажа (до 80 символов).');
+    nameInput.setCustomValidity(name && name.length <= 80 ? '' : 'Укажи имя игрока (до 80 символов).');
     if (!form.reportValidity()) return;
     let nextAccess = access?.roomId === roomId ? access : null;
     if (!nextAccess) {
@@ -1143,6 +1166,43 @@ document.addEventListener('toggle',event=>{if(event.target.matches?.('.dice-opti
       if (characterSyncWanted) { clearTimeout(characterSyncTimer); characterSyncTimer = setTimeout(drainCharacterSync, 350); }
     }
   }
+  function syncPersona(persona) {
+    if(!ONLINE || !hasCurrentAccess() || !snapshot?.self)return;
+    const clean={name:String(persona.name || '').slice(0,80),age:String(persona.age || '').slice(0,40),gender:String(persona.gender || '').slice(0,80),portrait:typeof persona.portrait==='string'?persona.portrait:''};
+    const signature=JSON.stringify([access.roomId,snapshot.self.id,clean]);
+    if(signature===personaSyncLast || signature===personaSyncWanted?.signature)return;
+    personaSyncWanted={credential:access,persona:clean,signature};clearTimeout(personaSyncTimer);personaSyncTimer=setTimeout(drainPersonaSync,350);
+  }
+  function adoptPersona(persona){
+    if(!hasCurrentAccess() || !snapshot?.self)return;
+    const clean={name:String(persona.name || '').slice(0,80),age:String(persona.age || '').slice(0,40),gender:String(persona.gender || '').slice(0,80),portrait:typeof persona.portrait==='string'?persona.portrait:''};
+    personaSyncLast=JSON.stringify([access.roomId,snapshot.self.id,clean]);
+  }
+  async function drainPersonaSync(){
+    if(personaSyncInFlight || !personaSyncWanted)return;
+    const next=personaSyncWanted;personaSyncWanted=null;
+    if(access!==next.credential || !hasCurrentAccess())return;
+    personaSyncInFlight=true;
+    try{
+      const data=await api('/'+encodeURIComponent(next.credential.roomId)+'/persona',{method:'POST',token:next.credential.playerToken,body:{persona:next.persona}});
+      if(access!==next.credential)return;
+      personaSyncLast=next.signature;personaSyncError='';
+      if(data.room && (!snapshot || data.room.revision>=snapshot.revision))snapshot=data.room;
+      updateMounted();
+    }catch(error){
+      if(access===next.credential && error.code==='CHARACTER_DELETED')forgetDeletedCharacter(next.credential);
+      else if(access===next.credential && personaSyncError!==error.message){personaSyncError=error.message;notify('Досье отряда пока не обновилось. '+error.message);}
+    }finally{personaSyncInFlight=false;if(personaSyncWanted){clearTimeout(personaSyncTimer);personaSyncTimer=setTimeout(drainPersonaSync,350);}}
+  }
+  async function setOwnerName(value){
+    const name=String(value || '').trim();if(!name || name.length>80)throw new Error('Укажи имя игрока или ник до 80 символов.');
+    if(!ONLINE || !hasCurrentAccess() || !snapshot?.self)throw new Error('Подключись к игровой сессии.');
+    const credential=access;
+    const data=await api('/'+encodeURIComponent(credential.roomId)+'/persona',{method:'POST',token:credential.playerToken,body:{persona:{ownerName:name}}});
+    if(access!==credential)throw new Error('Сессия изменилась. Открой нужную комнату.');
+    if(data.room && (!snapshot || data.room.revision>=snapshot.revision))snapshot=data.room;
+    access.name=name;writeAccess(access);updateMounted();return {room:snapshot};
+  }
   async function deleteCharacter() {
     if (!access) { window.playerClearCharacter?.(); notifySession(); notify('Анкета удалена. Личные заметки сохранены.'); return; }
     if (!ONLINE || !hasCurrentAccess()) throw new Error('Для удаления персонажа из комнаты открой его онлайн-терминал.');
@@ -1177,6 +1237,9 @@ document.addEventListener('toggle',event=>{if(event.target.matches?.('.dice-opti
   window.playerSessionStats = stats;
   window.playerSessionRefresh = refresh;
   window.playerSessionSyncCharacter = syncCharacter;
+  window.playerSessionSyncPersona = syncPersona;
+  window.playerSessionAdoptPersona = adoptPersona;
+  window.playerSessionSetOwnerName = setOwnerName;
   window.playerDeleteCharacter = deleteCharacter;
   setTimeout(() => { if (requestedRoom && location.hash !== '#session') location.hash = 'session'; refresh(); }, 0);
 })();
@@ -1575,6 +1638,8 @@ document.addEventListener('toggle',event=>{if(event.target.matches?.('.dice-opti
   const TAG_FIELDS = new Set(SKILLS.map(([name]) => 'tag_' + name));
   const LONG_FIELDS = new Set(['perks', 'wounds', ...WEAPON_FIELDS.map(([name]) => name), ...ARMOR_FIELDS.map(([name]) => name)]);
   const RULES = window.PlayerCharacterRules;
+  const PORTRAIT_LIMIT = 32000;
+  let portraitBusy = false, portraitMessage = '', portraitError = false, portraitEpoch = 0;
   let saveTimer = 0;
   let selectedTrait = '';
   let selectedPerk = '';
@@ -1600,10 +1665,14 @@ document.addEventListener('toggle',event=>{if(event.target.matches?.('.dice-opti
     if (!Number.isSafeInteger(number)) return '';
     return number - 5 >= 0 ? '+' + (number - 5) : String(number - 5);
   }
+  function validPortrait(value) {
+    return typeof value==='string' && (value==='' || (value.length<=PORTRAIT_LIMIT && /^data:image\/(?:jpeg|png|webp);base64,[A-Za-z0-9+/]+={0,2}$/.test(value)));
+  }
   function validSheet(value) {
     return !!value && typeof value === 'object' && !Array.isArray(value) && value.version === 1
-      && Object.keys(value).every(name => name === 'version' || name === 'rules' || FIELD_SET.has(name))
+      && Object.keys(value).every(name => name === 'version' || name === 'rules' || name === 'portrait' || FIELD_SET.has(name))
       && FIELD_NAMES.every(name => ['tag_scavenging','skill_scavenging'].includes(name) && !Object.hasOwn(value,name) ? true : TAG_FIELDS.has(name) ? typeof value[name] === 'boolean' : typeof value[name] === 'string' && value[name].length <= limitFor(name))
+      && (!Object.hasOwn(value, 'portrait') || validPortrait(value.portrait))
       && (!Object.hasOwn(value, 'rules') || RULES.validMeta(value.rules));
   }
   function normalizeSheet(value, profile) {
@@ -1621,6 +1690,7 @@ document.addEventListener('toggle',event=>{if(event.target.matches?.('.dice-opti
         if (current !== undefined && current !== null) result[name] = String(current).slice(0, 40);
       }
     }
+    result.portrait = validPortrait(value?.portrait) ? value.portrait : '';
     result.rules = RULES.normalizeMeta(value?.rules, result);
     return result;
   }
@@ -1725,7 +1795,7 @@ document.addEventListener('toggle',event=>{if(event.target.matches?.('.dice-opti
   function sectionTitle(title, extra = '') { return `<div class="sheet-section-title"><h2>${title}</h2>${extra}</div>`; }
   function specialMarkup(sheet) {
     const result = calculation(sheet);
-    return `<section class="sheet-special-column" aria-label="S.P.E.C.I.A.L.">${SPECIAL_ROWS.map(([letter, name, label]) => `<div class="sheet-special"><span class="sheet-special-letter" aria-hidden="true">${letter}</span><label for="sheet-${name}"><span>${label} · база</span><input class="input sheet-special-input" type="text" inputmode="numeric" maxlength="40" id="sheet-${name}" name="${name}" data-sheet-field="${name}" value="${escapeText(sheet[name])}"></label><output class="sheet-special-effective" data-special-effective="${letter}">${result.special[letter]} итог</output><input class="input sheet-special-mod" readonly aria-readonly="true" id="sheet-${name}_modifier" aria-label="${label}: автоматический модификатор" data-special-mod="${letter}" value="${signed(result.modifiers[letter])}"></div>`).join('')}${allocationMarkup(sheet,result)}<p class="sheet-special-hint" data-special-budget>${specialBudget(result)}</p></section>`;
+    return `<section class="sheet-special-column" aria-label="S.P.E.C.I.A.L.">${SPECIAL_ROWS.map(([letter, name, label]) => `<div class="sheet-special"><span class="sheet-special-letter" aria-hidden="true">${letter}</span><label for="sheet-${name}"><span>${label} · база</span><input class="input sheet-special-input" type="text" inputmode="numeric" maxlength="40" id="sheet-${name}" name="${name}" data-sheet-field="${name}" value="${escapeText(sheet[name])}"></label><output class="sheet-special-effective" data-special-effective="${letter}" aria-label="${label}: значение с бонусами">${result.special[letter]}</output><input class="input sheet-special-mod" readonly aria-readonly="true" id="sheet-${name}_modifier" aria-label="${label}: автоматический модификатор" data-special-mod="${letter}" value="${signed(result.modifiers[letter])}"></div>`).join('')}${allocationMarkup(sheet,result)}<p class="sheet-special-hint" data-special-budget>${specialBudget(result)}</p></section>`;
   }
   function allocationMarkup(sheet=currentSheet(),result=calculation(sheet)) {
     const allocation=allocationState(sheet,result);
@@ -1974,12 +2044,86 @@ document.addEventListener('toggle',event=>{if(event.target.matches?.('.dice-opti
     });
     const submit=document.querySelector('#dialogForm button[type="submit"]');if(submit){submit.textContent='Удалить персонажа';submit.classList.add('danger');submit.classList.remove('primary');}
   }
+  function portraitMarkup(sheet=currentSheet()) {
+    const image=validPortrait(sheet.portrait) ? sheet.portrait : '';
+    return `<div class="sheet-portrait-frame ${image ? 'has-portrait' : ''}" aria-label="Арт персонажа, пропорции 10 на 15">${image ? `<img src="${escapeText(image)}" alt="Арт персонажа${sheet.name ? ': '+escapeText(sheet.name) : ''}" draggable="false">` : '<svg viewBox="0 0 80 100" fill="none" stroke="currentColor" aria-hidden="true"><path d="M7 7h66v86H7zM7 22h66M7 79h66M17 14h20m20 0h6"/><circle cx="40" cy="43" r="12"/><path d="M20 76v-4a20 20 0 0 1 40 0v4"/></svg><span>ЛИЧНОЕ ДЕЛО</span>'}<span class="sheet-portrait-format" aria-hidden="true">10 × 15</span></div><div class="sheet-portrait-copy"><span class="eyebrow">ФОТОАРХИВ · 2207</span><h2>Лицо твоей истории</h2><p>Добавь фото, арт или рисунок персонажа. Изображение целиком впишется в рамку 10×15.</p><div class="sheet-portrait-actions"><button type="button" class="button primary small" data-sheet-portrait-action="choose" ${portraitBusy ? 'disabled' : ''}>${portraitBusy ? 'Подготовка арта…' : image ? 'Заменить арт' : 'Добавить арт'}</button><button type="button" class="button ghost small" data-sheet-portrait-action="remove" ${!image || portraitBusy ? 'disabled' : ''}>Удалить арт</button></div><input class="sheet-portrait-file" id="sheetPortraitFile" type="file" accept="image/jpeg,image/png,image/webp" aria-label="Выбрать фото или арт персонажа"><small>JPG, PNG или WebP · до 12 МБ. Портрет увидит твой отряд.</small><p class="sheet-portrait-status ${portraitError ? 'is-error' : ''}" role="status" aria-live="polite">${escapeText(portraitMessage || 'Рамка сохраняет размер: поля анкеты остаются на своих местах.')}</p></div>`;
+  }
+  function refreshPortrait() {
+    const panel=document.querySelector('[data-sheet-portrait]');
+    if(panel)panel.innerHTML=portraitMarkup();
+  }
+  function publicPersona(sheet) {
+    if(!sheet) {
+      const accepted=window.playerAcceptedCharacter?.();
+      sheet=accepted?.sheet || normalizeSheet(null,accepted?.profile || {});
+    }
+    return {name:String(sheet.name || '').trim().slice(0,80),age:String(sheet.age || '').trim().slice(0,40),gender:String(sheet.gender || '').trim().slice(0,80),portrait:validPortrait(sheet.portrait) ? sheet.portrait : ''};
+  }
+  function portraitContext() {
+    const room=currentRoom();
+    return room?.self ? room.id+':'+room.self.id : 'local';
+  }
+  async function preparePortrait(file) {
+    if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw new Error('Выбери изображение JPG, PNG или WebP.');
+    if(!file.size || file.size>12*1024*1024)throw new Error('Изображение должно быть не больше 12 МБ.');
+    const bytes=new Uint8Array(await file.slice(0,16).arrayBuffer());
+    const png=[137,80,78,71,13,10,26,10].every((value,index)=>bytes[index]===value),jpeg=bytes[0]===255 && bytes[1]===216 && bytes[2]===255,webp=String.fromCharCode(...bytes.slice(0,4))==='RIFF' && String.fromCharCode(...bytes.slice(8,12))==='WEBP';
+    if(!png && !jpeg && !webp)throw new Error('Файл не похож на изображение JPG, PNG или WebP.');
+    let image,url='';
+    try {
+      if(typeof createImageBitmap==='function')image=await createImageBitmap(file,{imageOrientation:'from-image'});
+      else {url=URL.createObjectURL(file);image=new Image();image.src=url;await image.decode();}
+      const width=image.width || image.naturalWidth,height=image.height || image.naturalHeight;
+      if(!width || !height || width>16000 || height>16000 || width*height>48000000)throw new Error('Выбери изображение размером до 48 мегапикселей.');
+      const canvas=document.createElement('canvas'),context=canvas.getContext('2d');
+      if(!context)throw new Error('Браузер не может подготовить изображение.');
+      for(const size of [[480,720],[400,600],[320,480],[240,360],[180,270]]) {
+        const scale=Math.min(1,size[0]/width,size[1]/height);
+        canvas.width=Math.max(1,Math.round(width*scale));canvas.height=Math.max(1,Math.round(height*scale));
+        context.clearRect(0,0,canvas.width,canvas.height);context.drawImage(image,0,0,canvas.width,canvas.height);
+        for(const quality of [.82,.72,.62,.52]) {
+          const data=canvas.toDataURL('image/webp',quality);
+          if(validPortrait(data))return data;
+        }
+      }
+      throw new Error('Не удалось уменьшить изображение. Выбери другой файл или уменьши его размер.');
+    } finally {image?.close?.();if(url)URL.revokeObjectURL(url);}
+  }
+  async function setPortraitFile(file) {
+    const epoch=++portraitEpoch,identity=portraitContext();
+    portraitBusy=true;portraitMessage='Подготавливаю изображение…';portraitError=false;refreshPortrait();
+    try {
+      const data=await preparePortrait(file);
+      if(epoch!==portraitEpoch || identity!==portraitContext())return;
+      if(typeof window.playerSetPortrait!=='function')throw new Error('Сохранение арта пока недоступно. Обнови терминал.');
+      const result=await window.playerSetPortrait(data);
+      if(result?.saved!==true)throw new Error(result?.error || 'Не удалось сохранить арт в браузере. Попробуй ещё раз.');
+      portraitMessage='Арт сохранён. Он появится в карточке отряда.';
+    } catch(error) {if(epoch===portraitEpoch){portraitMessage=error?.message || 'Не удалось открыть изображение.';portraitError=true;}}
+    finally {if(epoch===portraitEpoch){portraitBusy=false;refreshPortrait();}}
+  }
+  document.addEventListener('click',async event=>{
+    const action=event.target.closest('[data-sheet-portrait-action]')?.dataset.sheetPortraitAction;
+    if(!action || portraitBusy)return;
+    if(action==='choose')document.getElementById('sheetPortraitFile')?.click();
+    if(action==='remove') {
+      const epoch=++portraitEpoch;portraitBusy=true;portraitError=false;refreshPortrait();
+      try {const result=await window.playerSetPortrait?.('');if(result?.saved!==true)throw new Error(result?.error || 'Не удалось удалить арт. Попробуй ещё раз.');portraitMessage='Арт удалён.';}
+      catch(error){portraitMessage=error?.message || 'Не удалось удалить арт.';portraitError=true;}
+      finally{if(epoch===portraitEpoch){portraitBusy=false;refreshPortrait();}}
+    }
+  });
+  document.addEventListener('change',event=>{
+    if(event.target.id!=='sheetPortraitFile')return;
+    const file=event.target.files?.[0];event.target.value='';if(file)setPortraitFile(file);
+  });
+  window.addEventListener('niti:character-cleared',()=>{portraitEpoch++;portraitBusy=false;portraitMessage='';portraitError=false;refreshPortrait();});
   function page() {
     const sheet = currentSheet();
     const result=applyCalculated(sheet);
     queueMicrotask(()=>{updateSessionParts();maybePromptPerk();});
     const heading = typeof head === 'function' ? head('ЛИЧНЫЙ ЛИСТ · ПРАВИЛА ПУСТОШИ', 'Мой персонаж.', 'Характеристики считаются по правилам. Обучение навыкам и текущее здоровье — под твоим контролем.') : '<h1>Мой персонаж.</h1>';
-    return heading + `<form class="panel fallout-sheet" id="falloutSheetForm"><div class="sheet-masthead"><div class="sheet-brand"><h2>Fallout</h2><small>ПЕРСОНАЛЬНОЕ ДЕЛО ВЫЖИВШЕГО</small></div><span class="sheet-document-id">S.P.E.C.I.A.L. // 2207<br>АВТОМАТИЧЕСКИЙ РАСЧЁТ ПО ПРАВИЛАМ</span></div><div class="sheet-top"><div class="sheet-identity">${field('name', 'Имя', sheet)}${field('gender', 'Пол', sheet)}${field('age', 'Возраст', sheet, {numeric:true})}</div><div class="sheet-combat-summary">${field('initiative', 'Инициатива · авто', sheet, {readonly:true})}${field('action_points', 'Очки действия · авто', sheet, {readonly:true,after:`<small data-movement-ap>${result.movementAP ? '+'+result.movementAP+' ОД только на передвижение' : 'Общие ОД на ход'}</small>`})}${field('armor_class', 'Класс брони · авто', sheet, {readonly:true})}${experienceMarkup(sheet,result)}${field('level', 'Уровень · авто', sheet, {readonly:true})}<label class="sheet-field" for="sheet-health-current"><span>Здоровье · текущее / максимум</span><span class="sheet-health-control"><input class="input" type="number" step="any" inputmode="decimal" id="sheet-health-current" data-health-current aria-label="Текущее здоровье" value="${result.currentHP===null?'':result.currentHP}"><output data-health-max>/ ${result.maxHP}</output></span><small>Максимум считается; текущее не лечится при повышении уровня.</small></label></div></div><div id="sheetAdvancement">${progressMarkup(sheet,result)}</div><div class="sheet-rule-notices" data-rules-warnings aria-live="polite">${warningsMarkup(result)}</div><div class="sheet-body">${specialMarkup(sheet)}<div class="sheet-notes-column"><section class="sheet-notebox sheet-traits" id="sheetTraits">${traitMarkup(sheet)}</section><section class="sheet-notebox sheet-perks" id="sheetPerks">${perkMarkup(sheet)}</section><section class="sheet-notebox sheet-wounds">${sectionTitle('Ранения')}${field('wounds', '<span class="sr-only">Ранения</span>', sheet, {multiline:true, rows:6})}</section>${legacyNotes()}</div>${skillsMarkup(sheet)}</div><div id="falloutSheetEquipment">${equipmentMarkup(sheet)}</div><details class="sheet-formulas"><summary>Как считается анкета</summary><p>Модификатор S.P.E.C.I.A.L. = итог − 5. Максимум здоровья = 15 + 3 × В + (уровень − 1) × В + бонусы. ОД = 5 + ⌊Л / 2⌋ + бонусы. Инициатива = Восприятие + d20; кубик бросается в игре.</p><p>КБ = КБ экипированной брони + бонус ловкости + постоянные бонусы. Без брони бонус равен ловкости; кожаная куртка — ⌊Л/2⌋, кожаная боевая куртка — ⌊Л/3⌋, кожаная броня — ⌊Л/4⌋, кожаная броня МК2 — ⌊Л/6⌋. «Камикадзе» исключает бонус ловкости к КБ и прибавляет ловкость к инициативе.</p><p>В таблице опыта: 1 — 200; 2 — 400; 3 — 800; 4 — 1400; 5 — 2200; 6 — 3200; 7 — 4400; 8 — 5800; 9 — 7400; 10 — 9100; 11 — 11000; 12 — 13100; 13 — 15400; 14 — 17900; 15 — 20600. Создание начинается с 1-го уровня: при 0–399 XP показан 1-й уровень. Выше 15-го формулы опыта в файле нет.</p><p>Стартовый опыт — уже полученная сумма. «Светоч» делит новый опыт сессии на два; округление в правилах не указано, поэтому сохраняется точная половина. Серверная запись опыта остаётся исходной.</p></details><div class="sheet-footer"><button class="button primary" type="submit">Сохранить анкету ↗</button><button type="button" class="button ghost small sheet-delete-character" data-sheet-progress-action="delete-character">Удалить персонажа</button><span class="sheet-save-status" id="falloutSheetSaveStatus" role="status">Изменения сохраняются автоматически в этом браузере.</span></div><p class="sheet-storage-note">Расчёты — по твоим «Правилам игры» и «Перкам». Лист и последний полученный опыт сохраняются в браузере и входят в резервную копию. Награды приходят с сервера автоматически.</p></form>`;
+    return heading + `<form class="panel fallout-sheet" id="falloutSheetForm"><div class="sheet-masthead"><div class="sheet-brand"><h2>Fallout</h2><small>ПЕРСОНАЛЬНОЕ ДЕЛО ВЫЖИВШЕГО</small></div><span class="sheet-document-id">S.P.E.C.I.A.L. // 2207<br>АВТОМАТИЧЕСКИЙ РАСЧЁТ ПО ПРАВИЛАМ</span></div><section class="sheet-portrait-panel" data-sheet-portrait aria-label="Арт персонажа">${portraitMarkup(sheet)}</section><div class="sheet-top"><div class="sheet-identity">${field('name', 'Имя', sheet)}${field('gender', 'Пол', sheet)}${field('age', 'Возраст', sheet, {numeric:true})}</div><div class="sheet-combat-summary">${field('initiative', 'Инициатива · авто', sheet, {readonly:true})}${field('action_points', 'Очки действия · авто', sheet, {readonly:true,after:`<small data-movement-ap>${result.movementAP ? '+'+result.movementAP+' ОД только на передвижение' : 'Общие ОД на ход'}</small>`})}${field('armor_class', 'Класс брони · авто', sheet, {readonly:true})}${experienceMarkup(sheet,result)}${field('level', 'Уровень · авто', sheet, {readonly:true})}<label class="sheet-field" for="sheet-health-current"><span>Здоровье · текущее / максимум</span><span class="sheet-health-control"><input class="input" type="number" step="any" inputmode="decimal" id="sheet-health-current" data-health-current aria-label="Текущее здоровье" value="${result.currentHP===null?'':result.currentHP}"><output data-health-max>/ ${result.maxHP}</output></span><small>Максимум считается; текущее не лечится при повышении уровня.</small></label></div></div><div id="sheetAdvancement">${progressMarkup(sheet,result)}</div><div class="sheet-rule-notices" data-rules-warnings aria-live="polite">${warningsMarkup(result)}</div><div class="sheet-body">${specialMarkup(sheet)}<div class="sheet-notes-column"><section class="sheet-notebox sheet-traits" id="sheetTraits">${traitMarkup(sheet)}</section><section class="sheet-notebox sheet-perks" id="sheetPerks">${perkMarkup(sheet)}</section><section class="sheet-notebox sheet-wounds">${sectionTitle('Ранения')}${field('wounds', '<span class="sr-only">Ранения</span>', sheet, {multiline:true, rows:6})}</section>${legacyNotes()}</div>${skillsMarkup(sheet)}</div><div id="falloutSheetEquipment">${equipmentMarkup(sheet)}</div><details class="sheet-formulas"><summary>Как считается анкета</summary><p>Модификатор S.P.E.C.I.A.L. = итог − 5. Максимум здоровья = 15 + 3 × В + (уровень − 1) × В + бонусы. ОД = 5 + ⌊Л / 2⌋ + бонусы. Инициатива = Восприятие + d20; кубик бросается в игре.</p><p>КБ = КБ экипированной брони + бонус ловкости + постоянные бонусы. Без брони бонус равен ловкости; кожаная куртка — ⌊Л/2⌋, кожаная боевая куртка — ⌊Л/3⌋, кожаная броня — ⌊Л/4⌋, кожаная броня МК2 — ⌊Л/6⌋. «Камикадзе» исключает бонус ловкости к КБ и прибавляет ловкость к инициативе.</p><p>В таблице опыта: 1 — 200; 2 — 400; 3 — 800; 4 — 1400; 5 — 2200; 6 — 3200; 7 — 4400; 8 — 5800; 9 — 7400; 10 — 9100; 11 — 11000; 12 — 13100; 13 — 15400; 14 — 17900; 15 — 20600. Создание начинается с 1-го уровня: при 0–399 XP показан 1-й уровень. Выше 15-го формулы опыта в файле нет.</p><p>Стартовый опыт — уже полученная сумма. «Светоч» делит новый опыт сессии на два; округление в правилах не указано, поэтому сохраняется точная половина. Серверная запись опыта остаётся исходной.</p></details><div class="sheet-footer"><button class="button primary" type="submit">Сохранить анкету ↗</button><button type="button" class="button ghost small sheet-delete-character" data-sheet-progress-action="delete-character">Удалить персонажа</button><span class="sheet-save-status" id="falloutSheetSaveStatus" role="status">Изменения сохраняются автоматически в этом браузере.</span></div><p class="sheet-storage-note">Расчёты — по твоим «Правилам игры» и «Перкам». Лист и последний полученный опыт сохраняются в браузере и входят в резервную копию. Награды приходят с сервера автоматически.</p></form>`;
   }
   function warningsMarkup(result) { return result.warnings.length ? result.warnings.map(text=>`<p class="sheet-warning">${escapeText(text)}</p>`).join('') : '<p class="sheet-rules-help">Постоянные бонусы особенностей и перков учтены в итогах.</p>'; }
   function scheduleSave() {
@@ -2025,7 +2169,7 @@ document.addEventListener('toggle',event=>{if(event.target.matches?.('.dice-opti
     const advancement=document.getElementById('sheetAdvancement');if(advancement){const markup=progressMarkup(sheet,result);if(advancement.innerHTML!==markup)advancement.innerHTML=markup;}
     const health=form.querySelector('[data-health-max]');if(health)health.textContent='/ '+result.maxHP;
     const movement=form.querySelector('[data-movement-ap]');if(movement)movement.textContent=result.movementAP ? '+'+result.movementAP+' ОД только на передвижение' : 'Общие ОД на ход';
-    for(const [letter] of SPECIAL_ROWS) {const effective=form.querySelector(`[data-special-effective="${letter}"]`),mod=form.querySelector(`[data-special-mod="${letter}"]`);if(effective)effective.textContent=result.special[letter]+' итог';if(mod)mod.value=signed(result.modifiers[letter]);}
+    for(const [letter] of SPECIAL_ROWS) {const effective=form.querySelector(`[data-special-effective="${letter}"]`),mod=form.querySelector(`[data-special-mod="${letter}"]`);if(effective)effective.textContent=String(result.special[letter]);if(mod)mod.value=signed(result.modifiers[letter]);}
     for(const [id] of SKILLS) {const total=form.querySelector(`[data-skill-total="${id}"]`),bonus=form.querySelector(`[data-skill-bonus="${id}"]`);if(total)total.textContent=signed(result.skills[id]);if(bonus)bonus.textContent=result.bonus[id] ? signed(result.bonus[id])+' от особенностей / перков' : 'Без постоянного бонуса';}
     const special=form.querySelector('[data-special-budget]');if(special)special.textContent=specialBudget(result);
     const skills=form.querySelector('[data-skill-budget]');if(skills)skills.textContent=skillBudget(result);
@@ -2088,6 +2232,8 @@ document.addEventListener('toggle',event=>{if(event.target.matches?.('.dice-opti
   window.addEventListener('pagehide',()=>{if(saveTimer)persist();});
   document.addEventListener('visibilitychange',()=>{if(document.hidden && saveTimer)persist();});
   window.playerRulesEffectivePerception=()=>calculation().special.P;
+  window.playerSheetValidPortrait = validPortrait;
+  window.playerSheetPublicPersona = publicPersona;
   window.playerSheetPage = page;
   window.playerSheetValid = validSheet;
   window.playerSheetNormalize = normalizeSheet;
@@ -2867,6 +3013,7 @@ window.NITI_EQUIPMENT_ART = {"weapon":"data:image/png;base64,iVBORw0KGgoAAAANSUh
     scenes:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v5m8-5v5m-6 4 5 3-5 3Z"/>',
     character:'<circle cx="12" cy="7" r="3.5"/><path d="M4 21v-2a8 8 0 0 1 16 0v2M9 16l3 3 3-3"/>',
     characters:'<circle cx="9" cy="7" r="3"/><path d="M2.5 21v-2a6.5 6.5 0 0 1 13 0v2M16 4a3 3 0 0 1 0 6m2 4a6 6 0 0 1 3.5 5v2"/>',
+    squad:'<circle cx="9" cy="7" r="3"/><path d="M2 21v-2a7 7 0 0 1 14 0v2M17 4a3 3 0 0 1 0 6m2 4a6 6 0 0 1 3 5v2"/>',
     inventory:'<path d="M8 6V5a4 4 0 0 1 8 0v1M6 6h12l2 5v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-9l2-5Z"/><path d="M8 6v7h8V6M4 16h16m-9 0v3h2v-3"/>',
     threads:'<circle cx="5" cy="6" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="12" cy="19" r="2"/><path d="M5 8v2a4 4 0 0 0 4 4h6a4 4 0 0 0 4-4V8m-7 6v3"/>',
     secrets:'<path d="M3 10a12 12 0 0 1 18 0M5 7l-2-2m16 2 2-2M8 14v-2a4 4 0 0 1 8 0v2"/><rect x="6" y="14" width="12" height="8" rx="2"/><path d="M12 17v2"/>',
@@ -2964,6 +3111,138 @@ window.NITI_EQUIPMENT_ART = {"weapon":"data:image/png;base64,iVBORw0KGgoAAAANSUh
   window.NitiDesign = Object.freeze({icon,render,brandSVG:brand});
 })();
 </script><script>'use strict';
+/* A public character gallery. Only the shared persona whitelist is rendered. */
+(function () {
+  const MAX_PORTRAIT = 32000;
+  let cachedRoom = null;
+  let ownerRoomId = '';
+  let ownerDraft = '';
+  let ownerDirty = false;
+  let busy = false;
+  let feedback = '';
+  let feedbackError = false;
+  let mountedRoster = '';
+
+  const e = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
+  const short = (value, max) => typeof value === 'string' ? value.slice(0, max).trim() : '';
+  function room() {
+    try {
+      if (typeof window.playerSessionSnapshot === 'function') {
+        const next = window.playerSessionSnapshot();
+        cachedRoom = next?.self ? next : null;
+      }
+    } catch { /* The next session update can restore the connection. */ }
+    return cachedRoom?.self ? cachedRoom : null;
+  }
+  function portrait(value) {
+    return typeof value === 'string' && value.length <= MAX_PORTRAIT && /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/]+={0,2}$/.test(value) ? value : '';
+  }
+  function roster(current) {
+    if (!Array.isArray(current?.squad)) return [];
+    return current.squad.slice(0, 20).filter(member => member && typeof member.id === 'string').map(member => ({
+      id: short(member.id, 128), name: short(member.name, 80), age: short(member.age, 40),
+      gender: short(member.gender, 80), ownerName: short(member.ownerName, 80), portrait: portrait(member.portrait),
+    }));
+  }
+  function prepareOwner(current) {
+    const id = current?.id || '';
+    if (id !== ownerRoomId) {
+      ownerRoomId = id; ownerDraft = short(current?.self?.ownerName, 80); ownerDirty = false;
+      feedback = ''; feedbackError = false;
+    } else if (!ownerDirty && document.activeElement?.id !== 'squad-owner-name' && !busy) {
+      ownerDraft = short(current?.self?.ownerName, 80);
+    }
+  }
+  function silhouette() {
+    return '<svg viewBox="0 0 100 150" fill="none" stroke="currentColor" aria-hidden="true"><path d="M12 12h12M12 12v12m76-12H76m12 0v12M12 138h12m-12 0v-12m76 12H76m12 0v-12"/><circle cx="50" cy="54" r="16"/><path d="M24 109v-9a26 26 0 0 1 52 0v9M20 118h60"/><path d="M32 27h36M40 130h20" opacity=".45"/></svg>';
+  }
+  function card(member, current, index) {
+    const own = member.id === current.self.id;
+    const name = member.name || 'Персонаж пока не назван';
+    return `<article class="panel squad-card ${own ? 'is-own' : ''}" aria-labelledby="squad-name-${index}"><div class="squad-card-top"><span>ЛИЧНОЕ ДЕЛО ${String(index + 1).padStart(2, '0')}</span>${own ? '<span class="squad-own-badge">ТВОЙ ПЕРСОНАЖ</span>' : '<span class="squad-dossier-stamp" aria-hidden="true">2207</span>'}</div><div class="squad-portrait ${member.portrait ? 'has-art' : ''}">${member.portrait ? `<img src="${e(member.portrait)}" alt="Арт персонажа: ${e(name)}" loading="lazy" decoding="async" draggable="false">` : `<div class="squad-no-portrait">${silhouette()}<span>Арт ещё не добавлен</span></div>`}<span class="squad-portrait-corner" aria-hidden="true"></span></div><div class="squad-card-info"><h2 id="squad-name-${index}">${e(name)}</h2><dl><div><dt>Возраст</dt><dd>${e(member.age || 'Не указан')}</dd></div><div><dt>Пол</dt><dd>${e(member.gender || 'Не указан')}</dd></div></dl><div class="squad-owner"><span class="squad-owner-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="7" r="3.5"/><path d="M5 21v-3a7 7 0 0 1 14 0v3"/></svg></span><div><span>ИГРОК</span><strong>${e(member.ownerName || 'Имя игрока пока не указано')}</strong></div></div>${own ? '<a class="text-button squad-own-link" href="#character">Открыть мою анкету ↗</a>' : ''}</div></article>`;
+  }
+  function cards(current) {
+    const members = roster(current);
+    mountedRoster = JSON.stringify([current.self.id, members]);
+    return members.length ? members.map((member, index) => card(member, current, index)).join('') : '<section class="panel squad-empty"><span class="eyebrow">ОБЩИЕ ЛИЧНЫЕ ДЕЛА</span><h2>Отряд собирается.</h2><p>Анкеты появятся здесь, когда участники заполнят сведения о своих персонажах.</p><a class="button ghost" href="#character">К моей анкете ↗</a></section>';
+  }
+  function ownerForm(current) {
+    return `<section class="panel squad-owner-settings"><div><span class="eyebrow">ВЛАДЕЛЕЦ АНКЕТЫ</span><h2>Как тебя представить отряду?</h2><p>Это имя игрока. Имя персонажа заполняется в его анкете.</p></div><form id="squadOwnerForm"><label for="squad-owner-name"><span>Имя игрока</span><input class="input" id="squad-owner-name" name="ownerName" type="text" autocomplete="nickname" maxlength="80" required value="${e(ownerDraft)}" placeholder="Твоё имя или ник" ${busy ? 'readonly' : ''}></label><button class="button ghost" type="submit" ${busy ? 'disabled' : ''}>${busy ? 'Сохраняю…' : 'Сохранить имя'}</button><p class="squad-owner-feedback ${feedbackError ? 'is-error' : ''}" data-squad-owner-feedback role="status">${e(feedback)}</p></form></section>`;
+  }
+  function connectionText() {
+    let state = '';
+    try { state = window.playerSessionConnection?.() || ''; } catch {}
+    return navigator.onLine === false || ['offline', 'error', 'denied'].includes(state) ? 'Сохранённые сведения · ожидаем связь' : 'Общий архив отряда';
+  }
+  function content(current) {
+    if (!current) return `<section class="panel squad-connect"><div class="squad-connect-mark" aria-hidden="true">${silhouette()}</div><span class="eyebrow">ЛИЧНЫЕ ДЕЛА ОТРЯДА</span><h2>Найди свою группу.</h2><p>Подключись к игровой комнате ведущего. Здесь появятся лица и имена твоих спутников.</p><a class="button primary" href="#session">К игровой сессии ↗</a></section>`;
+    prepareOwner(current);
+    return `<div class="squad-room-heading"><div><span class="eyebrow">${e(current.name || 'ИГРОВАЯ КОМНАТА')}</span><span class="squad-archive-status" data-squad-status>${e(connectionText())}</span></div><span class="tag" data-squad-count>${roster(current).length} В ОТРЯДЕ</span></div>${ownerForm(current)}<div class="squad-grid" data-squad-grid>${cards(current)}</div><p class="squad-archive-note">Личное дело обновляется, когда игрок сохраняет сведения о персонаже. Арт можно добавить в разделе «Мой персонаж».</p>`;
+  }
+  function page() {
+    const current = room();
+    const heading = typeof head === 'function' ? head('ЛЮДИ РЯДОМ С ТОБОЙ', 'Мой отряд.', 'Участники текущей комнаты и их персонажи.') : '<div class="heading-row"><div><span class="eyebrow">ЛЮДИ РЯДОМ С ТОБОЙ</span><h1 class="page-title">Мой отряд.</h1><p class="subtitle">Участники текущей комнаты и их персонажи.</p></div></div>';
+    return heading + `<div id="playerSquadRoot" data-squad-room="${e(current?.id || '')}" data-squad-connected="${current ? 'true' : 'false'}">${content(current)}</div>`;
+  }
+  function paint() {
+    const root = document.getElementById('playerSquadRoot');
+    if (!root) return;
+    const current = room();
+    if (root.dataset.squadRoom !== (current?.id || '') || root.dataset.squadConnected !== String(!!current)) {
+      root.dataset.squadRoom = current?.id || ''; root.dataset.squadConnected = String(!!current);
+      root.innerHTML = content(current); return;
+    }
+    if (!current) return;
+    prepareOwner(current);
+    const input = root.querySelector('#squad-owner-name');
+    if (input && input !== document.activeElement && !ownerDirty && input.value !== ownerDraft) input.value = ownerDraft;
+    if (input) input.readOnly = busy;
+    const submit = root.querySelector('#squadOwnerForm button');
+    if (submit) { submit.disabled = busy; submit.textContent = busy ? 'Сохраняю…' : 'Сохранить имя'; }
+    const feedbackNode = root.querySelector('[data-squad-owner-feedback]');
+    if (feedbackNode) { feedbackNode.textContent = feedback; feedbackNode.classList.toggle('is-error', feedbackError); }
+    const status = root.querySelector('[data-squad-status]'); if (status) status.textContent = connectionText();
+    const members = roster(current), signature = JSON.stringify([current.self.id, members]);
+    const grid = root.querySelector('[data-squad-grid]');
+    if (grid && signature !== mountedRoster) grid.innerHTML = cards(current);
+    const count = root.querySelector('[data-squad-count]'); if (count) count.textContent = members.length + ' В ОТРЯДЕ';
+  }
+  document.addEventListener('input', event => {
+    if (event.target.id !== 'squad-owner-name') return;
+    ownerDraft = event.target.value; ownerDirty = true;
+    event.target.setCustomValidity(''); feedback = ''; feedbackError = false;
+    const status = document.querySelector('[data-squad-owner-feedback]'); if (status) status.textContent = '';
+  });
+  document.addEventListener('submit', async event => {
+    if (event.target.id !== 'squadOwnerForm') return;
+    event.preventDefault();
+    if (busy) return;
+    const current = room(), input = event.target.elements.ownerName, value = input.value.trim();
+    input.setCustomValidity(value && value.length <= 80 ? '' : 'Укажи имя игрока — до 80 символов.');
+    if (!event.target.reportValidity()) return;
+    if (!current || typeof window.playerSessionSetOwnerName !== 'function') { feedback = 'Подключись к игровой сессии и повтори сохранение.'; feedbackError = true; paint(); return; }
+    const id = current.id;
+    busy = true; feedback = ''; feedbackError = false; paint();
+    try {
+      const result = await window.playerSessionSetOwnerName(value);
+      if (room()?.id !== id) return;
+      if (result?.error || result?.saved === false) throw new Error(result.error || 'Не удалось сохранить имя игрока.');
+      if (result?.room?.self) cachedRoom = result.room;
+      ownerDraft = value; ownerDirty = false; feedback = 'Имя игрока сохранено.';
+    } catch (error) {
+      if (room()?.id === id) { feedback = error?.message || 'Не удалось сохранить имя игрока. Повтори, когда восстановится связь.'; feedbackError = true; }
+    } finally { busy = false; paint(); }
+  });
+  window.addEventListener('niti:session-update', event => {
+    if (Object.hasOwn(event.detail || {}, 'room')) cachedRoom = event.detail.room?.self ? event.detail.room : null;
+    paint();
+  });
+  window.addEventListener('online', paint);
+  window.addEventListener('offline', paint);
+  window.playerSquadPage = page;
+})();
+</script>
+<script>'use strict';
 const PLAYER_KEY='niti-player-v1';
 const $=s=>document.querySelector(s);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -2975,8 +3254,12 @@ let player=initial(),storageOK=true;try{const raw=localStorage.getItem(PLAYER_KE
 const copyPlayerValue=value=>JSON.parse(JSON.stringify(value));
 function characterSnapshot(value){return {profile:copyPlayerValue(value.profile),...(value.sheet?{sheet:copyPlayerValue(value.sheet)}:{})};}
 let persistedCharacter=characterSnapshot(player),resetCharacterStorage=false;
+window.playerAcceptedCharacter=()=>copyPlayerValue(persistedCharacter);
+function publicIdentity(data=persistedCharacter){return window.playerSheetPublicPersona?.(playerSheetNormalize(data.sheet,data.profile)) || {name:'',age:'',gender:'',portrait:''};}
+let acceptedIdentitySignature=JSON.stringify(publicIdentity()),identityAuthored=Object.values(publicIdentity()).some(Boolean);
+function publishAcceptedIdentity(){const identity=publicIdentity();if(!identityAuthored && !Object.values(identity).some(Boolean))return;window.playerSessionSyncPersona?.(identity);}
 let view=location.hash.slice(1)||'home',lastFocus=null;
-const pages=[['home','На связи'],['session','Игровая сессия'],['character','Мой персонаж'],['inventory','Инвентарь'],['notes','Мои заметки'],['dice','Кубики'],['help','Справка']];
+const pages=[['home','На связи'],['session','Игровая сессия'],['character','Мой персонаж'],['squad','Мой отряд'],['inventory','Инвентарь'],['notes','Мои заметки'],['dice','Кубики'],['help','Справка']];
 function icon(key){const shapes={home:'<path d="m3 11 9-8 9 8v10h-6v-7H9v7H3Z"/>',character:'<circle cx="12" cy="7" r="4"/><path d="M4 22v-3a8 8 0 0 1 16 0v3"/>',notes:'<path d="M5 3h14v18H5zM9 7h6m-6 5h6m-6 5h3"/>',dice:'<path d="m12 2 9 5v10l-9 5-9-5V7Zm0 0L7 15h10L12 2ZM3 7l14 8-5 7-5-7 14-8"/>',help:'<circle cx="12" cy="12" r="10"/><path d="M9 8a3 3 0 0 1 6 0c0 3-3 2-3 5m0 3v1"/>'};return `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${shapes[key]||shapes.home}</svg>`;}
 function head(eyebrow,title,subtitle,actions=''){return `<div class="heading-row"><div><div class="eyebrow">${eyebrow}</div><h1 class="page-title">${title}</h1><p class="subtitle">${subtitle}</p></div><div class="header-actions">${actions}</div></div>`;}
 function btn(label,action,cls='',extra=''){return `<button type="button" class="button ${cls}" data-player-action="${action}" ${extra}>${label}</button>`;}
@@ -3008,7 +3291,7 @@ function playerArchiveState(){
 }
 function save(){
   const prepared=playerArchiveState();
-  try{localStorage.setItem(PLAYER_KEY,JSON.stringify(prepared.data));persistedCharacter=characterSnapshot(prepared.data);storageOK=true;}catch{storageOK=false;}
+  try{localStorage.setItem(PLAYER_KEY,JSON.stringify(prepared.data));persistedCharacter=characterSnapshot(prepared.data);storageOK=true;const signature=JSON.stringify(publicIdentity());if(signature!==acceptedIdentitySignature)identityAuthored=true;acceptedIdentitySignature=signature;if(!resetCharacterStorage)publishAcceptedIdentity();}catch{storageOK=false;}
   $('#saveStatus').textContent=!storageOK?'! Не сохранено · скачай копию':prepared.error?'! Анкета не сохранена · проверь S.P.E.C.I.A.L. / перки':'● Личные записи сохранены';
   return storageOK && !prepared.error;
 }
@@ -3075,14 +3358,35 @@ function applyConfirmedItemEffect(outcome){
   return {applied:true,...healed,message:'Здоровье: '+healed.before+' → '+healed.after+' / '+healed.maxHP+(result.healingMultiplier===0.5?' · «Жидкое тело»: половина лечения':'')};
 };
 window.playerApplyConfirmedItemEffect=outcome=>navigator.locks?.request ? navigator.locks.request('niti-item-effects',()=>applyConfirmedItemEffect(outcome)) : applyConfirmedItemEffect(outcome);
+window.playerSetPortrait=async portrait=>{
+  if(!window.playerSheetValidPortrait?.(portrait))return {saved:false,error:'Нужен портрет PNG, JPEG или WebP подходящего размера.'};
+  const prepared=copyPlayerValue(playerArchiveState().data);
+  prepared.sheet=playerSheetNormalize(prepared.sheet,prepared.profile);prepared.sheet.portrait=portrait;
+  try{localStorage.setItem(PLAYER_KEY,JSON.stringify(prepared));}catch{return {saved:false,error:'Браузер не сохранил арт. Освободи место или скачай резервную копию.'};}
+  persistedCharacter=characterSnapshot(prepared);storageOK=true;
+  if(!player.sheet)player.sheet=playerSheetNormalize(null,player.profile);player.sheet.portrait=portrait;
+  identityAuthored=true;acceptedIdentitySignature=JSON.stringify(publicIdentity());publishAcceptedIdentity();
+  return {saved:true};
+};
+window.addEventListener('niti:session-update',()=>{
+  const room=window.playerSessionSnapshot?.();if(!room?.self)return;
+  const remote=room.squad?.find(member=>member.id===room.self.id);
+  // A fresh device may recover the public identity; private character statistics stay local.
+  if(!identityAuthored && remote && !Object.values(publicIdentity()).some(Boolean) && [remote.name,remote.age,remote.gender,remote.portrait].some(Boolean)){
+    const prepared=copyPlayerValue(playerArchiveState().data);prepared.sheet=playerSheetNormalize(prepared.sheet,prepared.profile);
+    Object.assign(prepared.sheet,{name:remote.name || '',age:remote.age || '',gender:remote.gender || '',portrait:remote.portrait || ''});prepared.profile.name=prepared.sheet.name;
+    try{localStorage.setItem(PLAYER_KEY,JSON.stringify(prepared));persistedCharacter=characterSnapshot(prepared);Object.assign(player.sheet || (player.sheet=playerSheetNormalize(null,player.profile)),{name:prepared.sheet.name,age:prepared.sheet.age,gender:prepared.sheet.gender,portrait:prepared.sheet.portrait});player.profile.name=prepared.profile.name;identityAuthored=true;acceptedIdentitySignature=JSON.stringify(publicIdentity());window.playerSessionAdoptPersona?.(publicIdentity());if(view==='character')render();}catch{/* Keep server identity intact if the browser cannot save. */}
+  }
+  publishAcceptedIdentity();
+});
 function modifier(n){return n-5>=0?'+'+(n-5):String(n-5);}
 function home(){const p=player.profile;return playerSessionSummary()+head('ЛИЧНОЕ ПРОСТРАНСТВО УЧАСТНИКА','Твоя история ещё впереди.','Персонаж, заметки и кубики. Всё под рукой во время игры.')+`<div class="player-home-grid"><section class="panel player-welcome"><div class="panel-header"><h2 class="panel-title">Терминал игрока</h2><span class="tag">OLYMPUS 2207</span></div><div class="player-vault"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAwIDQyMCIgZmlsbD0ibm9uZSI+CiAgPGRlZnM+CiAgICA8cGF0dGVybiBpZD0idi1ncmlkIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxwYXRoIGQ9Ik0yNCAwSDB2MjQiIHN0cm9rZT0iIzZhNzU1NCIgc3Ryb2tlLXdpZHRoPSIuNiIgb3BhY2l0eT0iLjEzIi8+PC9wYXR0ZXJuPgogICAgPHBhdHRlcm4gaWQ9InYtaGF6YXJkIiB3aWR0aD0iMjYiIGhlaWdodD0iMjYiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSgzNSkiPjxyZWN0IHdpZHRoPSIyNiIgaGVpZ2h0PSIyNiIgZmlsbD0iIzkyOGE0MyIvPjxyZWN0IHdpZHRoPSIxMiIgaGVpZ2h0PSIyNiIgZmlsbD0iIzIyMmIyMSIvPjwvcGF0dGVybj4KICAgIDxwYXR0ZXJuIGlkPSJ2LXBlcmZvcmF0aW9uIiB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxjaXJjbGUgY3g9IjQiIGN5PSI0IiByPSIxLjMiIGZpbGw9IiMxMDFhMTQiLz48L3BhdHRlcm4+CiAgICA8ZyBpZD0idi1ib2x0Ij48Y2lyY2xlIHI9IjQiIGZpbGw9IiMxMTFiMTQiIHN0cm9rZT0iIzc1ODM2NCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48cGF0aCBkPSJtLTEuNS0xLjUgMyAzIiBzdHJva2U9IiM3NTgzNjQiLz48L2c+CiAgICA8ZyBpZD0idi1yaXZldCI+PGNpcmNsZSByPSIyIiBmaWxsPSIjNzU4MzY0IiBvcGFjaXR5PSIuNiIvPjwvZz4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjEyMDAiIGhlaWdodD0iNDIwIiBmaWxsPSIjMTIxYzE2Ii8+CiAgPHBhdGggZD0iTTAgMGgxMjAwdjMxMWwtMTMxIDQxSDEzM0wwIDMxMVoiIGZpbGw9IiMyYjM3MjgiLz4KICA8cmVjdCB5PSIyNyIgd2lkdGg9IjEyMDAiIGhlaWdodD0iMjc0IiBmaWxsPSIjMzAzZDJjIi8+CiAgPHBhdGggZD0iTTAgMGgxMjAwdjMxSDBabTAgMzAyaDEyMDB2MjVIMFoiIGZpbGw9IiMxNzI1MWIiLz4KICA8cGF0aCBkPSJNMCAzMWgxMjAwTTAgMzAyaDEyMDAiIHN0cm9rZT0iIzY1NzU1NiIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHBhdGggZD0iTTAgNDZoMTIwME0wIDI4OGgxMjAwIiBzdHJva2U9IiMxNDIyMTkiIHN0cm9rZS13aWR0aD0iOCIvPgogIDxwYXRoIGQ9Ik0wIDMzN2gxMjAwdjgzSDBaIiBmaWxsPSIjMWEyODFjIi8+CiAgPHBhdGggZD0iTTAgMzYwaDEyMDBNMCAzOThoMTIwME0wIDQyMGw0MzAtODNtNzcwIDgzLTQzMC04M00xODMgNDIwbDMzNS04M200OTkgODMtMzM1LTgzTTQyMCA0MjBsMTU2LTgzbTIxNyA4My0xNTYtODMiIHN0cm9rZT0iIzQ2NTgzYSIgc3Ryb2tlLXdpZHRoPSIxLjQiLz4KICA8cmVjdCB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI0MjAiIGZpbGw9InVybCgjdi1ncmlkKSIvPgogIDwhLS0gVGhpY2sgc3RydWN0dXJhbCByaWJzIGFuZCByZWNlc3NlZCB3YWxsIHBhbmVscy4gLS0+CiAgPGcgZmlsbD0iIzIwMmQyMCIgc3Ryb2tlPSIjNmI3YjU4IiBzdHJva2Utd2lkdGg9IjEuMyI+CiAgICA8cGF0aCBkPSJNNyA0OGg3N3YyMzdIN3pNMTEwIDQ4aDI0NHYyMzdIMTEwek0zODYgNDhoMzl2MjM3aC0zOXpNODg0IDQ4aDM1djIzN2gtMzV6TTk0OCA0OGgyMzh2MjM3SDk0OHoiLz4KICA8L2c+CiAgPGcgc3Ryb2tlPSIjMGIxNzEwIiBzdHJva2Utd2lkdGg9IjgiPjxwYXRoIGQ9Ik05NCAzMXYyNzBtMjc3LTI3MHYyNzBtNTYwLTI3MHYyNzAiLz48L2c+CiAgPGcgc3Ryb2tlPSIjN2M4OTY2IiBzdHJva2Utd2lkdGg9IjEuNSI+PHBhdGggZD0iTTEwMCAzMXYyNzBtMjc3LTI3MHYyNzBtNTYwLTI3MHYyNzAiLz48L2c+CiAgPGcgZmlsbD0iIzQ0NTEzYSIgc3Ryb2tlPSIjNzE4MTViIj48cGF0aCBkPSJNMzAgODBoMzJ2MTE4SDMwem0wIDEyOWgzMnY1MUgzMHpNOTgwIDc5aDE3NXY1Nkg5ODB6Ii8+PC9nPgogIDxwYXRoIGQ9Ik0zOCA5MGgxNm0tMTYgMTBoMTZtLTE2IDEwaDE2bS0xNiAxMGgxNm0tMTYgMTBoMTZtLTE2IDEwaDE2bS0xNiAxMGgxNm0tMTYgMTBoMTZtLTE2IDEwaDE2bS0xNiAxMGgxNm0tMTYgMTBoMTYiIHN0cm9rZT0iIzE0MjMxNyIgc3Ryb2tlLXdpZHRoPSI0Ii8+CiAgPHJlY3QgeD0iOTkwIiB5PSI4OSIgd2lkdGg9IjE1NSIgaGVpZ2h0PSIzNSIgcng9IjIiIGZpbGw9IiMwYzFhMTEiIHN0cm9rZT0iIzgzOTM2NSIvPgogIDxwYXRoIGQ9Ik0xMDAxIDExM3YtMTBoNnYxMG04IDBWOTloNnYxNG04IDBWOTRoNnYxOW04IDBWOTloNnYxNG04IDBWOTBoNnYyM204IDB2LTE1aDZ2MTVtOCAwdi04aDZ2OG04IDB2LTIxaDZ2MjFtOCAwVjk5aDZ2MTQiIHN0cm9rZT0iIzg4YjU1YiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgPCEtLSBQaXBld29yayBpcyByb3V0ZWQgYXdheSBmcm9tIHRoZSBzZXJ2aWNlIGRvb3IuIC0tPgogIDxwYXRoIGQ9Ik0wIDE1aDMyMHEyOCAwIDI4IDI5djIxbTAgMHYyNG0wIDI1djIyTTEwODAgMHYzNnEwIDE4LTIwIDE4SDk2MHEtMjAgMC0yMCAyMHYxMTMiIHN0cm9rZT0iIzExMWUxNCIgc3Ryb2tlLXdpZHRoPSIxOCIvPgogIDxwYXRoIGQ9Ik0wIDE1aDMyMHEyOCAwIDI4IDI5djIxbTAgMHYyNG0wIDI1djIyTTEwODAgMHYzNnEwIDE4LTIwIDE4SDk2MHEtMjAgMC0yMCAyMHYxMTMiIHN0cm9rZT0iIzZjNzk1NSIgc3Ryb2tlLXdpZHRoPSIxMCIvPgogIDxwYXRoIGQ9Ik0wIDEzaDMyMHEyNiAwIDI2IDI5TTEwNzggMHYzNnEwIDE2LTE4IDE2SDk2MCIgc3Ryb2tlPSIjYTFhNjdiIiBzdHJva2Utd2lkdGg9IjIiIG9wYWNpdHk9Ii41NSIvPgogIDxnIGZpbGw9IiM4NDkxNmIiIHN0cm9rZT0iIzIxMzQyMyIgc3Ryb2tlLXdpZHRoPSIyIj48cmVjdCB4PSI4NiIgeT0iNiIgd2lkdGg9IjkiIGhlaWdodD0iMTgiIHJ4PSIxIi8+PHJlY3QgeD0iMjMyIiB5PSI2IiB3aWR0aD0iOSIgaGVpZ2h0PSIxOCIgcng9IjEiLz48cmVjdCB4PSIzMzkiIHk9IjY5IiB3aWR0aD0iMTgiIGhlaWdodD0iOCIgcng9IjEiLz48cmVjdCB4PSIxMDcxIiB5PSIxOCIgd2lkdGg9IjE4IiBoZWlnaHQ9IjgiIHJ4PSIxIi8+PHJlY3QgeD0iOTk1IiB5PSI0NSIgd2lkdGg9IjkiIGhlaWdodD0iMTgiIHJ4PSIxIi8+PC9nPgogIDwhLS0gUm91bmQgYmxhc3QgZG9vciwgZGVsaWJlcmF0ZWx5IHVubGlrZSBhbnkgb2ZmaWNpYWwgZ2FtZSBhc3NldC4gLS0+CiAgPHBhdGggZD0iTTQ3MiA0OWgzNDhsNDkgNDh2MjA2bC00MyAzNUg0NjVsLTQwLTM1Vjk3WiIgZmlsbD0iIzExMWYxNiIgc3Ryb2tlPSIjN2I4OTYwIiBzdHJva2Utd2lkdGg9IjIiLz4KICA8cGF0aCBkPSJNNDc5IDU4aDMzM2w0NiA0NHYxOTZsLTM4IDMxSDQ3MmwtMzYtMzFWMTAyWiIgZmlsbD0idXJsKCN2LWhhemFyZCkiLz4KICA8cGF0aCBkPSJNNDkwIDcwaDMxMWw0NCA0MHYxODBsLTM3IDI3SDQ4M2wtMzUtMjdWMTEwWiIgZmlsbD0iIzI4MzkyOCIgc3Ryb2tlPSIjMGUxYjEyIiBzdHJva2Utd2lkdGg9IjYiLz4KICA8cGF0aCBkPSJNNDg5IDc1aDMxM2wzNiAzN3YxNzNsLTMyIDI1SDQ4NWwtMzEtMjVWMTEyWiIgc3Ryb2tlPSIjNzM4NDViIiBzdHJva2Utd2lkdGg9IjEuNSIvPgogIDxjaXJjbGUgY3g9IjY0NyIgY3k9IjE5NCIgcj0iMTMyIiBmaWxsPSIjMGYxZTE0IiBzdHJva2U9IiM2ODdiNTEiIHN0cm9rZS13aWR0aD0iNSIvPgogIDxjaXJjbGUgY3g9IjY0NyIgY3k9IjE5NCIgcj0iMTE5IiBmaWxsPSIjM2Q0YzMzIiBzdHJva2U9IiM4OTk2NmQiIHN0cm9rZS13aWR0aD0iMiIvPgogIDxjaXJjbGUgY3g9IjY0NyIgY3k9IjE5NCIgcj0iMTA1IiBmaWxsPSIjMmY0MDJiIiBzdHJva2U9IiMxODI4MWIiIHN0cm9rZS13aWR0aD0iNyIvPgogIDxjaXJjbGUgY3g9IjY0NyIgY3k9IjE5NCIgcj0iOTIiIHN0cm9rZT0iIzczODQ2MSIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KICA8cGF0aCBkPSJNNjQ3IDg3djIxM001NDAgMTk0aDIxNE01NzEgMTE4bDE1MiAxNTJtMC0xNTJMNTcxIDI3MCIgc3Ryb2tlPSIjMTQyNzFhIiBzdHJva2Utd2lkdGg9IjciLz4KICA8cGF0aCBkPSJNNjQ3IDkwdjIwN001NDMgMTk0aDIwOE01NzQgMTIxbDE0NiAxNDZtMC0xNDZMNTc0IDI2NyIgc3Ryb2tlPSIjODE5MTZhIiBzdHJva2Utd2lkdGg9IjEuMyIvPgogIDxwYXRoIGQ9Ik01NzkgMTU2aDEzN3Y3NUg1NzlaIiBmaWxsPSIjMmU0MDJiIi8+CiAgPHRleHQgeD0iNjQ3IiB5PSIyMTAiIGZpbGw9IiNhMGFmN2IiIGZvbnQtZmFtaWx5PSJtb25vc3BhY2UiIGZvbnQtc2l6ZT0iNDciIGZvbnQtd2VpZ2h0PSI3MDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGxldHRlci1zcGFjaW5nPSI2Ij4yMjA3PC90ZXh0PgogIDxwYXRoIGQ9Ik02MDIgMjMxaDkwbS03OCA1aDY2IiBzdHJva2U9IiM5YmE2NzUiIHN0cm9rZS13aWR0aD0iMSIvPgogIDxnIGZpbGw9IiMxNDI1MTkiIHN0cm9rZT0iIzkxYTE2ZCIgc3Ryb2tlLXdpZHRoPSIyIj4KICAgIDxyZWN0IHg9IjYyNCIgeT0iNzQiIHdpZHRoPSI0NiIgaGVpZ2h0PSIxMyIgcng9IjIiLz48cmVjdCB4PSI2MjQiIHk9IjMwMSIgd2lkdGg9IjQ2IiBoZWlnaHQ9IjEzIiByeD0iMiIvPjxyZWN0IHg9IjUyNyIgeT0iMTcxIiB3aWR0aD0iMTMiIGhlaWdodD0iNDYiIHJ4PSIyIi8+PHJlY3QgeD0iNzU0IiB5PSIxNzEiIHdpZHRoPSIxMyIgaGVpZ2h0PSI0NiIgcng9IjIiLz4KICA8L2c+CiAgPGc+CiAgICA8dXNlIGhyZWY9IiN2LWJvbHQiIHg9IjY0NyIgeT0iODQiLz48dXNlIGhyZWY9IiN2LWJvbHQiIHg9IjY0NyIgeT0iMzA0Ii8+PHVzZSBocmVmPSIjdi1ib2x0IiB4PSI1MzciIHk9IjE5NCIvPjx1c2UgaHJlZj0iI3YtYm9sdCIgeD0iNzU3IiB5PSIxOTQiLz48dXNlIGhyZWY9IiN2LWJvbHQiIHg9IjU3MCIgeT0iMTE3Ii8+PHVzZSBocmVmPSIjdi1ib2x0IiB4PSI3MjQiIHk9IjExNyIvPjx1c2UgaHJlZj0iI3YtYm9sdCIgeD0iNTcwIiB5PSIyNzEiLz48dXNlIGhyZWY9IiN2LWJvbHQiIHg9IjcyNCIgeT0iMjcxIi8+CiAgICA8dXNlIGhyZWY9IiN2LWJvbHQiIHg9IjQ2NCIgeT0iMTEzIi8+PHVzZSBocmVmPSIjdi1ib2x0IiB4PSI4MzAiIHk9IjExMyIvPjx1c2UgaHJlZj0iI3YtYm9sdCIgeD0iNDY0IiB5PSIyODQiLz48dXNlIGhyZWY9IiN2LWJvbHQiIHg9IjgzMCIgeT0iMjg0Ii8+CiAgPC9nPgogIDwhLS0gU2VydmljZSB0ZXJtaW5hbDogaGVhdnkgYmV2ZWxzLCBDUlQgcGhvc3Bob3IgYW5kIGEgbWVjaGFuaWNhbCBrZXlib2FyZC4gLS0+CiAgPHBhdGggZD0iTTEyMyAxMTNoMTg4bDE3IDE3djEzOEgxMTFWMTI4WiIgZmlsbD0iIzBmMWQxMyIgc3Ryb2tlPSIjN2Y4YzY2IiBzdHJva2Utd2lkdGg9IjIiLz4KICA8cGF0aCBkPSJNMTI5IDEyMmgxNzNsMTQgMTR2MTEySDEyM1YxMzdaIiBmaWxsPSIjNTM2MDQ0IiBzdHJva2U9IiMyMTMwMjEiIHN0cm9rZS13aWR0aD0iMyIvPgogIDxwYXRoIGQ9Ik0xNDUgMTM2aDE0NGw5IDl2NzdsLTkgOUgxNDVsLTEwLTl2LTc3WiIgZmlsbD0iIzA3MTYwYiIgc3Ryb2tlPSIjOTJhMjc0IiBzdHJva2Utd2lkdGg9IjIiLz4KICA8cGF0aCBkPSJNMTQ2IDE0MGgxNDFsNyA3djczbC03IDdIMTQ3bC04LTh2LTcxWiIgc3Ryb2tlPSIjMmQ1MTJjIi8+CiAgPGcgc3Ryb2tlPSIjN2ZiMjVhIiBzdHJva2Utd2lkdGg9IjIiIG9wYWNpdHk9Ii45Ij48cGF0aCBkPSJNMTUzIDE1NGg3M20tNzMgOWgxMThtLTExOCA5aDU5bTggMGg0MW0tMTA4IDE3aDIwbTcgMGg1MG0tNzcgMTBoMTAzbS0xMDMgMTBoNDltOCAwaDM1Ii8+PC9nPgogIDxwYXRoIGQ9Ik0xNTMgMTgxaDYiIHN0cm9rZT0iIzlhZDQ2YSIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgPHJlY3QgeD0iMTM5IiB5PSIyNDAiIHdpZHRoPSI2NyIgaGVpZ2h0PSIxMSIgZmlsbD0idXJsKCN2LXBlcmZvcmF0aW9uKSIvPgogIDxnIGZpbGw9IiM3OTlmNGMiPjxjaXJjbGUgY3g9IjI4MiIgY3k9IjI0NCIgcj0iMyIvPjxjaXJjbGUgY3g9IjI5MyIgY3k9IjI0NCIgcj0iMyIvPjwvZz4KICA8cGF0aCBkPSJNMTEyIDI2MmgyMTZsMzEgMzV2MjBIODF2LTIwWiIgZmlsbD0iIzU5NjA0NCIgc3Ryb2tlPSIjMTExZTE0IiBzdHJva2Utd2lkdGg9IjQiLz4KICA8cGF0aCBkPSJNMTE5IDI3MmgyMDBsMTcgMjJIOTlaIiBmaWxsPSIjMjAzMzIyIiBzdHJva2U9IiM5Y2EyN2EiLz4KICA8ZyBzdHJva2U9IiM5MjljNzAiIHN0cm9rZS13aWR0aD0iMyI+PHBhdGggZD0iTTEyMSAyNzloMTkwbS0xOTcgN2gyMDRtLTE1Ni0xMC00IDE1bTIyLTE1LTIgMTVtMjItMTV2MTVtMjItMTUgMiAxNW0yMi0xNSA0IDE1bTIyLTE1IDYgMTUiLz48L2c+CiAgPHJlY3QgeD0iMTgyIiB5PSIyOTciIHdpZHRoPSI3NiIgaGVpZ2h0PSI3IiByeD0iMiIgZmlsbD0iIzI0MzYyNSIvPgogIDxwYXRoIGQ9Ik0xMTEgMzE3aDIxOHYzMUgxMTFaIiBmaWxsPSIjMjMzMjIyIiBzdHJva2U9IiM3Yjg1NWYiLz4KICA8ZyBmaWxsPSIjMGUxZDEzIj48cmVjdCB4PSIxMzAiIHk9IjMyNyIgd2lkdGg9IjciIGhlaWdodD0iMTIiLz48cmVjdCB4PSIxNDUiIHk9IjMyNyIgd2lkdGg9IjciIGhlaWdodD0iMTIiLz48cmVjdCB4PSIxNjAiIHk9IjMyNyIgd2lkdGg9IjciIGhlaWdodD0iMTIiLz48cmVjdCB4PSIyODAiIHk9IjMyNyIgd2lkdGg9IjciIGhlaWdodD0iMTIiLz48cmVjdCB4PSIyOTUiIHk9IjMyNyIgd2lkdGg9IjciIGhlaWdodD0iMTIiLz48L2c+CiAgPHBhdGggZD0iTTIwNyAzNDh2MThoMjh2LTE4IiBzdHJva2U9IiM3Mzg1NjMiIHN0cm9rZS13aWR0aD0iNSIvPgogIDxwYXRoIGQ9Ik0yMjEgMzY2djE4aC04NiIgc3Ryb2tlPSIjMGQxYjEzIiBzdHJva2Utd2lkdGg9IjciLz4KICA8IS0tIExvY2FsIGNvbnRyb2wgcGFuZWwgYW5kIHJlc3RyYWluZWQgc2FmZXR5IG1hcmtpbmdzLiAtLT4KICA8cmVjdCB4PSI5ODAiIHk9IjE1NyIgd2lkdGg9IjE3NSIgaGVpZ2h0PSIxMDUiIHJ4PSIzIiBmaWxsPSIjMTkyYTFjIiBzdHJva2U9IiM2NTdjNTEiIHN0cm9rZS13aWR0aD0iMiIvPgogIDxyZWN0IHg9Ijk5MyIgeT0iMTcxIiB3aWR0aD0iNjYiIGhlaWdodD0iNzciIGZpbGw9IiMwYjFjMTEiIHN0cm9rZT0iIzg0OTg2YSIvPgogIDxwYXRoIGQ9Ik0xMDI3IDE4NXY0Mm0tMTgtMjFoMzYiIHN0cm9rZT0iIzY3Nzg0YyIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPGNpcmNsZSBjeD0iMTAyNyIgY3k9IjIwNiIgcj0iMTUiIHN0cm9rZT0iI2EyYTE2YiIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHBhdGggZD0ibTEwMjcgMjA2IDgtMTEiIHN0cm9rZT0iI2JiYmM4MiIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPGcgZmlsbD0iIzgxYWM1NSIgc3Ryb2tlPSIjMTAxZjE0IiBzdHJva2Utd2lkdGg9IjMiPjxjaXJjbGUgY3g9IjEwODAiIGN5PSIxODAiIHI9IjciLz48Y2lyY2xlIGN4PSIxMTA1IiBjeT0iMTgwIiByPSI3Ii8+PC9nPgogIDxjaXJjbGUgY3g9IjExMzAiIGN5PSIxODAiIHI9IjciIGZpbGw9IiM3YzYzMzkiIHN0cm9rZT0iIzEwMWYxNCIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgPHBhdGggZD0iTTEwNzMgMjA0aDYybS02MiA5aDYybS02MiA5aDYybS02MiA5aDYybS02MiA5aDYyIiBzdHJva2U9IiM2ODc5NGYiIHN0cm9rZS13aWR0aD0iMiIvPgogIDxyZWN0IHg9IjgwMCIgeT0iMzQ5IiB3aWR0aD0iOTciIGhlaWdodD0iMzQiIGZpbGw9IiNhMzlhNGQiIHN0cm9rZT0iIzFkMmMxZSIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgPHBhdGggZD0ibTgxOCAzNzQgMTEtMTkgMTEgMTlaIiBmaWxsPSIjMjUzNTIzIi8+CiAgPHBhdGggZD0iTTgyOSAzNjB2NyIgc3Ryb2tlPSIjYjhhZTViIiBzdHJva2Utd2lkdGg9IjIiLz48Y2lyY2xlIGN4PSI4MjkiIGN5PSIzNzEiIHI9IjEiIGZpbGw9IiNiOGFlNWIiLz4KICA8cGF0aCBkPSJNODQ5IDM1OWgzN20tMzcgN2gzN20tMzcgN2gyMyIgc3Ryb2tlPSIjMzQ0MTI2IiBzdHJva2Utd2lkdGg9IjIiLz4KICA8Zz48dXNlIGhyZWY9IiN2LXJpdmV0IiB4PSIxNyIgeT0iNDAiLz48dXNlIGhyZWY9IiN2LXJpdmV0IiB4PSIzMDAiIHk9IjQwIi8+PHVzZSBocmVmPSIjdi1yaXZldCIgeD0iNDU1IiB5PSI0MCIvPjx1c2UgaHJlZj0iI3Ytcml2ZXQiIHg9Ijg1MCIgeT0iNDAiLz48dXNlIGhyZWY9IiN2LXJpdmV0IiB4PSI5NzAiIHk9IjQwIi8+PHVzZSBocmVmPSIjdi1yaXZldCIgeD0iMTE4MCIgeT0iNDAiLz48dXNlIGhyZWY9IiN2LXJpdmV0IiB4PSIxNyIgeT0iMjk0Ii8+PHVzZSBocmVmPSIjdi1yaXZldCIgeD0iMzAwIiB5PSIyOTQiLz48dXNlIGhyZWY9IiN2LXJpdmV0IiB4PSI5NzAiIHk9IjI5NCIvPjx1c2UgaHJlZj0iI3Ytcml2ZXQiIHg9IjExODAiIHk9IjI5NCIvPjwvZz4KICA8cGF0aCBkPSJNMCAwaDEyMDB2NDIwSDBaIiBzdHJva2U9IiMwYTE2MGUiIHN0cm9rZS13aWR0aD0iMTIiLz4KPC9zdmc+Cg==" alt="Ретрофутуристический терминал рядом с гермодверью"></div><div class="player-welcome-body"><div class="player-kicker">ГОТОВ К СЛЕДУЮЩЕМУ ХОДУ</div><h2 class="player-title">История открывается за столом.</h2><p>Здесь хранятся твои записи и инструменты для игры. Добавляй то, что узнал во время встречи, и возвращайся к заметкам перед следующей.</p><div class="player-home-actions"><a class="button primary" href="#dice">Бросить кубик ↗</a><a class="button ghost" href="#notes">Сделать заметку ↗</a></div></div></section><section class="panel player-profile-summary"><div class="panel-header"><h2 class="panel-title">Мой персонаж</h2><a class="text-button" href="#character">Заполнить ↗</a></div><div class="player-profile-summary-body"><div class="player-summary-label">ИМЯ В АРХИВЕ</div><h2 class="player-summary-name">${esc(p.name)||'Пока без имени'}</h2><p class="muted">${esc(p.concept)||'Перенеси имя и характеристики из своего игрового листа.'}</p><div class="player-summary-stats">${SPECIAL.map(([k,n])=>`<div class="player-summary-stat" title="${n}"><small>${k}</small><strong>${p.special[k]}</strong></div>`).join('')}</div><p class="player-local-notice">${player.notes.length} личных заметок. Записи видны только в твоём браузере.</p></div></section></div><div class="player-tools"><a class="panel" href="#character">${icon('character')}<strong>Твой персонаж</strong><span>Характеристики, навыки и состояние.</span><b>↗</b></a><a class="panel" href="#notes">${icon('notes')}<strong>Твоя память</strong><span>Имена, обещания и собственные наблюдения.</span><b>↗</b></a><a class="panel" href="#dice">${icon('dice')}<strong>Твой шанс</strong><span>d4, d6, d8, d10, d12, d20 и d100.</span><b>↗</b></a></div><div class="banner"><strong>Личный архив.</strong> У каждого участника свои записи. Для переноса на другое устройство скачай копию данных в разделе «Справка».</div>`;}
 function inputField(name,label,value='',type='input'){return `<div class="field"><label class="field-label" for="p-${name}">${label}</label>${type==='textarea'?`<textarea class="textarea" id="p-${name}" name="${name}" rows="4" maxlength="30000">${esc(value)}</textarea>`:`<input class="input" id="p-${name}" name="${name}" maxlength="300" value="${esc(value)}">`}</div>`;}
 function character(){return playerSheetPage();}
-window.playerClearCharacter=()=>{const notes=player.notes;window.playerSheetResetProgress?.();player=initial();player.notes=notes;persistedCharacter=characterSnapshot(player);resetCharacterStorage=true;save();resetCharacterStorage=false;closeModal();render();window.dispatchEvent(new CustomEvent('niti:character-cleared'));};
+window.playerClearCharacter=()=>{const notes=player.notes;window.playerSheetResetProgress?.();player=initial();player.notes=notes;persistedCharacter=characterSnapshot(player);resetCharacterStorage=true;identityAuthored=false;acceptedIdentitySignature=JSON.stringify(publicIdentity());save();resetCharacterStorage=false;closeModal();render();window.dispatchEvent(new CustomEvent('niti:character-cleared'));};
 function notes(){return head('ТО, ЧТО ТЫ УЖЕ ЗНАЕШЬ','Мои заметки.','Записывай события, договорённости и вопросы, которые хочешь задать на следующей встрече.')+`<section class="panel player-notes-form"><form id="noteForm">${inputField('noteTitle','КОРОТКИЙ ЗАГОЛОВОК')}${inputField('noteText','ЗАПИСЬ','','textarea')}<button class="button primary" type="submit">Добавить заметку ↗</button></form></section><div class="player-note-list">${player.notes.map(n=>`<article class="panel player-note"><div class="card-top"><span class="muted">${esc(new Date(n.date).toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'}))}</span><div class="player-note-actions">${btn('Изменить','edit-note','ghost small',`data-id="${esc(n.id)}"`)}${btn('×','delete-note','ghost small',`data-id="${esc(n.id)}" aria-label="Удалить заметку"`)}</div></div><h2 class="card-title">${esc(n.title)||'Заметка'}</h2><p class="prewrap">${esc(n.text)}</p></article>`).join('')||'<div class="empty-state"><h3>Чистая страница.</h3><p>Первая запись появится здесь после сохранения.</p></div>'}</div>`;}
-function help(){return head('ПАМЯТКА УЧАСТНИКА','Всегда под рукой.','Личные инструменты и сохранения для твоей игры.')+`<div class="player-help-grid"><section class="panel"><h2 class="card-title">Проверки</h2><p>Характеристика: <strong>1d20 + (SPECIAL − 5)</strong>.<br>Навык: <strong>1d20 + значение навыка</strong>.</p><p>Навык и характеристика одновременно не складываются. Итог сравнивается с порогом, который задаёт ведущий. Особенности и снаряжение учитывайте по правилам вашей группы.</p><p class="muted">Кубики показывают результат броска. Условия успеха определяются за столом.</p></section><section class="panel"><h2 class="card-title">Цвет и экран</h2><p>В верхней панели доступны 10 оттенков терминала. Кнопка «ЭЛТ» включает и отключает декоративные полосы экрана.</p><p>Настройки сохраняются для этого браузера.</p></section><section class="panel"><h2 class="card-title">Личные сохранения</h2><p>Анкета и заметки хранятся на этом устройстве. С комнатой синхронизируются имя, исходный опыт и влияние особенности «Светоч», чтобы мастер мог повышать уровень. Миссия, полученный опыт и вещи хранятся на сервере. История кубиков ведётся отдельно.</p><p>Очистка данных браузера удаляет локальные записи. Скачай резервную копию перед переносом на другое устройство.</p><div class="player-data-actions">${btn('↓ Скачать мои данные','backup','primary')}${btn('↥ Восстановить копию','restore','ghost')}</div></section><section class="panel"><h2 class="card-title">Без интернета</h2><p>Скачай терминал одним HTML-файлом. Для переноса персонажа и заметок также сохрани и восстанови резервную копию.</p></section></div>`;}
-function render(){if(!pages.some(([id])=>id===view))view='home';$('#nav').innerHTML=pages.map(([id,name])=>`<a class="nav-item ${id===view?'active':''}" href="#${id}" ${id===view?'aria-current="page"':''}>${icon(id)}<span>${name}</span></a>`).join('');const name=pages.find(([id])=>id===view)[1];$('#crumb').textContent=name;document.title=name+' · Нити — игрок';$('#workspace').innerHTML=({home,session:playerSessionPage,character,inventory:playerInventoryPage,notes,dice:dicePage,help}[view])();$('#saveStatus').textContent=storageOK?'● Личные записи в браузере':'! Не сохранено · скачай копию';window.nitiAnimateNavigation?.(view);window.NitiDesign?.render(view);}
+function help(){return head('ПАМЯТКА УЧАСТНИКА','Всегда под рукой.','Личные инструменты и сохранения для твоей игры.')+`<div class="player-help-grid"><section class="panel"><h2 class="card-title">Проверки</h2><p>Характеристика: <strong>1d20 + (SPECIAL − 5)</strong>.<br>Навык: <strong>1d20 + значение навыка</strong>.</p><p>Навык и характеристика одновременно не складываются. Итог сравнивается с порогом, который задаёт ведущий. Особенности и снаряжение учитывайте по правилам вашей группы.</p><p class="muted">Кубики показывают результат броска. Условия успеха определяются за столом.</p></section><section class="panel"><h2 class="card-title">Цвет и экран</h2><p>В верхней панели доступны 10 оттенков терминала. Кнопка «ЭЛТ» включает и отключает декоративные полосы экрана.</p><p>Настройки сохраняются для этого браузера.</p></section><section class="panel"><h2 class="card-title">Личные сохранения</h2><p>Анкета и заметки хранятся на этом устройстве. В «Моём отряде» участники видят арт, имя, возраст, пол персонажа и имя владельца. Мастеру также передаются исходный опыт и влияние особенности «Светоч» для повышения уровня. Миссия, полученный опыт и вещи хранятся на сервере. История кубиков ведётся отдельно.</p><p>Очистка данных браузера удаляет локальные записи. Скачай резервную копию перед переносом на другое устройство.</p><div class="player-data-actions">${btn('↓ Скачать мои данные','backup','primary')}${btn('↥ Восстановить копию','restore','ghost')}</div></section><section class="panel"><h2 class="card-title">Без интернета</h2><p>Скачай терминал одним HTML-файлом. Для переноса персонажа и заметок также сохрани и восстанови резервную копию.</p></section></div>`;}
+function render(){if(!pages.some(([id])=>id===view))view='home';$('#nav').innerHTML=pages.map(([id,name])=>`<a class="nav-item ${id===view?'active':''}" href="#${id}" ${id===view?'aria-current="page"':''}>${icon(id)}<span>${name}</span></a>`).join('');const name=pages.find(([id])=>id===view)[1];$('#crumb').textContent=name;document.title=name+' · Нити — игрок';$('#workspace').innerHTML=({home,session:playerSessionPage,character,squad:playerSquadPage,inventory:playerInventoryPage,notes,dice:dicePage,help}[view])();$('#saveStatus').textContent=storageOK?'● Личные записи в браузере':'! Не сохранено · скачай копию';window.nitiAnimateNavigation?.(view);window.NitiDesign?.render(view);}
 function navigate(id){if(location.hash.slice(1)===id){view=id;render();}else location.hash=id;}
 window.addEventListener('hashchange',()=>{view=location.hash.slice(1);render();window.scrollTo(0,0);});
 function download(name,text){const url=URL.createObjectURL(new Blob([text],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}

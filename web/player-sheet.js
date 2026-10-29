@@ -29,6 +29,8 @@
   const TAG_FIELDS = new Set(SKILLS.map(([name]) => 'tag_' + name));
   const LONG_FIELDS = new Set(['perks', 'wounds', ...WEAPON_FIELDS.map(([name]) => name), ...ARMOR_FIELDS.map(([name]) => name)]);
   const RULES = window.PlayerCharacterRules;
+  const PORTRAIT_LIMIT = 32000;
+  let portraitBusy = false, portraitMessage = '', portraitError = false, portraitEpoch = 0;
   let saveTimer = 0;
   let selectedTrait = '';
   let selectedPerk = '';
@@ -54,10 +56,14 @@
     if (!Number.isSafeInteger(number)) return '';
     return number - 5 >= 0 ? '+' + (number - 5) : String(number - 5);
   }
+  function validPortrait(value) {
+    return typeof value==='string' && (value==='' || (value.length<=PORTRAIT_LIMIT && /^data:image\/(?:jpeg|png|webp);base64,[A-Za-z0-9+/]+={0,2}$/.test(value)));
+  }
   function validSheet(value) {
     return !!value && typeof value === 'object' && !Array.isArray(value) && value.version === 1
-      && Object.keys(value).every(name => name === 'version' || name === 'rules' || FIELD_SET.has(name))
+      && Object.keys(value).every(name => name === 'version' || name === 'rules' || name === 'portrait' || FIELD_SET.has(name))
       && FIELD_NAMES.every(name => ['tag_scavenging','skill_scavenging'].includes(name) && !Object.hasOwn(value,name) ? true : TAG_FIELDS.has(name) ? typeof value[name] === 'boolean' : typeof value[name] === 'string' && value[name].length <= limitFor(name))
+      && (!Object.hasOwn(value, 'portrait') || validPortrait(value.portrait))
       && (!Object.hasOwn(value, 'rules') || RULES.validMeta(value.rules));
   }
   function normalizeSheet(value, profile) {
@@ -75,6 +81,7 @@
         if (current !== undefined && current !== null) result[name] = String(current).slice(0, 40);
       }
     }
+    result.portrait = validPortrait(value?.portrait) ? value.portrait : '';
     result.rules = RULES.normalizeMeta(value?.rules, result);
     return result;
   }
@@ -179,7 +186,7 @@
   function sectionTitle(title, extra = '') { return `<div class="sheet-section-title"><h2>${title}</h2>${extra}</div>`; }
   function specialMarkup(sheet) {
     const result = calculation(sheet);
-    return `<section class="sheet-special-column" aria-label="S.P.E.C.I.A.L.">${SPECIAL_ROWS.map(([letter, name, label]) => `<div class="sheet-special"><span class="sheet-special-letter" aria-hidden="true">${letter}</span><label for="sheet-${name}"><span>${label} · база</span><input class="input sheet-special-input" type="text" inputmode="numeric" maxlength="40" id="sheet-${name}" name="${name}" data-sheet-field="${name}" value="${escapeText(sheet[name])}"></label><output class="sheet-special-effective" data-special-effective="${letter}">${result.special[letter]} итог</output><input class="input sheet-special-mod" readonly aria-readonly="true" id="sheet-${name}_modifier" aria-label="${label}: автоматический модификатор" data-special-mod="${letter}" value="${signed(result.modifiers[letter])}"></div>`).join('')}${allocationMarkup(sheet,result)}<p class="sheet-special-hint" data-special-budget>${specialBudget(result)}</p></section>`;
+    return `<section class="sheet-special-column" aria-label="S.P.E.C.I.A.L.">${SPECIAL_ROWS.map(([letter, name, label]) => `<div class="sheet-special"><span class="sheet-special-letter" aria-hidden="true">${letter}</span><label for="sheet-${name}"><span>${label} · база</span><input class="input sheet-special-input" type="text" inputmode="numeric" maxlength="40" id="sheet-${name}" name="${name}" data-sheet-field="${name}" value="${escapeText(sheet[name])}"></label><output class="sheet-special-effective" data-special-effective="${letter}" aria-label="${label}: значение с бонусами">${result.special[letter]}</output><input class="input sheet-special-mod" readonly aria-readonly="true" id="sheet-${name}_modifier" aria-label="${label}: автоматический модификатор" data-special-mod="${letter}" value="${signed(result.modifiers[letter])}"></div>`).join('')}${allocationMarkup(sheet,result)}<p class="sheet-special-hint" data-special-budget>${specialBudget(result)}</p></section>`;
   }
   function allocationMarkup(sheet=currentSheet(),result=calculation(sheet)) {
     const allocation=allocationState(sheet,result);
@@ -428,12 +435,86 @@
     });
     const submit=document.querySelector('#dialogForm button[type="submit"]');if(submit){submit.textContent='Удалить персонажа';submit.classList.add('danger');submit.classList.remove('primary');}
   }
+  function portraitMarkup(sheet=currentSheet()) {
+    const image=validPortrait(sheet.portrait) ? sheet.portrait : '';
+    return `<div class="sheet-portrait-frame ${image ? 'has-portrait' : ''}" aria-label="Арт персонажа, пропорции 10 на 15">${image ? `<img src="${escapeText(image)}" alt="Арт персонажа${sheet.name ? ': '+escapeText(sheet.name) : ''}" draggable="false">` : '<svg viewBox="0 0 80 100" fill="none" stroke="currentColor" aria-hidden="true"><path d="M7 7h66v86H7zM7 22h66M7 79h66M17 14h20m20 0h6"/><circle cx="40" cy="43" r="12"/><path d="M20 76v-4a20 20 0 0 1 40 0v4"/></svg><span>ЛИЧНОЕ ДЕЛО</span>'}<span class="sheet-portrait-format" aria-hidden="true">10 × 15</span></div><div class="sheet-portrait-copy"><span class="eyebrow">ФОТОАРХИВ · 2207</span><h2>Лицо твоей истории</h2><p>Добавь фото, арт или рисунок персонажа. Изображение целиком впишется в рамку 10×15.</p><div class="sheet-portrait-actions"><button type="button" class="button primary small" data-sheet-portrait-action="choose" ${portraitBusy ? 'disabled' : ''}>${portraitBusy ? 'Подготовка арта…' : image ? 'Заменить арт' : 'Добавить арт'}</button><button type="button" class="button ghost small" data-sheet-portrait-action="remove" ${!image || portraitBusy ? 'disabled' : ''}>Удалить арт</button></div><input class="sheet-portrait-file" id="sheetPortraitFile" type="file" accept="image/jpeg,image/png,image/webp" aria-label="Выбрать фото или арт персонажа"><small>JPG, PNG или WebP · до 12 МБ. Портрет увидит твой отряд.</small><p class="sheet-portrait-status ${portraitError ? 'is-error' : ''}" role="status" aria-live="polite">${escapeText(portraitMessage || 'Рамка сохраняет размер: поля анкеты остаются на своих местах.')}</p></div>`;
+  }
+  function refreshPortrait() {
+    const panel=document.querySelector('[data-sheet-portrait]');
+    if(panel)panel.innerHTML=portraitMarkup();
+  }
+  function publicPersona(sheet) {
+    if(!sheet) {
+      const accepted=window.playerAcceptedCharacter?.();
+      sheet=accepted?.sheet || normalizeSheet(null,accepted?.profile || {});
+    }
+    return {name:String(sheet.name || '').trim().slice(0,80),age:String(sheet.age || '').trim().slice(0,40),gender:String(sheet.gender || '').trim().slice(0,80),portrait:validPortrait(sheet.portrait) ? sheet.portrait : ''};
+  }
+  function portraitContext() {
+    const room=currentRoom();
+    return room?.self ? room.id+':'+room.self.id : 'local';
+  }
+  async function preparePortrait(file) {
+    if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw new Error('Выбери изображение JPG, PNG или WebP.');
+    if(!file.size || file.size>12*1024*1024)throw new Error('Изображение должно быть не больше 12 МБ.');
+    const bytes=new Uint8Array(await file.slice(0,16).arrayBuffer());
+    const png=[137,80,78,71,13,10,26,10].every((value,index)=>bytes[index]===value),jpeg=bytes[0]===255 && bytes[1]===216 && bytes[2]===255,webp=String.fromCharCode(...bytes.slice(0,4))==='RIFF' && String.fromCharCode(...bytes.slice(8,12))==='WEBP';
+    if(!png && !jpeg && !webp)throw new Error('Файл не похож на изображение JPG, PNG или WebP.');
+    let image,url='';
+    try {
+      if(typeof createImageBitmap==='function')image=await createImageBitmap(file,{imageOrientation:'from-image'});
+      else {url=URL.createObjectURL(file);image=new Image();image.src=url;await image.decode();}
+      const width=image.width || image.naturalWidth,height=image.height || image.naturalHeight;
+      if(!width || !height || width>16000 || height>16000 || width*height>48000000)throw new Error('Выбери изображение размером до 48 мегапикселей.');
+      const canvas=document.createElement('canvas'),context=canvas.getContext('2d');
+      if(!context)throw new Error('Браузер не может подготовить изображение.');
+      for(const size of [[480,720],[400,600],[320,480],[240,360],[180,270]]) {
+        const scale=Math.min(1,size[0]/width,size[1]/height);
+        canvas.width=Math.max(1,Math.round(width*scale));canvas.height=Math.max(1,Math.round(height*scale));
+        context.clearRect(0,0,canvas.width,canvas.height);context.drawImage(image,0,0,canvas.width,canvas.height);
+        for(const quality of [.82,.72,.62,.52]) {
+          const data=canvas.toDataURL('image/webp',quality);
+          if(validPortrait(data))return data;
+        }
+      }
+      throw new Error('Не удалось уменьшить изображение. Выбери другой файл или уменьши его размер.');
+    } finally {image?.close?.();if(url)URL.revokeObjectURL(url);}
+  }
+  async function setPortraitFile(file) {
+    const epoch=++portraitEpoch,identity=portraitContext();
+    portraitBusy=true;portraitMessage='Подготавливаю изображение…';portraitError=false;refreshPortrait();
+    try {
+      const data=await preparePortrait(file);
+      if(epoch!==portraitEpoch || identity!==portraitContext())return;
+      if(typeof window.playerSetPortrait!=='function')throw new Error('Сохранение арта пока недоступно. Обнови терминал.');
+      const result=await window.playerSetPortrait(data);
+      if(result?.saved!==true)throw new Error(result?.error || 'Не удалось сохранить арт в браузере. Попробуй ещё раз.');
+      portraitMessage='Арт сохранён. Он появится в карточке отряда.';
+    } catch(error) {if(epoch===portraitEpoch){portraitMessage=error?.message || 'Не удалось открыть изображение.';portraitError=true;}}
+    finally {if(epoch===portraitEpoch){portraitBusy=false;refreshPortrait();}}
+  }
+  document.addEventListener('click',async event=>{
+    const action=event.target.closest('[data-sheet-portrait-action]')?.dataset.sheetPortraitAction;
+    if(!action || portraitBusy)return;
+    if(action==='choose')document.getElementById('sheetPortraitFile')?.click();
+    if(action==='remove') {
+      const epoch=++portraitEpoch;portraitBusy=true;portraitError=false;refreshPortrait();
+      try {const result=await window.playerSetPortrait?.('');if(result?.saved!==true)throw new Error(result?.error || 'Не удалось удалить арт. Попробуй ещё раз.');portraitMessage='Арт удалён.';}
+      catch(error){portraitMessage=error?.message || 'Не удалось удалить арт.';portraitError=true;}
+      finally{if(epoch===portraitEpoch){portraitBusy=false;refreshPortrait();}}
+    }
+  });
+  document.addEventListener('change',event=>{
+    if(event.target.id!=='sheetPortraitFile')return;
+    const file=event.target.files?.[0];event.target.value='';if(file)setPortraitFile(file);
+  });
+  window.addEventListener('niti:character-cleared',()=>{portraitEpoch++;portraitBusy=false;portraitMessage='';portraitError=false;refreshPortrait();});
   function page() {
     const sheet = currentSheet();
     const result=applyCalculated(sheet);
     queueMicrotask(()=>{updateSessionParts();maybePromptPerk();});
     const heading = typeof head === 'function' ? head('ЛИЧНЫЙ ЛИСТ · ПРАВИЛА ПУСТОШИ', 'Мой персонаж.', 'Характеристики считаются по правилам. Обучение навыкам и текущее здоровье — под твоим контролем.') : '<h1>Мой персонаж.</h1>';
-    return heading + `<form class="panel fallout-sheet" id="falloutSheetForm"><div class="sheet-masthead"><div class="sheet-brand"><h2>Fallout</h2><small>ПЕРСОНАЛЬНОЕ ДЕЛО ВЫЖИВШЕГО</small></div><span class="sheet-document-id">S.P.E.C.I.A.L. // 2207<br>АВТОМАТИЧЕСКИЙ РАСЧЁТ ПО ПРАВИЛАМ</span></div><div class="sheet-top"><div class="sheet-identity">${field('name', 'Имя', sheet)}${field('gender', 'Пол', sheet)}${field('age', 'Возраст', sheet, {numeric:true})}</div><div class="sheet-combat-summary">${field('initiative', 'Инициатива · авто', sheet, {readonly:true})}${field('action_points', 'Очки действия · авто', sheet, {readonly:true,after:`<small data-movement-ap>${result.movementAP ? '+'+result.movementAP+' ОД только на передвижение' : 'Общие ОД на ход'}</small>`})}${field('armor_class', 'Класс брони · авто', sheet, {readonly:true})}${experienceMarkup(sheet,result)}${field('level', 'Уровень · авто', sheet, {readonly:true})}<label class="sheet-field" for="sheet-health-current"><span>Здоровье · текущее / максимум</span><span class="sheet-health-control"><input class="input" type="number" step="any" inputmode="decimal" id="sheet-health-current" data-health-current aria-label="Текущее здоровье" value="${result.currentHP===null?'':result.currentHP}"><output data-health-max>/ ${result.maxHP}</output></span><small>Максимум считается; текущее не лечится при повышении уровня.</small></label></div></div><div id="sheetAdvancement">${progressMarkup(sheet,result)}</div><div class="sheet-rule-notices" data-rules-warnings aria-live="polite">${warningsMarkup(result)}</div><div class="sheet-body">${specialMarkup(sheet)}<div class="sheet-notes-column"><section class="sheet-notebox sheet-traits" id="sheetTraits">${traitMarkup(sheet)}</section><section class="sheet-notebox sheet-perks" id="sheetPerks">${perkMarkup(sheet)}</section><section class="sheet-notebox sheet-wounds">${sectionTitle('Ранения')}${field('wounds', '<span class="sr-only">Ранения</span>', sheet, {multiline:true, rows:6})}</section>${legacyNotes()}</div>${skillsMarkup(sheet)}</div><div id="falloutSheetEquipment">${equipmentMarkup(sheet)}</div><details class="sheet-formulas"><summary>Как считается анкета</summary><p>Модификатор S.P.E.C.I.A.L. = итог − 5. Максимум здоровья = 15 + 3 × В + (уровень − 1) × В + бонусы. ОД = 5 + ⌊Л / 2⌋ + бонусы. Инициатива = Восприятие + d20; кубик бросается в игре.</p><p>КБ = КБ экипированной брони + бонус ловкости + постоянные бонусы. Без брони бонус равен ловкости; кожаная куртка — ⌊Л/2⌋, кожаная боевая куртка — ⌊Л/3⌋, кожаная броня — ⌊Л/4⌋, кожаная броня МК2 — ⌊Л/6⌋. «Камикадзе» исключает бонус ловкости к КБ и прибавляет ловкость к инициативе.</p><p>В таблице опыта: 1 — 200; 2 — 400; 3 — 800; 4 — 1400; 5 — 2200; 6 — 3200; 7 — 4400; 8 — 5800; 9 — 7400; 10 — 9100; 11 — 11000; 12 — 13100; 13 — 15400; 14 — 17900; 15 — 20600. Создание начинается с 1-го уровня: при 0–399 XP показан 1-й уровень. Выше 15-го формулы опыта в файле нет.</p><p>Стартовый опыт — уже полученная сумма. «Светоч» делит новый опыт сессии на два; округление в правилах не указано, поэтому сохраняется точная половина. Серверная запись опыта остаётся исходной.</p></details><div class="sheet-footer"><button class="button primary" type="submit">Сохранить анкету ↗</button><button type="button" class="button ghost small sheet-delete-character" data-sheet-progress-action="delete-character">Удалить персонажа</button><span class="sheet-save-status" id="falloutSheetSaveStatus" role="status">Изменения сохраняются автоматически в этом браузере.</span></div><p class="sheet-storage-note">Расчёты — по твоим «Правилам игры» и «Перкам». Лист и последний полученный опыт сохраняются в браузере и входят в резервную копию. Награды приходят с сервера автоматически.</p></form>`;
+    return heading + `<form class="panel fallout-sheet" id="falloutSheetForm"><div class="sheet-masthead"><div class="sheet-brand"><h2>Fallout</h2><small>ПЕРСОНАЛЬНОЕ ДЕЛО ВЫЖИВШЕГО</small></div><span class="sheet-document-id">S.P.E.C.I.A.L. // 2207<br>АВТОМАТИЧЕСКИЙ РАСЧЁТ ПО ПРАВИЛАМ</span></div><section class="sheet-portrait-panel" data-sheet-portrait aria-label="Арт персонажа">${portraitMarkup(sheet)}</section><div class="sheet-top"><div class="sheet-identity">${field('name', 'Имя', sheet)}${field('gender', 'Пол', sheet)}${field('age', 'Возраст', sheet, {numeric:true})}</div><div class="sheet-combat-summary">${field('initiative', 'Инициатива · авто', sheet, {readonly:true})}${field('action_points', 'Очки действия · авто', sheet, {readonly:true,after:`<small data-movement-ap>${result.movementAP ? '+'+result.movementAP+' ОД только на передвижение' : 'Общие ОД на ход'}</small>`})}${field('armor_class', 'Класс брони · авто', sheet, {readonly:true})}${experienceMarkup(sheet,result)}${field('level', 'Уровень · авто', sheet, {readonly:true})}<label class="sheet-field" for="sheet-health-current"><span>Здоровье · текущее / максимум</span><span class="sheet-health-control"><input class="input" type="number" step="any" inputmode="decimal" id="sheet-health-current" data-health-current aria-label="Текущее здоровье" value="${result.currentHP===null?'':result.currentHP}"><output data-health-max>/ ${result.maxHP}</output></span><small>Максимум считается; текущее не лечится при повышении уровня.</small></label></div></div><div id="sheetAdvancement">${progressMarkup(sheet,result)}</div><div class="sheet-rule-notices" data-rules-warnings aria-live="polite">${warningsMarkup(result)}</div><div class="sheet-body">${specialMarkup(sheet)}<div class="sheet-notes-column"><section class="sheet-notebox sheet-traits" id="sheetTraits">${traitMarkup(sheet)}</section><section class="sheet-notebox sheet-perks" id="sheetPerks">${perkMarkup(sheet)}</section><section class="sheet-notebox sheet-wounds">${sectionTitle('Ранения')}${field('wounds', '<span class="sr-only">Ранения</span>', sheet, {multiline:true, rows:6})}</section>${legacyNotes()}</div>${skillsMarkup(sheet)}</div><div id="falloutSheetEquipment">${equipmentMarkup(sheet)}</div><details class="sheet-formulas"><summary>Как считается анкета</summary><p>Модификатор S.P.E.C.I.A.L. = итог − 5. Максимум здоровья = 15 + 3 × В + (уровень − 1) × В + бонусы. ОД = 5 + ⌊Л / 2⌋ + бонусы. Инициатива = Восприятие + d20; кубик бросается в игре.</p><p>КБ = КБ экипированной брони + бонус ловкости + постоянные бонусы. Без брони бонус равен ловкости; кожаная куртка — ⌊Л/2⌋, кожаная боевая куртка — ⌊Л/3⌋, кожаная броня — ⌊Л/4⌋, кожаная броня МК2 — ⌊Л/6⌋. «Камикадзе» исключает бонус ловкости к КБ и прибавляет ловкость к инициативе.</p><p>В таблице опыта: 1 — 200; 2 — 400; 3 — 800; 4 — 1400; 5 — 2200; 6 — 3200; 7 — 4400; 8 — 5800; 9 — 7400; 10 — 9100; 11 — 11000; 12 — 13100; 13 — 15400; 14 — 17900; 15 — 20600. Создание начинается с 1-го уровня: при 0–399 XP показан 1-й уровень. Выше 15-го формулы опыта в файле нет.</p><p>Стартовый опыт — уже полученная сумма. «Светоч» делит новый опыт сессии на два; округление в правилах не указано, поэтому сохраняется точная половина. Серверная запись опыта остаётся исходной.</p></details><div class="sheet-footer"><button class="button primary" type="submit">Сохранить анкету ↗</button><button type="button" class="button ghost small sheet-delete-character" data-sheet-progress-action="delete-character">Удалить персонажа</button><span class="sheet-save-status" id="falloutSheetSaveStatus" role="status">Изменения сохраняются автоматически в этом браузере.</span></div><p class="sheet-storage-note">Расчёты — по твоим «Правилам игры» и «Перкам». Лист и последний полученный опыт сохраняются в браузере и входят в резервную копию. Награды приходят с сервера автоматически.</p></form>`;
   }
   function warningsMarkup(result) { return result.warnings.length ? result.warnings.map(text=>`<p class="sheet-warning">${escapeText(text)}</p>`).join('') : '<p class="sheet-rules-help">Постоянные бонусы особенностей и перков учтены в итогах.</p>'; }
   function scheduleSave() {
@@ -479,7 +560,7 @@
     const advancement=document.getElementById('sheetAdvancement');if(advancement){const markup=progressMarkup(sheet,result);if(advancement.innerHTML!==markup)advancement.innerHTML=markup;}
     const health=form.querySelector('[data-health-max]');if(health)health.textContent='/ '+result.maxHP;
     const movement=form.querySelector('[data-movement-ap]');if(movement)movement.textContent=result.movementAP ? '+'+result.movementAP+' ОД только на передвижение' : 'Общие ОД на ход';
-    for(const [letter] of SPECIAL_ROWS) {const effective=form.querySelector(`[data-special-effective="${letter}"]`),mod=form.querySelector(`[data-special-mod="${letter}"]`);if(effective)effective.textContent=result.special[letter]+' итог';if(mod)mod.value=signed(result.modifiers[letter]);}
+    for(const [letter] of SPECIAL_ROWS) {const effective=form.querySelector(`[data-special-effective="${letter}"]`),mod=form.querySelector(`[data-special-mod="${letter}"]`);if(effective)effective.textContent=String(result.special[letter]);if(mod)mod.value=signed(result.modifiers[letter]);}
     for(const [id] of SKILLS) {const total=form.querySelector(`[data-skill-total="${id}"]`),bonus=form.querySelector(`[data-skill-bonus="${id}"]`);if(total)total.textContent=signed(result.skills[id]);if(bonus)bonus.textContent=result.bonus[id] ? signed(result.bonus[id])+' от особенностей / перков' : 'Без постоянного бонуса';}
     const special=form.querySelector('[data-special-budget]');if(special)special.textContent=specialBudget(result);
     const skills=form.querySelector('[data-skill-budget]');if(skills)skills.textContent=skillBudget(result);
@@ -542,6 +623,8 @@
   window.addEventListener('pagehide',()=>{if(saveTimer)persist();});
   document.addEventListener('visibilitychange',()=>{if(document.hidden && saveTimer)persist();});
   window.playerRulesEffectivePerception=()=>calculation().special.P;
+  window.playerSheetValidPortrait = validPortrait;
+  window.playerSheetPublicPersona = publicPersona;
   window.playerSheetPage = page;
   window.playerSheetValid = validSheet;
   window.playerSheetNormalize = normalizeSheet;

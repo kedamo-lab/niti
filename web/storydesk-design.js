@@ -8,6 +8,7 @@
     scenes:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v5m8-5v5m-6 4 5 3-5 3Z"/>',
     character:'<circle cx="12" cy="7" r="3.5"/><path d="M4 21v-2a8 8 0 0 1 16 0v2M9 16l3 3 3-3"/>',
     characters:'<circle cx="9" cy="7" r="3"/><path d="M2.5 21v-2a6.5 6.5 0 0 1 13 0v2M16 4a3 3 0 0 1 0 6m2 4a6 6 0 0 1 3.5 5v2"/>',
+    squad:'<circle cx="9" cy="7" r="3"/><path d="M2 21v-2a7 7 0 0 1 14 0v2M17 4a3 3 0 0 1 0 6m2 4a6 6 0 0 1 3 5v2"/>',
     inventory:'<path d="M8 6V5a4 4 0 0 1 8 0v1M6 6h12l2 5v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-9l2-5Z"/><path d="M8 6v7h8V6M4 16h16m-9 0v3h2v-3"/>',
     threads:'<circle cx="5" cy="6" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="12" cy="19" r="2"/><path d="M5 8v2a4 4 0 0 0 4 4h6a4 4 0 0 0 4-4V8m-7 6v3"/>',
     secrets:'<path d="M3 10a12 12 0 0 1 18 0M5 7l-2-2m16 2 2-2M8 14v-2a4 4 0 0 1 8 0v2"/><rect x="6" y="14" width="12" height="8" rx="2"/><path d="M12 17v2"/>',

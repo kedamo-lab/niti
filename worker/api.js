@@ -1,7 +1,7 @@
 import { InventoryError, inventoryStatsPatch, inventoryEnsure, inventoryItems, inventoryEquipment, inventoryHistory, inventoryApply, inventoryDeleteCharacter } from './inventory.js';
 import { ITEM_CATALOG } from './item-catalog.js';
 // Durable, capability-based session API. Only explicitly public mission fields
-// and announced rewards ever enter this service; the GM module stays elsewhere.
+// announced rewards and public character dossiers enter this service; the GM module stays elsewhere.
 const TABLE = 'niti_rooms';
 const DEFAULT_ORIGINS = new Set([
   'https://niti-storydesk.vercel.app',
@@ -10,6 +10,8 @@ const DEFAULT_ORIGINS = new Set([
 ]);
 const encoder = new TextEncoder();
 const MAX_BODY = 32768;
+const PERSONA_MAX_BODY = 49152;
+const PERSONA_MAX_PORTRAIT = 32000;
 const MAX_PLAYERS = 20;
 const MAX_EVENTS = 400;
 // The level thresholds printed in the supplied rulebook (level one is the floor).
@@ -58,12 +60,12 @@ function equalHash(a, b) {
   return diff === 0;
 }
 
-async function body(request) {
+async function body(request, limit = MAX_BODY) {
   if (!(request.headers.get('content-type') || '').toLowerCase().startsWith('application/json')) {
     throw new ApiError(415, 'Нужен JSON.');
   }
   const declared = Number(request.headers.get('content-length'));
-  if (declared > MAX_BODY) throw new ApiError(413, 'Слишком большой запрос.');
+  if (declared > limit) throw new ApiError(413, 'Слишком большой запрос.');
   const reader = request.body?.getReader();
   const chunks = [];
   let length = 0;
@@ -72,7 +74,7 @@ async function body(request) {
       const part = await reader.read();
       if (part.done) break;
       length += part.value.byteLength;
-      if (length > MAX_BODY) {
+      if (length > limit) {
         await reader.cancel();
         throw new ApiError(413, 'Слишком большой запрос.');
       }
@@ -142,6 +144,75 @@ function playerRawXP(state, player) {
   return own.reduce((sum, event) => sum + event.xp, 0) + (player.characterXP || 0);
 }
 
+// This is the entire public dossier. Never spread a full character or inventory here.
+function squadMember(player) {
+  const persona = player.persona;
+  return {
+    id: player.id,
+    name: persona ? persona.name : player.name,
+    age: persona?.age || '', gender: persona?.gender || '',
+    portrait: persona?.portrait || '', ownerName: player.ownerName || '',
+  };
+}
+function personaPortrait(value) {
+  if (typeof value !== 'string' || value.length > PERSONA_MAX_PORTRAIT) throw new ApiError(400, 'Арт должен быть подготовленным изображением до 32 000 символов.');
+  if (value === '') return '';
+  const match = /^data:image\/(png|jpeg|webp);base64,([A-Za-z0-9+/]+={0,2})$/.exec(value);
+  if (!match || match[2].length % 4 !== 0) throw new ApiError(400, 'Используй изображение PNG, JPEG или WebP.');
+  let data;
+  try { data = Uint8Array.from(atob(match[2]), character => character.charCodeAt(0)); }
+  catch { throw new ApiError(400, 'Некорректное изображение.'); }
+  const ascii = (offset, length) => String.fromCharCode(...data.slice(offset, offset + length));
+  const view = new DataView(data.buffer);
+  let width = 0, height = 0;
+  if (match[1] === 'png' && data.length >= 45 && data[0] === 137 && ascii(1, 7) === 'PNG\r\n\x1a\n' && ascii(12, 4) === 'IHDR' && ascii(data.length - 8, 4) === 'IEND') {
+    width = view.getUint32(16); height = view.getUint32(20);
+  } else if (match[1] === 'jpeg' && data.length >= 12 && data[0] === 255 && data[1] === 216 && data[data.length - 2] === 255 && data[data.length - 1] === 217) {
+    let offset = 2;
+    while (offset + 4 <= data.length) {
+      if (data[offset++] !== 255) break;
+      while (data[offset] === 255) offset++;
+      const marker = data[offset++];
+      if (marker === 218 || marker === 217) break;
+      if (marker === 1 || marker >= 208 && marker <= 215) continue;
+      if (offset + 2 > data.length) break;
+      const length = view.getUint16(offset);
+      if (length < 2 || offset + length > data.length) break;
+      if ([192,193,194,195,197,198,199,201,202,203,205,206,207].includes(marker) && length >= 8) {
+        height = view.getUint16(offset + 3); width = view.getUint16(offset + 5); break;
+      }
+      offset += length;
+    }
+  } else if (match[1] === 'webp' && data.length >= 25 && ascii(0, 4) === 'RIFF' && ascii(8, 4) === 'WEBP' && view.getUint32(4, true) + 8 === data.length) {
+    const chunk = ascii(12, 4);
+    if (chunk === 'VP8X' && data.length >= 30) {
+      width = 1 + data[24] + (data[25] << 8) + (data[26] << 16);
+      height = 1 + data[27] + (data[28] << 8) + (data[29] << 16);
+    } else if (chunk === 'VP8L' && data[20] === 47) {
+      width = 1 + ((data[21] | data[22] << 8) & 16383);
+      height = 1 + ((data[22] >> 6 | data[23] << 2 | data[24] << 10) & 16383);
+    } else if (chunk === 'VP8 ' && data.length >= 30 && data[23] === 157 && data[24] === 1 && data[25] === 42) {
+      width = view.getUint16(26, true) & 16383; height = view.getUint16(28, true) & 16383;
+    }
+  }
+  if (!Number.isInteger(width) || !Number.isInteger(height) || width < 1 || height < 1 || width > 2000 || height > 3000 || width * height > 6000000) throw new ApiError(400, 'Не удалось прочитать изображение или его размер слишком велик.');
+  return value;
+}
+function personaPatch(input) {
+  const fields = {name:80,age:40,gender:80,ownerName:80};
+  if (!input || typeof input !== 'object' || Array.isArray(input) || Object.keys(input).some(field => field !== 'portrait' && !Object.hasOwn(fields, field))) throw new ApiError(400, 'В открытом досье допустимы только имя, возраст, пол, арт и имя игрока.');
+  const result = {};
+  for (const [field, value] of Object.entries(input)) {
+    if (field === 'portrait') result.portrait = personaPortrait(value);
+    else {
+      if (typeof value !== 'string') throw new ApiError(400, 'Поля открытого досье должны быть текстом.');
+      result[field] = text(value, fields[field], false);
+      if (/[\u0000-\u001f\u007f]/.test(result[field])) throw new ApiError(400, 'В открытом досье нужен однострочный текст.');
+    }
+  }
+  return result;
+}
+
 function characterView(state, player) {
   const rawXP = playerRawXP(state, player);
   const baseXP = player.character?.baseXP || 0;
@@ -159,7 +230,7 @@ function characterView(state, player) {
 
 function playerView(state, player) {
   return {
-    id: player.id, name: player.name,
+    id: player.id, name: player.name, ownerName: player.ownerName || '',
     xp: playerRawXP(state, player),
     character: characterView(state, player),
     inventory: inventoryItems(state, player.id),
@@ -181,6 +252,7 @@ function roomView(row, state, auth) {
     id: row.id, name: state.name, revision: row.revision,
     mission: state.mission, result: state.result,
     players: state.players.map(player => master ? playerView(state, player) : { id: player.id, name: player.name }),
+    squad: state.players.map(squadMember),
     sharedItems: inventoryItems(state, null),
     inventoryHistory: inventoryHistory(state, auth),
     completedMissions: state.completedMissions,
@@ -247,7 +319,7 @@ async function route(request, env, pathname) {
       .bind(roomId, masterHash, JSON.stringify(state), now, now).run();
     return { roomId, masterToken, room: roomView({ id: roomId, revision: 0 }, state, { role: 'master' }) };
   }
-  const match = /^\/api\/rooms\/([a-f0-9]{32})(?:\/(join|mission|result|inventory|characters))?$/.exec(pathname);
+  const match = /^\/api\/rooms\/([a-f0-9]{32})(?:\/(join|mission|result|inventory|characters|persona))?$/.exec(pathname);
   if (!match) throw new ApiError(404, 'Адрес не найден.');
   const [, roomId, action] = match;
 
@@ -272,7 +344,7 @@ async function route(request, env, pathname) {
       if (state.players.some(player => equalHash(player.tokenHash, tokenHash))) throw new ApiError(409, 'Ключ игрока уже использован.');
       if (state.players.length >= MAX_PLAYERS) throw new ApiError(409, 'В сессии уже 20 игроков.');
       const playerId = randomToken(12);
-      state.players.push({ id: playerId, name, tokenHash, joinHash, joinedAt: Date.now() });
+      state.players.push({ id: playerId, name, ownerName: name, persona:{name:'',age:'',gender:'',portrait:''}, tokenHash, joinHash, joinedAt: Date.now() });
       return { changed: true, auth: { role: 'player', playerId } };
     });
     return { roomId, playerId: mutation.auth.playerId, playerToken, duplicate: !!mutation.duplicate, room: roomView(mutation.row, mutation.state, mutation.auth) };
@@ -289,6 +361,26 @@ async function route(request, env, pathname) {
     masterOnly(auth);
     await env.DB.prepare(`DELETE FROM ${TABLE} WHERE id = ? AND master_hash = ?`).bind(roomId, row.master_hash).run();
     return { deleted: true };
+  }
+  if (action === 'persona' && request.method === 'POST') {
+    const input = await body(request, PERSONA_MAX_BODY);
+    if (Object.keys(input).some(field => field !== 'persona')) throw new ApiError(400, 'Некорректное действие с открытым досье.');
+    const patch = personaPatch(input.persona);
+    const mutation = await mutate(env, roomId, async (row, state) => {
+      const auth = await authenticate(request, row, state);
+      if (auth.role !== 'player') throw new ApiError(403, 'Открытое досье меняет только его владелец.');
+      const player = state.players.find(member => member.id === auth.playerId);
+      const previous = player.persona || {name:player.name,age:'',gender:'',portrait:''};
+      const persona = {...previous};
+      for (const field of ['name','age','gender','portrait']) if (Object.hasOwn(patch, field)) persona[field] = patch[field];
+      const ownerName = Object.hasOwn(patch, 'ownerName') ? patch.ownerName : player.ownerName || '';
+      if (JSON.stringify(previous) === JSON.stringify(persona) && (player.ownerName || '') === ownerName && player.persona) return {changed:false,auth};
+      player.persona = persona; player.ownerName = ownerName;
+      // Preserve the GM's existing character labels without using them as owner names.
+      if (persona.name) player.name = persona.name;
+      return {changed:true,auth};
+    });
+    return {room:roomView(mutation.row, mutation.state, mutation.auth)};
   }
   if (action === 'characters' && request.method === 'POST') {
     const input = await body(request);
