@@ -186,7 +186,7 @@ button,input,textarea,select{font-family:var(--sans)}
 .sheet-special{border-radius:var(--niti-small-radius);border-color:var(--line);padding:11px 12px;background:var(--paper)}
 .sheet-special-letter{font-family:var(--niti-mono);font-size:25px;color:var(--green)}
 .sheet-special-input{font-family:var(--niti-mono);font-variant-numeric:tabular-nums}
-.sheet-special-effective,.sheet-special-mod{font-family:var(--niti-mono);font-size:10px}
+.sheet-special-mod{font-family:var(--niti-mono);font-size:10px}
 .sheet-rule-card,.sheet-rule-preview,.sheet-advancement,.sheet-special-allocation{border-radius:var(--niti-small-radius)}
 .sheet-rule-card strong,.sheet-section-title h2{font-family:var(--sans);font-size:14px;font-weight:650;letter-spacing:0}
 .sheet-rule-card p,.sheet-rules-help,.sheet-storage-note{font-family:var(--sans);line-height:1.8}
@@ -330,7 +330,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
   .sheet-special-letter{font-size:23px}
   .sheet-special label>span{font-size:10px}
   .sheet-special-input{font-size:18px}
-  .sheet-special-effective,.sheet-special-mod{font-size:9px}
+  .sheet-special-mod{font-size:9px}
   .sheet-skill-row>label{font-size:11px;line-height:1.5}
   .sheet-skill-total{font-size:12px}
   .sheet-rule-card p{font-size:12px;line-height:1.8}

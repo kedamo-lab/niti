@@ -140,7 +140,7 @@ a,button,input,textarea,select{font-family:var(--sans)}button:focus-visible,a:fo
 .sheet-rule-notices{margin:0 0 20px;padding:11px 14px;border:1px dashed var(--line)}
 .sheet-rule-notices p:last-child{margin-bottom:0}.sheet-warning{font-size:10px;line-height:1.8;color:var(--terminal-accent);margin:0 0 8px;overflow-wrap:anywhere}
 .sheet-special-column{grid-template-rows:repeat(7,minmax(127px,1fr)) auto}
-.sheet-special{padding-bottom:25px}.sheet-special-effective{grid-column:2;color:var(--green);font-size:9px;line-height:1.8;text-align:center;overflow-wrap:anywhere}
+.sheet-special{padding-bottom:25px}
 .sheet-special-hint{grid-row:auto;align-self:start}.fallout-sheet .input[readonly]{color:var(--green);background:var(--card);cursor:default}
 .sheet-health-control{display:flex;align-items:center;gap:9px;min-width:0}.sheet-health-control .input{flex:1;min-width:0}.sheet-health-control output{color:var(--green);font-size:15px;white-space:nowrap}.sheet-field>small{color:var(--muted);font-size:8px;line-height:1.8}
 .sheet-skill-row{grid-template-columns:22px minmax(0,1fr) 54px 36px;gap:7px;min-height:52px}.sheet-skill-row>label{font-size:10px}.sheet-skill-row>label>small{display:block;font-size:8px;font-weight:400;color:var(--muted);line-height:1.7}.sheet-skill-total{font-size:14px;font-weight:700;color:var(--green);text-align:right}.sheet-skills-column>.sheet-rules-help{margin-top:12px}
@@ -152,9 +152,9 @@ a,button,input,textarea,select{font-family:var(--sans)}button:focus-visible,a:fo
 .sheet-thief-config{border:1px dashed var(--line);padding:10px;margin:13px 0 0;min-width:0;color:var(--muted);font-size:9px;line-height:1.8}.sheet-thief-config legend{color:var(--terminal-accent);font-size:9px}.sheet-thief-config>label:first-of-type{display:grid;gap:6px}.sheet-thief-skill{display:flex;align-items:center;gap:7px;margin-top:8px;font-size:9px}.sheet-thief-skill input{accent-color:var(--green)}
 .sheet-formulas{border:1px solid var(--line);padding:14px 16px;margin-top:22px;font-size:10px;line-height:1.9;color:var(--muted)}.sheet-formulas p{margin:11px 0 0;overflow-wrap:anywhere}
 @media(max-width:1250px) and (min-width:1101px){.sheet-body{grid-template-columns:minmax(115px,130px) minmax(200px,230px) minmax(0,1fr)}.sheet-skill-row{grid-template-columns:18px minmax(0,1fr) 44px 29px;gap:5px}.sheet-skill-row>label{font-size:9px}.sheet-skill-row>label>small{font-size:7px}.sheet-skill-total{font-size:12px}}
-@media(max-width:1100px){.sheet-special-column{grid-template-rows:auto auto}.sheet-special-column .sheet-special-hint{grid-column:1/-1}.sheet-special{min-height:164px}.sheet-special-effective{font-size:9px}.sheet-notes-column{align-self:start}}
+@media(max-width:1100px){.sheet-special-column{grid-template-rows:auto auto}.sheet-special-column .sheet-special-hint{grid-column:1/-1}.sheet-special{min-height:164px}.sheet-notes-column{align-self:start}}
 @media(max-width:680px){.sheet-special-column{grid-template-rows:auto}.sheet-special{min-height:160px}.sheet-skill-row{grid-template-columns:21px minmax(0,1fr) 52px 35px;gap:7px;min-height:56px}.sheet-skill-row>label{font-size:11px}.sheet-skill-row>label>small{font-size:8px}.sheet-skill-total{font-size:16px}.fallout-sheet select.input{font-size:16px;min-height:44px}.sheet-rule-card p,.sheet-rule-card small,.sheet-rule-preview,.sheet-rules-help{font-size:10px}.sheet-rule-card strong,.sheet-catalog>summary,.sheet-formulas>summary{font-size:11px}.sheet-rule-preview .button{font-size:11px;min-height:42px}.sheet-rule-remove{min-width:34px;height:34px}.sheet-perks>.sheet-field>.textarea{font-size:16px;min-height:100px}.sheet-rule-notices{padding:11px}.sheet-formulas{padding:13px;font-size:10px}.sheet-thief-skill{font-size:11px;min-height:27px}.sheet-thief-skill input{width:18px;height:18px}.sheet-special-hint{font-size:9px}.sheet-health-control output{font-size:16px}}
-@media print{.sheet-rule-remove,.sheet-rule-rank,.sheet-catalog,.sheet-formulas{display:none}.sheet-special-effective{color:#111}.sheet-rules-help,.sheet-rule-card p{font-size:8px}.sheet-skill-row{grid-template-columns:16px minmax(0,1fr) 35px 25px;gap:5px}.sheet-special-column{grid-template-rows:repeat(7,minmax(100px,1fr)) auto}}
+@media print{.sheet-rule-remove,.sheet-rule-rank,.sheet-catalog,.sheet-formulas{display:none}.sheet-rules-help,.sheet-rule-card p{font-size:8px}.sheet-skill-row{grid-template-columns:16px minmax(0,1fr) 35px 25px;gap:5px}.sheet-special-column{grid-template-rows:repeat(7,minmax(100px,1fr)) auto}}
 
 /* Earned experience stays visible; the editable starting amount is a secondary control. */
 .fallout-sheet .sheet-xp-total{font-size:25px;font-weight:700;letter-spacing:-.5px;color:var(--terminal-bright);border-color:var(--green)}
@@ -182,8 +182,8 @@ a,button,input,textarea,select{font-family:var(--sans)}button:focus-visible,a:fo
 .sheet-portrait-format{position:absolute;bottom:10px;left:10px;z-index:3;font-size:8px;letter-spacing:1px;padding:3px 6px;color:var(--green);background:var(--paper);border:1px solid var(--line)}
 .sheet-portrait-copy{min-width:0;align-self:center}.sheet-portrait-copy>.eyebrow{font-size:8px;color:var(--terminal-accent);letter-spacing:1.3px}.sheet-portrait-copy>h2{margin:9px 0 10px;font:600 21px/1.3 var(--sans);color:var(--terminal-bright);letter-spacing:-.3px}.sheet-portrait-copy>p{font-size:11px;line-height:1.9;max-width:480px;color:var(--muted);margin:0 0 16px}.sheet-portrait-copy>small{display:block;font-size:9px;line-height:1.8;color:var(--muted);margin:12px 0 0}.sheet-portrait-actions{display:flex;gap:10px;flex-wrap:wrap}.sheet-portrait-actions .button{white-space:normal;line-height:1.7;min-height:38px}.sheet-portrait-actions .button:disabled{opacity:.5;cursor:default}
 .sheet-portrait-file{display:none!important}.sheet-portrait-copy>.sheet-portrait-status{min-height:38px;font-size:10px;line-height:1.8;color:var(--green);margin:12px 0 0;max-width:550px}.sheet-portrait-status.is-error{color:var(--terminal-accent)}
-.sheet-special-effective{display:grid;place-items:center;justify-self:center;width:27px;height:27px;min-width:27px;min-height:27px;border:1px solid var(--line);border-radius:50%;font-size:11px!important;line-height:1;background:var(--card);overflow:hidden}
-@media(max-width:680px){.sheet-portrait-panel{padding:15px;gap:18px;grid-template-columns:120px minmax(0,1fr);align-items:start}.sheet-portrait-frame{width:120px;height:180px}.sheet-portrait-copy>h2{font-size:18px;line-height:1.45}.sheet-portrait-copy>.eyebrow{font-size:7px;line-height:1.8}.sheet-portrait-copy>p{font-size:10px;margin-bottom:12px;line-height:1.8}.sheet-portrait-actions{gap:8px}.sheet-portrait-actions .button{font-size:10px;width:100%;padding:8px}.sheet-portrait-copy>small{font-size:8px}.sheet-portrait-copy>.sheet-portrait-status{font-size:9px}.sheet-special-effective{flex:0 0 27px;align-self:center}}
+
+@media(max-width:680px){.sheet-portrait-panel{padding:15px;gap:18px;grid-template-columns:120px minmax(0,1fr);align-items:start}.sheet-portrait-frame{width:120px;height:180px}.sheet-portrait-copy>h2{font-size:18px;line-height:1.45}.sheet-portrait-copy>.eyebrow{font-size:7px;line-height:1.8}.sheet-portrait-copy>p{font-size:10px;margin-bottom:12px;line-height:1.8}.sheet-portrait-actions{gap:8px}.sheet-portrait-actions .button{font-size:10px;width:100%;padding:8px}.sheet-portrait-copy>small{font-size:8px}.sheet-portrait-copy>.sheet-portrait-status{font-size:9px}}
 @media(max-width:420px){.sheet-portrait-panel{grid-template-columns:minmax(0,1fr);padding:17px;gap:16px}.sheet-portrait-frame{width:150px;height:225px;justify-self:center}.sheet-portrait-copy{text-align:center}.sheet-portrait-actions{justify-content:center}.sheet-portrait-actions .button{width:auto;flex:1 1 100px}.sheet-portrait-copy>p{max-width:none}.sheet-portrait-copy>.sheet-portrait-status{min-height:34px}}
 @media print{.sheet-portrait-panel{display:grid;grid-template-columns:100px minmax(0,1fr);padding:12px;gap:18px;break-inside:avoid}.sheet-portrait-frame{width:100px;height:150px}.sheet-portrait-actions,.sheet-portrait-copy>small,.sheet-portrait-status{display:none!important}.sheet-portrait-copy{text-align:left}.sheet-portrait-frame img{print-color-adjust:exact}.sheet-portrait-format{font-size:6px}}
 </style><style>/* The equipment and 8×8 pack follow the supplied inventory sheet. */
@@ -548,7 +548,7 @@ button,input,textarea,select{font-family:var(--sans)}
 .sheet-special{border-radius:var(--niti-small-radius);border-color:var(--line);padding:11px 12px;background:var(--paper)}
 .sheet-special-letter{font-family:var(--niti-mono);font-size:25px;color:var(--green)}
 .sheet-special-input{font-family:var(--niti-mono);font-variant-numeric:tabular-nums}
-.sheet-special-effective,.sheet-special-mod{font-family:var(--niti-mono);font-size:10px}
+.sheet-special-mod{font-family:var(--niti-mono);font-size:10px}
 .sheet-rule-card,.sheet-rule-preview,.sheet-advancement,.sheet-special-allocation{border-radius:var(--niti-small-radius)}
 .sheet-rule-card strong,.sheet-section-title h2{font-family:var(--sans);font-size:14px;font-weight:650;letter-spacing:0}
 .sheet-rule-card p,.sheet-rules-help,.sheet-storage-note{font-family:var(--sans);line-height:1.8}
@@ -692,7 +692,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
   .sheet-special-letter{font-size:23px}
   .sheet-special label>span{font-size:10px}
   .sheet-special-input{font-size:18px}
-  .sheet-special-effective,.sheet-special-mod{font-size:9px}
+  .sheet-special-mod{font-size:9px}
   .sheet-skill-row>label{font-size:11px;line-height:1.5}
   .sheet-skill-total{font-size:12px}
   .sheet-rule-card p{font-size:12px;line-height:1.8}
@@ -1795,7 +1795,7 @@ document.addEventListener('toggle',event=>{if(event.target.matches?.('.dice-opti
   function sectionTitle(title, extra = '') { return `<div class="sheet-section-title"><h2>${title}</h2>${extra}</div>`; }
   function specialMarkup(sheet) {
     const result = calculation(sheet);
-    return `<section class="sheet-special-column" aria-label="S.P.E.C.I.A.L.">${SPECIAL_ROWS.map(([letter, name, label]) => `<div class="sheet-special"><span class="sheet-special-letter" aria-hidden="true">${letter}</span><label for="sheet-${name}"><span>${label} · база</span><input class="input sheet-special-input" type="text" inputmode="numeric" maxlength="40" id="sheet-${name}" name="${name}" data-sheet-field="${name}" value="${escapeText(sheet[name])}"></label><output class="sheet-special-effective" data-special-effective="${letter}" aria-label="${label}: значение с бонусами">${result.special[letter]}</output><input class="input sheet-special-mod" readonly aria-readonly="true" id="sheet-${name}_modifier" aria-label="${label}: автоматический модификатор" data-special-mod="${letter}" value="${signed(result.modifiers[letter])}"></div>`).join('')}${allocationMarkup(sheet,result)}<p class="sheet-special-hint" data-special-budget>${specialBudget(result)}</p></section>`;
+    return `<section class="sheet-special-column" aria-label="S.P.E.C.I.A.L.">${SPECIAL_ROWS.map(([letter, name, label]) => `<div class="sheet-special"><span class="sheet-special-letter" aria-hidden="true">${letter}</span><label for="sheet-${name}"><span>${label} · база</span><input class="input sheet-special-input" type="text" inputmode="numeric" maxlength="40" id="sheet-${name}" name="${name}" data-sheet-field="${name}" value="${escapeText(sheet[name])}"></label><input class="input sheet-special-mod" readonly aria-readonly="true" id="sheet-${name}_modifier" aria-label="${label}: автоматический модификатор" data-special-mod="${letter}" value="${signed(result.modifiers[letter])}"></div>`).join('')}${allocationMarkup(sheet,result)}<p class="sheet-special-hint" data-special-budget>${specialBudget(result)}</p></section>`;
   }
   function allocationMarkup(sheet=currentSheet(),result=calculation(sheet)) {
     const allocation=allocationState(sheet,result);
@@ -2169,7 +2169,7 @@ document.addEventListener('toggle',event=>{if(event.target.matches?.('.dice-opti
     const advancement=document.getElementById('sheetAdvancement');if(advancement){const markup=progressMarkup(sheet,result);if(advancement.innerHTML!==markup)advancement.innerHTML=markup;}
     const health=form.querySelector('[data-health-max]');if(health)health.textContent='/ '+result.maxHP;
     const movement=form.querySelector('[data-movement-ap]');if(movement)movement.textContent=result.movementAP ? '+'+result.movementAP+' ОД только на передвижение' : 'Общие ОД на ход';
-    for(const [letter] of SPECIAL_ROWS) {const effective=form.querySelector(`[data-special-effective="${letter}"]`),mod=form.querySelector(`[data-special-mod="${letter}"]`);if(effective)effective.textContent=String(result.special[letter]);if(mod)mod.value=signed(result.modifiers[letter]);}
+    for(const [letter] of SPECIAL_ROWS) {const mod=form.querySelector(`[data-special-mod="${letter}"]`);if(mod)mod.value=signed(result.modifiers[letter]);}
     for(const [id] of SKILLS) {const total=form.querySelector(`[data-skill-total="${id}"]`),bonus=form.querySelector(`[data-skill-bonus="${id}"]`);if(total)total.textContent=signed(result.skills[id]);if(bonus)bonus.textContent=result.bonus[id] ? signed(result.bonus[id])+' от особенностей / перков' : 'Без постоянного бонуса';}
     const special=form.querySelector('[data-special-budget]');if(special)special.textContent=specialBudget(result);
     const skills=form.querySelector('[data-skill-budget]');if(skills)skills.textContent=skillBudget(result);
