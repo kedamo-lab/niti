@@ -186,6 +186,11 @@ a,button,input,textarea,select{font-family:var(--sans)}button:focus-visible,a:fo
 @media(max-width:680px){.sheet-portrait-panel{padding:15px;gap:18px;grid-template-columns:120px minmax(0,1fr);align-items:start}.sheet-portrait-frame{width:120px;height:180px}.sheet-portrait-copy>h2{font-size:18px;line-height:1.45}.sheet-portrait-copy>.eyebrow{font-size:7px;line-height:1.8}.sheet-portrait-copy>p{font-size:10px;margin-bottom:12px;line-height:1.8}.sheet-portrait-actions{gap:8px}.sheet-portrait-actions .button{font-size:10px;width:100%;padding:8px}.sheet-portrait-copy>small{font-size:8px}.sheet-portrait-copy>.sheet-portrait-status{font-size:9px}}
 @media(max-width:420px){.sheet-portrait-panel{grid-template-columns:minmax(0,1fr);padding:17px;gap:16px}.sheet-portrait-frame{width:150px;height:225px;justify-self:center}.sheet-portrait-copy{text-align:center}.sheet-portrait-actions{justify-content:center}.sheet-portrait-actions .button{width:auto;flex:1 1 100px}.sheet-portrait-copy>p{max-width:none}.sheet-portrait-copy>.sheet-portrait-status{min-height:34px}}
 @media print{.sheet-portrait-panel{display:grid;grid-template-columns:100px minmax(0,1fr);padding:12px;gap:18px;break-inside:avoid}.sheet-portrait-frame{width:100px;height:150px}.sheet-portrait-actions,.sheet-portrait-copy>small,.sheet-portrait-status{display:none!important}.sheet-portrait-copy{text-align:left}.sheet-portrait-frame img{print-color-adjust:exact}.sheet-portrait-format{font-size:6px}}
+
+/* Anchor each modifier to its value field, regardless of caption wrapping. */
+.fallout-sheet .sheet-special{row-gap:10px}
+.fallout-sheet .sheet-special>label{display:flex;flex-direction:column;gap:6px}
+.fallout-sheet .sheet-special-mod{position:static;inset:auto!important;grid-column:2;grid-row:2;justify-self:center;align-self:center;margin:0}
 </style><style>/* The equipment and 8×8 pack follow the supplied inventory sheet. */
 #playerInventoryRoot{min-width:0}
 .inv-stats .inv-range-rule{font-size:9px;line-height:1.8}.inv-stats .inv-range-rule dd{color:var(--terminal-accent)}
