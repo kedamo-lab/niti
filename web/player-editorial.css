@@ -1,0 +1,99 @@
+/* The player's archive shares the GM's editorial chassis; sheet geometry stays intact. */
+.sidebar-footer>a[href="#help"]{display:none}
+.sidebar-footer .text-button[data-player-action=backup]{display:inline-flex;align-items:center;gap:5px}
+.topbar .player-session-tag{font-size:7px;color:var(--muted);border:0;background:transparent;white-space:nowrap}
+.terminal-setting.player-audio-trigger{border-radius:2px;background:transparent;min-height:31px;height:31px}
+.player-audio-popover{border-radius:3px;background:var(--card);box-shadow:0 20px 80px #000c;max-height:min(70dvh,580px,calc(100dvh - 200px));overflow-y:auto}
+.player-editorial-hero .crimson-slogan h2{font-size:clamp(52px,6.1vw,92px);line-height:1.1;letter-spacing:-2px}
+.player-editorial-hero .crimson-current-name{overflow-wrap:anywhere;hyphens:auto}
+.player-editorial-hero .crimson-current-place{overflow-wrap:anywhere}
+.player-editorial-hero .crimson-control-top>span:last-child{white-space:nowrap}
+.player-editorial-hero .crimson-control-bottom{gap:18px}
+.player-editorial-hero .crimson-control-bottom>.text-button{display:inline-flex;align-items:center;gap:6px}
+.player-editorial-hero .crimson-control>.button{display:flex;gap:8px}
+.editorial-link-arrow{display:inline-block;vertical-align:middle;flex:0 0 14px;width:14px;height:14px}
+.player-editorial-hero .crimson-control-bottom>span{max-width:70px;line-height:1.8}
+.session-home-summary{margin:24px 0 0;padding:19px 22px;border:1px solid var(--line);border-left:3px solid var(--green);border-radius:3px;background:var(--card);box-shadow:none}
+.session-home-summary:hover{border-color:var(--green);background:var(--terminal-tint)}
+.session-home-summary .session-summary-icon{border-radius:2px;background:var(--terminal-tint);color:var(--green)}
+.session-home-summary .session-summary-arrow{color:var(--green)}
+.session-home-summary strong{color:var(--ink)}
+.player-editorial-section{padding-top:38px}
+.player-home-grid{grid-template-columns:minmax(0,1.35fr) minmax(280px,1fr);gap:20px;align-items:start}
+.player-welcome,.player-profile-summary{border-radius:3px;box-shadow:none}
+.player-vault{margin:0;height:240px;border:0;border-bottom:1px solid var(--line);border-radius:0;box-shadow:none;background:var(--paper)}
+.player-vault:after{inset:0;border:0;border-radius:0;opacity:.2}
+.player-welcome-body{padding:25px 23px}
+.player-welcome-body h2{font-family:var(--display);font-size:42px;font-weight:600;line-height:1.1;letter-spacing:-.8px;text-transform:uppercase;color:var(--green)}
+.player-welcome-body p{font-size:13px;line-height:1.8;color:var(--ink);max-width:570px}
+.player-kicker,.player-summary-label{color:var(--green);font-size:8px;line-height:1.8;letter-spacing:1.2px}
+.player-profile-summary{padding:0}
+.player-profile-summary-body{padding:25px 23px}
+.player-summary-name{font-family:var(--display);font-size:38px;font-weight:600;line-height:1.15;letter-spacing:-.7px;text-transform:uppercase;color:var(--green);overflow-wrap:anywhere}
+.player-summary-stats{border:1px solid var(--line);border-radius:2px;background:var(--paper);padding:18px 7px;margin:24px 0}
+.player-summary-stat strong{font-family:var(--display);font-size:30px;line-height:1.3;font-weight:600;color:var(--green)}
+.player-summary-stat small{font-family:var(--niti-mono);font-size:10px;color:var(--muted)}
+.player-local-notice{margin-top:20px;font-size:11px;color:var(--muted);line-height:1.8}
+.player-tools{gap:20px;margin:22px 0}
+.player-tools>a{border-radius:3px;box-shadow:none;padding:24px;min-height:168px;background:var(--card);border-color:var(--line)}
+.player-tools strong{font-family:var(--display);font-size:25px;line-height:1.2;letter-spacing:-.3px;text-transform:uppercase;color:var(--green)}
+.player-tools .icon{color:var(--green)}
+.player-tools span{font-size:12px;line-height:1.8;color:var(--muted)}
+.player-tools>a>b{color:var(--green)}
+.player-tools+a.banner,.player-tools~.banner{margin-top:0}
+.session-mission h2,.session-join-card h2,.session-connecting h2,.session-offline h2,.session-join-info h2{font-family:var(--display);font-weight:600;line-height:1.15;letter-spacing:-.6px;text-transform:uppercase;color:var(--green)}
+.session-mission h2{font-size:42px}
+.session-announced-result,.session-choices>li,.session-resolution-button,.session-resolution-stamp,.session-inventory,.session-experience,.session-party{border-radius:3px}
+.session-resolution-heading h3{font-family:var(--display);font-size:28px;line-height:1.2;letter-spacing:-.3px;text-transform:uppercase;color:var(--green)}
+.session-resolution-button{background:var(--paper);border-color:var(--line)}
+.session-resolution-button.is-selected{background:var(--terminal-tint)}
+.session-experience .session-xp-number strong{font-family:var(--display);font-weight:600;color:var(--green)}
+.fallout-sheet,.sheet-rule-card,.sheet-rule-preview,.sheet-advancement,.sheet-special-allocation,.sheet-portrait-panel{border-radius:3px}
+.sheet-brand h2{font-family:var(--display);font-weight:700;text-transform:uppercase;letter-spacing:-1px;color:var(--green)}
+.sheet-portrait-copy>h2{font-family:var(--display);font-weight:600;font-size:26px;line-height:1.25;letter-spacing:-.4px;color:var(--green)}
+.sheet-special{border-radius:3px}
+.inv-panel,.inv-detail,.inv-slot,.inv-stash-item,.inv-bag,.inv-detail-art,.inv-action-log{border-radius:3px}
+.inv-detail-name{font-family:var(--display)!important;line-height:1.2!important;letter-spacing:-.5px!important;text-transform:uppercase;color:var(--green)}
+.squad-card,.squad-owner-settings,.squad-archive-note{border-radius:3px}
+.squad-card-info h2{font-family:var(--display);font-weight:600;line-height:1.2;letter-spacing:-.4px;text-transform:uppercase;color:var(--green)}
+.player-notes-form,.player-note,.player-help-grid>.panel{border-radius:3px}
+.player-note h2,.player-note h3{font-family:var(--display);font-size:27px;line-height:1.2;letter-spacing:-.3px;text-transform:uppercase;color:var(--green)}
+@media(min-width:1700px){.player-editorial-hero .crimson-slogan h2{font-size:100px}}
+@media(max-width:1200px){.player-editorial-hero .crimson-slogan h2{font-size:6.2vw}.player-home-grid{gap:18px}.player-vault{height:220px}}
+@media(max-width:930px){
+  .player-editorial-hero .crimson-slogan h2{font-size:8.7vw;letter-spacing:-1.6px}
+  .player-editorial-hero .crimson-control-bottom{grid-row:4;align-self:end}
+  .player-editorial-hero .crimson-control>.button{grid-row:2/4}
+  .player-home-grid{grid-template-columns:1fr 1fr;gap:17px}.player-summary-name{font-size:31px}
+  .player-summary-stats{gap:2px;padding:16px 4px}.player-summary-stat strong{font-size:25px}
+  .player-vault{height:200px}.player-welcome-body{padding:23px 20px}.player-welcome-body h2{font-size:36px}
+  .player-profile-summary-body{padding:23px 20px}.player-tools{gap:14px}.player-tools>a{padding:22px 18px}.player-tools strong{font-size:23px}
+}
+@media(max-width:680px){
+  .sidebar-footer .text-button[data-player-action=backup]{display:none}
+  .topbar .player-session-tag{display:none}.player-audio-control{position:static}
+  .player-audio-popover{top:calc(100% + 8px);left:16px;right:16px;width:auto;max-width:calc(100vw - 32px);max-height:min(65dvh,520px,calc(100dvh - 200px));overflow-y:auto}
+  .player-editorial-hero .crimson-slogan{min-height:264px;padding-top:27px}
+  .player-editorial-hero .crimson-slogan h2{font-size:11.3vw;line-height:1.13;letter-spacing:-1.1px}
+  .player-editorial-hero .crimson-slogan>small{max-width:160px;font-size:5px;letter-spacing:.5px;margin-top:20px}
+  .player-editorial-hero .crimson-visual{height:264px}
+  .player-editorial-hero .crimson-sticker{top:203px}
+  .player-editorial-hero .crimson-control{padding:20px 16px}
+  .player-editorial-hero .crimson-control-bottom,.player-editorial-hero .crimson-control>.button{grid-row:auto}
+  .player-editorial-hero .crimson-control-bottom{padding-top:19px}
+  .player-editorial-hero .crimson-current-name{font-size:29px}
+  .session-home-summary{margin:20px 0 0;padding:17px 16px;gap:12px}.session-home-summary strong{font-size:12px;line-height:1.6}.session-home-summary small{font-size:10px;line-height:1.8}
+  .player-editorial-section{padding:31px 0 22px}.player-editorial-section h2{font-size:37px}.player-editorial-section span{font-size:6px;max-width:135px}
+  .player-home-grid{grid-template-columns:1fr;gap:17px}.player-vault{height:192px}
+  .player-welcome-body{padding:23px 18px}.player-welcome-body h2{font-size:36px}.player-welcome-body p{font-size:13px}
+  .player-profile-summary-body{padding:23px 18px}.player-summary-name{font-size:33px}.player-summary-stat strong{font-size:28px}.player-summary-stat small{font-size:9px}
+  .player-summary-stats{padding:17px 5px;margin:21px 0}
+  .player-tools{grid-template-columns:1fr;gap:12px;margin:18px 0}.player-tools>a{min-height:114px;padding:22px 44px 21px 65px;gap:7px}.player-tools strong{font-size:24px}.player-tools .icon{left:21px;top:25px}.player-tools span{font-size:12px}
+  .session-mission h2{font-size:33px}.session-resolution-heading h3{font-size:26px}.sheet-portrait-copy>h2{font-size:23px}
+}
+@media(max-width:370px){
+  .player-editorial-hero .crimson-slogan{min-height:244px}.player-editorial-hero .crimson-visual{height:244px}.player-editorial-hero .crimson-sticker{top:184px}
+  .player-editorial-hero .crimson-slogan h2{font-size:11.2vw;letter-spacing:-1px}.player-editorial-hero .crimson-current-name{font-size:27px}
+  .player-editorial-section h2{font-size:32px}.player-editorial-section span{font-size:5px;max-width:110px}.player-summary-stat strong{font-size:25px}
+}
+@media print{.player-editorial-hero,.player-editorial-section,.session-home-summary,.player-tools{display:none!important}.player-home-grid{display:block}.player-home-grid>.panel{margin-bottom:20px}.player-vault{display:none}.player-welcome-body h2,.player-summary-name{color:#111}}

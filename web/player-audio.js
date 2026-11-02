@@ -58,15 +58,19 @@
     menuOpen = true;
     const wrapper = document.getElementById('playerAudioControl');
     if (!wrapper) return;
-    wrapper.insertAdjacentHTML('beforeend', '<section id="playerAudioPopover" class="player-audio-popover" role="dialog" aria-labelledby="playerAudioTitle"><div class="player-audio-heading"><strong id="playerAudioTitle">СИГНАЛ ПОВЫШЕНИЯ</strong><button type="button" data-player-audio-action="close" aria-label="Закрыть настройки звука">×</button></div><p id="playerAudioStatus" role="status"></p><div class="player-audio-actions"><button type="button" class="button ghost small" data-player-audio-action="toggle" aria-pressed="true">Звук: включён</button><button type="button" class="button ghost small" data-player-audio-action="test">Проверить звук</button></div></section>');
+    document.body.insertAdjacentHTML('beforeend', '<section id="playerAudioPopover" class="player-audio-popover" role="dialog" aria-labelledby="playerAudioTitle"><div class="player-audio-heading"><strong id="playerAudioTitle">СИГНАЛ ПОВЫШЕНИЯ</strong><button type="button" data-player-audio-action="close" aria-label="Закрыть настройки звука">×</button></div><p id="playerAudioStatus" role="status"></p><div class="player-audio-actions"><button type="button" class="button ghost small" data-player-audio-action="toggle" aria-pressed="true">Звук: включён</button><button type="button" class="button ghost small" data-player-audio-action="test">Проверить звук</button></div></section>');
     updateControls();
     positionMenu();
+    document.querySelector('#playerAudioPopover button')?.focus({preventScroll:true});
   }
   function positionMenu() {
     const popover = document.getElementById('playerAudioPopover'), button = document.getElementById('playerAudioSettings');
     if (!popover || !button) return;
-    const anchor = button.getBoundingClientRect(), panel = popover.getBoundingClientRect();
+    // Body mounting keeps viewport coordinates independent of the sticky
+    // header's backdrop-filter containing block.
     popover.style.position = 'fixed'; popover.style.right = 'auto';
+    popover.style.width = Math.min(300, Math.max(0, window.innerWidth - 24)) + 'px';
+    const anchor = button.getBoundingClientRect(), panel = popover.getBoundingClientRect();
     popover.style.left = Math.max(12, Math.min(window.innerWidth - panel.width - 12, anchor.right - panel.width)) + 'px';
     popover.style.top = Math.max(12, Math.min(window.innerHeight - panel.height - 12, anchor.bottom + 11)) + 'px';
   }
@@ -156,7 +160,7 @@
   function trustedGesture(event) {
     if (!event.isTrusted || (event.type === 'keydown' && (event.repeat || event.ctrlKey || event.metaKey || event.altKey))) return;
     gestureReceived = true;
-    if (enabled) void unlock().then(() => { if (!event.target.closest?.('#playerAudioControl')) return flushPending(); });
+    if (enabled) void unlock().then(() => { if (!event.target.closest?.('#playerAudioControl,#playerAudioPopover')) return flushPending(); });
   }
   document.addEventListener('pointerdown', trustedGesture, {capture:true,passive:true});
   document.addEventListener('keydown', trustedGesture, true);
@@ -173,7 +177,7 @@
     } else if (action === 'test') {
       if (event.isTrusted) gestureReceived = true;
       void unlock().then(ready => { if (ready && chime()) message('Сигнал повышения уровня включён.'); updateControls(); });
-    } else if (menuOpen && !event.target.closest('#playerAudioControl')) closeMenu();
+    } else if (menuOpen && !event.target.closest('#playerAudioControl,#playerAudioPopover')) closeMenu();
   });
   document.addEventListener('keydown', event => { if (event.key === 'Escape' && menuOpen) { event.stopPropagation(); closeMenu(true); } });
   document.addEventListener('visibilitychange', () => {

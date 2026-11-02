@@ -17,7 +17,15 @@ export default {
     if (!['GET', 'HEAD'].includes(request.method)) {
       return new Response('Метод не поддерживается.', { status: 405, headers: { ...headers, allow: 'GET, HEAD' } });
     }
-    return new Response(request.method === 'HEAD' ? null : asset.body, {
+    let content = null;
+    if (request.method !== 'HEAD') {
+      if (asset.encoding === 'base64') {
+        const decoded = atob(asset.body);
+        content = new Uint8Array(decoded.length);
+        for (let index = 0; index < decoded.length; index++) content[index] = decoded.charCodeAt(index);
+      } else content = asset.body;
+    }
+    return new Response(content, {
       headers: { ...headers, 'content-type': asset.type },
     });
   },

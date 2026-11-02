@@ -1,17 +1,19 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#09110c">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#090809">
 <meta name="referrer" content="no-referrer"><meta name="description" content="Личный терминал игрока: персонаж, заметки и семь кубиков в ретрофутуристическом оформлении.">
 <title>Нити — терминал игрока</title>
 <link rel="icon" href="brand-mark.svg" type="image/svg+xml">
 <link rel="stylesheet" href="style.css"><link rel="stylesheet" href="fallout.css"><link rel="stylesheet" href="palette.css"><link rel="stylesheet" href="dice.css"><link rel="stylesheet" href="player.css"><link rel="stylesheet" href="player-session.css"><link rel="stylesheet" href="player-sheet.css"><link rel="stylesheet" href="player-inventory.css"><link rel="stylesheet" href="player-audio.css"><link rel="stylesheet" href="navigation-motion.css"><link rel="stylesheet" href="player-squad.css">
 <link rel="stylesheet" href="storydesk-design.css">
+<link rel="stylesheet" href="crimson.css"><link rel="stylesheet" href="player-editorial.css">
+<link rel="preload" href="fonts/oswald-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
 </head>
 <body>
 <div class="app-shell"><aside class="sidebar">
 <a class="brand" href="#home"><span class="brand-mark"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m32 6 23 13v26L32 58 9 45V19Zm0 0L19 39h26L32 6ZM9 19l36 20-13 19-13-19 36-20"/></svg></span><span>нити<small class="brand-sub">ТЕРМИНАЛ ИГРОКА</small></span></a>
-<div class="campaign-label">OLYMPUS 2207 · ЛИЧНЫЙ АРХИВ</div><nav id="nav" aria-label="Разделы"></nav>
+<div class="campaign-label"><span class="masthead-signal" aria-hidden="true"></span> OLYMPUS 2207 <span>/</span> ИГРОК</div><nav id="nav" aria-label="Разделы"></nav>
 <div class="sidebar-quote">«Твои решения.<br>Твои записи.<br>Твоя история.»<span>ЛИЧНЫЙ ТЕРМИНАЛ</span></div>
 <div class="sidebar-footer"><div id="saveStatus" class="save-status" role="status">● Личные записи в браузере</div><button type="button" class="text-button" data-player-action="backup">↓ Скачать мои данные</button><a class="text-button" href="niti-player-offline.html" download>↙ Терминал без интернета</a><a class="text-button" href="#help">Справка и сохранения ↗</a></div>
 </aside><main class="main"><header class="topbar"><div class="breadcrumbs"><span>ТЕРМИНАЛ ИГРОКА</span><span>/</span><strong id="crumb">На связи</strong></div><div class="top-actions"><div class="terminal-display-settings" aria-label="Настройки экрана"><button type="button" class="terminal-setting" id="phosphorSwitch">Цвет: зелёный</button><button type="button" class="terminal-setting" id="crtSwitch" aria-pressed="true">ЭЛТ: вкл</button></div><span class="tag player-session-tag">ЛИЧНЫЕ ДАННЫЕ</span></div></header><div id="workspace" class="workspace"></div><footer class="page-footer"><span>НИТИ // ТЕРМИНАЛ ИГРОКА</span><span>ЗАПИСИ ХРАНЯТСЯ НА ЭТОМ УСТРОЙСТВЕ</span></footer></main></div>
