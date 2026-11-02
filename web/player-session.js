@@ -13,6 +13,7 @@
   let characterSyncTimer = 0, characterSyncInFlight = false, characterSyncWanted = null, characterSyncLast = '';
   let personaSyncTimer=0,personaSyncInFlight=false,personaSyncWanted=null,personaSyncLast='',personaSyncError='';
   let requestedRoom = roomFromValue(new URLSearchParams(location.search).get('room') || '');
+  let choosingResult = null, choiceError = '', choiceErrorMission = '';
 
   function safeText(value) {
     return String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -83,20 +84,32 @@
   function itemList(items, emptyText, className) {
     return `<div class="session-item-list" ${className}>${Array.isArray(items) && items.length ? items.map(item => `<div class="session-item"><span aria-hidden="true">◇</span><strong>${safeText(item.name)}</strong><b>×${safeText(item.quantity)}</b></div>`).join('') : `<p class="session-empty-copy">${emptyText}</p>`}</div>`;
   }
+  function resolutionMarkup(room) {
+    const mission = room.mission;
+    if (!mission?.choiceVersion || !Array.isArray(mission.choices) || !mission.choices.length) return '';
+    const pending = choosingResult?.roomId === room.id && choosingResult.missionId === mission.id;
+    const complete = !!room.completedMissions?.[mission.id];
+    return `<section class="session-resolutions" aria-labelledby="session-resolution-title" aria-busy="${!!pending}"><div class="session-resolution-heading"><div><span class="eyebrow">РЕШЕНИЕ ОТРЯДА</span><h3 id="session-resolution-title">Что произошло?</h3></div><span class="session-resolution-stamp" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4v7a4 4 0 0 0 4 4h10m-5-5 5 5-5 5"/></svg></span></div><p class="session-resolution-help">Подтвердите только то, что уже произошло в игре. Выбор общий для отряда: награда и записи мастера обновятся автоматически. Неудачу отмечает мастер.</p><div class="session-resolution-list">${mission.choices.map((choice, index) => {
+      const selected = choice.selected === true || (room.events || []).some(event => event.missionId === mission.id && event.resultId === choice.id);
+      const available = typeof choice.available === 'boolean' ? choice.available : !complete;
+      const busy = pending && choosingResult.resultId === choice.id;
+      return `<button type="button" class="session-resolution-button ${selected ? 'is-selected' : ''}" data-session-action="choose-result" data-mission-id="${safeText(mission.id)}" data-result-id="${safeText(choice.id)}" data-choice-version="${safeText(mission.choiceVersion)}" aria-pressed="${selected}" ${selected || !available || pending || connection !== 'live' ? 'disabled' : ''}><span class="session-resolution-number" aria-hidden="true">${String(index + 1).padStart(2,'0')}</span><span class="session-resolution-copy"><strong>${safeText(choice.label)}</strong><small>${selected ? 'Подтверждено для отряда' : busy ? 'Сохраняем результат…' : !available ? 'Другой исход уже выбран' : 'Подтвердить результат'}</small></span><span class="session-resolution-check" aria-hidden="true">${selected ? '✓' : busy ? '…' : '↗'}</span></button>`;
+    }).join('')}</div><p class="session-resolution-status" data-session-choice-status role="status">${safeText(pending ? 'Результат сохраняется. Повторное нажатие не нужно.' : (choiceErrorMission === mission.id ? choiceError : '') || '')}</p></section>`;
+  }
   function missionMarkup(room) {
     const mission = room.mission;
     if (!mission) return `<section class="panel session-mission session-mission-waiting" data-session-mission><div class="session-signal-art" aria-hidden="true"><span>⌁</span><i></i><i></i><i></i></div><div class="eyebrow">КАНАЛ ВЕДУЩЕГО ОТКРЫТ</div><h2>Ждём следующую миссию.</h2><p>Как только ведущий выберет задание, оно появится здесь. Страницу обновлять не нужно.</p></section>`;
     const complete = !!room.completedMissions?.[mission.id];
     const result = room.result?.missionId === mission.id ? room.result : null;
-    return `<section class="panel session-mission ${complete ? 'is-complete' : ''}" data-session-mission><div class="session-section-label"><span class="eyebrow">${complete ? 'МИССИЯ ЗАВЕРШЕНА' : 'ПРЯМО СЕЙЧАС'}</span><span class="tag">${complete ? 'ВЫПОЛНЕНО ✓' : 'ЗАДАНИЕ ВЕДУЩЕГО'}</span></div><h2>${safeText(mission.title)}</h2><p class="session-description">${safeText(mission.description)}</p>${Array.isArray(mission.actions) && mission.actions.length ? `<div class="session-action-heading">ЧТО МОЖНО СДЕЛАТЬ</div><ol class="session-choices">${mission.actions.map((action, index) => `<li><span class="session-choice-number">${String(index + 1).padStart(2, '0')}</span><span>${safeText(action.label)}</span></li>`).join('')}</ol><p class="session-choice-hint">Выберите действие вместе с группой и сообщите ведущему.</p>` : ''}${result ? `<div class="session-announced-result"><span class="eyebrow">${result.complete ? 'ИТОГ МИССИИ' : 'СОБЫТИЕ'}</span><p>${safeText(result.summary)}</p></div>` : ''}</section>`;
+    return `<section class="panel session-mission ${complete ? 'is-complete' : ''}" data-session-mission><div class="session-section-label"><span class="eyebrow">${complete ? 'МИССИЯ ЗАВЕРШЕНА' : 'ПРЯМО СЕЙЧАС'}</span><span class="tag">${complete ? 'ВЫПОЛНЕНО ✓' : 'ЗАДАНИЕ ВЕДУЩЕГО'}</span></div><h2>${safeText(mission.title)}</h2><p class="session-description">${safeText(mission.description)}</p>${Array.isArray(mission.actions) && mission.actions.length ? `<div class="session-action-heading">ЧТО МОЖНО СДЕЛАТЬ</div><ol class="session-choices">${mission.actions.map((action, index) => `<li><span class="session-choice-number">${String(index + 1).padStart(2, '0')}</span><span>${safeText(action.label)}</span></li>`).join('')}</ol><p class="session-choice-hint">Обсудите действие с группой. Когда оно совершено, подтвердите доступный результат ниже.</p>` : ''}${resolutionMarkup(room)}${result ? `<div class="session-announced-result"><span class="eyebrow">${result.complete ? 'ИТОГ МИССИИ' : 'СОБЫТИЕ'}</span><p>${safeText(result.summary)}</p></div>` : ''}</section>`;
   }
   function eventsMarkup(events) {
     const list = Array.isArray(events) ? events.slice().reverse() : [];
-    return `<section class="panel session-history"><div class="panel-header"><h2 class="panel-title">Сигналы сессии</h2><span class="badge">${list.length}</span></div><div class="session-events" data-session-events>${list.length ? list.map(event => `<article class="session-event"><div class="session-event-top"><span>${event.complete ? 'МИССИЯ ЗАВЕРШЕНА' : 'СОБЫТИЕ'}</span><time>${safeText(shortTime(event.createdAt))}</time></div><p>${safeText(event.summary)}</p>${event.xp || event.items?.length ? `<div class="session-event-reward">${event.xp ? `<span>+${safeText(event.xp)} XP участникам события</span>` : ''}${event.items?.length ? `<span>${event.items.map(item => safeText(item.name) + ' ×' + safeText(item.quantity)).join(' · ')}</span>` : ''}</div>` : ''}</article>`).join('') : '<p class="session-empty-copy">Итоги и награды появятся здесь после решения ведущего.</p>'}</div></section>`;
+    return `<section class="panel session-history"><div class="panel-header"><h2 class="panel-title">Сигналы сессии</h2><span class="badge">${list.length}</span></div><div class="session-events" data-session-events>${list.length ? list.map(event => `<article class="session-event"><div class="session-event-top"><span>${event.complete ? 'МИССИЯ ЗАВЕРШЕНА' : 'СОБЫТИЕ'}</span><time>${safeText(shortTime(event.createdAt))}</time></div><p>${safeText(event.summary)}</p>${event.xp || event.items?.length ? `<div class="session-event-reward">${event.xp ? `<span>+${safeText(event.xp)} XP участникам события</span>` : ''}${event.items?.length ? `<span>${event.items.map(item => safeText(item.name) + ' ×' + safeText(item.quantity)).join(' · ')}</span>` : ''}</div>` : ''}</article>`).join('') : '<p class="session-empty-copy">Итоги и награды появятся здесь после подтверждения результата.</p>'}</div></section>`;
   }
   function roomMarkup(room) {
     const self = room.self || { name: access?.name || '', xp: 0, inventory: [] };
-    return `<div class="session-room-bar"><div><span class="eyebrow">ОБЩАЯ ИГРОВАЯ КОМНАТА</span><h2>${safeText(room.name)}</h2><span class="session-player-label">Игрок: ${safeText(self.ownerName || 'Не указано')} · Персонаж: ${safeText(self.name)}</span></div><div class="session-room-controls">${statusMarkup()}<button type="button" class="button ghost small" data-session-action="refresh">Обновить</button></div></div>${errorMarkup()}<div class="session-grid"><div class="session-main-column">${missionMarkup(room)}${eventsMarkup(room.events)}</div><aside class="session-side-column"><section class="panel session-experience"><span class="eyebrow">ТВОЙ ОПЫТ В СЕССИИ</span><div class="session-xp-number"><strong data-session-xp>${safeText(self.xp || 0)}</strong><span>XP</span></div><p>Начисляет ведущий за задания и повышение уровня. Опыт автоматически учитывается в анкете.</p><small>Награды сохраняются и приходят, даже если ты временно не в сети. Учитываются события после твоего вступления.</small></section><section class="panel session-inventory"><div class="panel-header"><h2 class="panel-title">Полученное снаряжение</h2></div>${itemList(self.inventory, 'Личные награды ещё не выданы.', 'data-session-personal-items')}<p class="session-card-hint"><a class="text-button" href="#inventory">Открыть инвентарь и экипировку ↗</a></p></section><section class="panel session-inventory"><div class="panel-header"><h2 class="panel-title">Общий тайник</h2><span class="tag">НА ГРУППУ</span></div>${itemList(room.sharedItems, 'Общая добыча пока не найдена.', 'data-session-shared-items')}<p class="session-card-hint"><a class="text-button" href="#inventory">Забрать вещи из тайника ↗</a></p></section><section class="panel session-party"><div class="panel-header"><h2 class="panel-title">Участники</h2><span class="badge">${room.players?.length || 0}</span></div><ul>${(room.players || []).map(member => `<li><span class="session-member-initial" aria-hidden="true">${safeText((member.name || '?').slice(0, 1))}</span><strong>${safeText(member.name)}</strong>${member.id === self.id ? '<small>ТЫ</small>' : ''}</li>`).join('')}</ul><p class="session-card-hint">Список вошедших в сессию; он не показывает присутствие в сети.</p></section></aside></div><div class="session-access-bar"><p>Доступ к этому персонажу сохранён в браузере. Скачай его для переноса на другое устройство.</p><div><button type="button" class="button ghost small" data-session-action="export">↓ Сохранить доступ</button><button type="button" class="button ghost small" data-session-action="leave">Отключиться</button></div></div>${leavePrompt ? `<div class="session-disconnect-confirm" role="alert"><p>Отключить этот браузер от сессии? Персонаж и награды останутся в комнате. Для возвращения сохрани доступ.</p><div><button type="button" class="button ghost small" data-session-action="export">Сохранить доступ</button><button type="button" class="button ghost small" data-session-action="leave-cancel">Остаться</button><button type="button" class="button danger small" data-session-action="leave-confirm">Отключиться</button></div></div>` : ''}`;
+    return `<div class="session-room-bar"><div><span class="eyebrow">ОБЩАЯ ИГРОВАЯ КОМНАТА</span><h2>${safeText(room.name)}</h2><span class="session-player-label">Игрок: ${safeText(self.ownerName || 'Не указано')} · Персонаж: ${safeText(self.name)}</span></div><div class="session-room-controls">${statusMarkup()}<button type="button" class="button ghost small" data-session-action="refresh">Обновить</button></div></div>${errorMarkup()}<div class="session-grid"><div class="session-main-column">${missionMarkup(room)}${eventsMarkup(room.events)}</div><aside class="session-side-column"><section class="panel session-experience"><span class="eyebrow">ТВОЙ ОПЫТ В СЕССИИ</span><div class="session-xp-number"><strong data-session-xp>${safeText(self.xp || 0)}</strong><span>XP</span></div><p>За подтверждённые результаты опыт начисляется автоматически. Мастер также может выдать награду. Опыт учитывается в анкете.</p><small>Награды сохраняются и приходят, даже если ты временно не в сети. Учитываются события после твоего вступления.</small></section><section class="panel session-inventory"><div class="panel-header"><h2 class="panel-title">Полученное снаряжение</h2></div>${itemList(self.inventory, 'Личные награды ещё не выданы.', 'data-session-personal-items')}<p class="session-card-hint"><a class="text-button" href="#inventory">Открыть инвентарь и экипировку ↗</a></p></section><section class="panel session-inventory"><div class="panel-header"><h2 class="panel-title">Общий тайник</h2><span class="tag">НА ГРУППУ</span></div>${itemList(room.sharedItems, 'Общая добыча пока не найдена.', 'data-session-shared-items')}<p class="session-card-hint"><a class="text-button" href="#inventory">Забрать вещи из тайника ↗</a></p></section><section class="panel session-party"><div class="panel-header"><h2 class="panel-title">Участники</h2><span class="badge">${room.players?.length || 0}</span></div><ul>${(room.players || []).map(member => `<li><span class="session-member-initial" aria-hidden="true">${safeText((member.name || '?').slice(0, 1))}</span><strong>${safeText(member.name)}</strong>${member.id === self.id ? '<small>ТЫ</small>' : ''}</li>`).join('')}</ul><p class="session-card-hint">Список вошедших в сессию; он не показывает присутствие в сети.</p></section></aside></div><div class="session-access-bar"><p>Доступ к этому персонажу сохранён в браузере. Скачай его для переноса на другое устройство.</p><div><button type="button" class="button ghost small" data-session-action="export">↓ Сохранить доступ</button><button type="button" class="button ghost small" data-session-action="leave">Отключиться</button></div></div>${leavePrompt ? `<div class="session-disconnect-confirm" role="alert"><p>Отключить этот браузер от сессии? Персонаж и награды останутся в комнате. Для возвращения сохрани доступ.</p><div><button type="button" class="button ghost small" data-session-action="export">Сохранить доступ</button><button type="button" class="button ghost small" data-session-action="leave-cancel">Остаться</button><button type="button" class="button danger small" data-session-action="leave-confirm">Отключиться</button></div></div>` : ''}`;
   }
   function joinMarkup() {
     if (!ONLINE) return `<section class="panel session-offline"><div class="eyebrow">ЛИЧНЫЕ ИНСТРУМЕНТЫ ДОСТУПНЫ</div><h2>Сессия работает в интернете.</h2><p>Открой онлайн-терминал по приглашению ведущего, чтобы получать миссии и награды. Персонаж, заметки и кубики в этом файле работают без соединения.</p></section>`;
@@ -195,6 +208,43 @@
     })();
     return requestInFlight;
   }
+  async function chooseResult(missionId, resultId, choiceVersion) {
+    if (choosingResult || !ONLINE || !hasCurrentAccess() || !snapshot?.self) return;
+    const mission = snapshot.mission;
+    if (mission?.id !== missionId || mission.choiceVersion !== choiceVersion) {
+      updateMounted(); notify('Сцена обновилась. Выбери результат из новой карточки.'); return;
+    }
+    const choice = mission.choices?.find(value => value.id === resultId);
+    if (!choice || choice.selected || choice.available === false) return;
+    const credential = access;
+    const pending = {roomId:credential.roomId, missionId, resultId};
+    choosingResult = pending; choiceError = ''; choiceErrorMission = missionId; updateMounted();
+    try {
+      const data = await api('/' + encodeURIComponent(credential.roomId) + '/choice', {
+        method:'POST', token:credential.playerToken, body:{missionId,resultId,choiceVersion}
+      });
+      if (access !== credential || currentRoomId() !== credential.roomId) return;
+      if (!data.room?.self) throw new Error('Не удалось получить подтверждение результата. Обнови сессию.');
+      if (!snapshot || data.room.revision >= snapshot.revision) snapshot = data.room;
+      connection = 'live'; connectionMessage = ''; lastSuccess = Date.now();
+      notify(data.duplicate ? 'Этот результат уже подтверждён. Награда учтена один раз.' : 'Результат подтверждён. Награда выдана, записи мастера обновляются.');
+    } catch (error) {
+      if (access !== credential) return;
+      if (error.code === 'CHARACTER_DELETED') { forgetDeletedCharacter(credential); return; }
+      // A reply can be lost after the transaction commits. Read its receipt
+      // before inviting a safe retry; the server remains the reward authority.
+      await refresh();
+      if (access !== credential) return;
+      const saved = snapshot?.events?.some(value => value.missionId === missionId && value.resultId === resultId);
+      if (saved) notify('Результат уже сохранён. Награда учтена один раз.');
+      else choiceError = error.name === 'AbortError'
+        ? 'Ответ задержался. Обнови сессию или повтори выбор: награда не начислится дважды.'
+        : error instanceof TypeError ? 'Нет связи с комнатой. Проверь интернет и повтори выбор.' : error.message || 'Не удалось сохранить результат. Проверь связь и повтори выбор.';
+    } finally {
+      if (choosingResult === pending) choosingResult = null;
+      if (access === credential) { updateMounted(); schedulePoll(); }
+    }
+  }
   async function join(form) {
     if (joining || !ONLINE) return;
     const fields = new FormData(form);
@@ -264,6 +314,8 @@
     const button = event.target.closest('[data-session-action]');
     if (!button) return;
     const action = button.dataset.sessionAction;
+    if (button.disabled) return;
+    if (action === 'choose-result') { void chooseResult(button.dataset.missionId,button.dataset.resultId,button.dataset.choiceVersion); return; }
     if (action === 'refresh') refresh();
     else if (action === 'rejoin') showJoinForm();
     else if (action === 'export') exportAccess();
@@ -271,7 +323,7 @@
     else if (action === 'leave') { leavePrompt = true; updateMounted(); }
     else if (action === 'leave-cancel') { leavePrompt = false; updateMounted(); }
     else if (action === 'leave-confirm') {
-      access = null; snapshot = null; requestedRoom = ''; lastSuccess = 0; connection = 'idle'; connectionMessage = ''; leavePrompt = false;
+      access = null; snapshot = null; requestedRoom = ''; lastSuccess = 0; connection = 'idle'; connectionMessage = ''; leavePrompt = false; choosingResult = null; choiceError = '';
       writeAccess(null); clearTimeout(pollingTimer);
       const url = new URL(location.href); url.searchParams.delete('room'); history.replaceState(null, '', url);
       const root = document.getElementById('playerSessionRoot'); if (root) root.innerHTML = joinMarkup();
@@ -291,6 +343,7 @@
       const data = JSON.parse(await file.text());
       if (data.kind !== 'niti-player-session-access' || data.version !== 1 || !validAccess(data.access)) throw new Error();
       if (!writeAccess(data.access)) { notify('Не удалось сохранить доступ в браузере.'); return; }
+      choosingResult = null; choiceError = '';
       access = { ...data.access }; requestedRoom = access.roomId; snapshot = null; lastSuccess = 0; connection = 'idle'; connectionMessage = '';
       const url = new URL(location.href); url.searchParams.set('room', access.roomId); url.hash = 'session'; history.replaceState(null, '', url);
       const root = document.getElementById('playerSessionRoot'); if (root) root.innerHTML = contentMarkup();
@@ -307,6 +360,7 @@
       return;
     }
     if (event.key !== ACCESS_KEY) return;
+    choosingResult = null; choiceError = '';
     access = readAccess(); snapshot = null; lastSuccess = 0; connection = 'idle'; connectionMessage = ''; requestedRoom = access?.roomId || requestedRoom;
     updateMounted(); refresh();
   });

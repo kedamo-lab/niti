@@ -10,6 +10,7 @@ const DEFAULT_ORIGINS = new Set([
 ]);
 const encoder = new TextEncoder();
 const MAX_BODY = 32768;
+const MISSION_MAX_BODY = 262144;
 const PERSONA_MAX_BODY = 49152;
 const PERSONA_MAX_PORTRAIT = 32000;
 const MAX_PLAYERS = 20;
@@ -118,6 +119,104 @@ function publicItems(input, state) {
     if (catalogId && !ITEM_CATALOG.some(entry => entry.id === catalogId)) throw new ApiError(400, 'Предмет не найден в каталоге.');
     return { id: key(item?.id), name: text(item.name, 180), quantity: integer(item.quantity, 1, 9999), recipientId, ...(catalogId ? { catalogId } : {}), ...(Object.hasOwn(item,'stats') ? {stats:inventoryStatsPatch(item.stats)} : {}) };
   });
+}
+
+// Resolution definitions are supplied only by the authenticated master. They are
+// stored separately from the public mission and copied into immutable events.
+function resolutionObject(input, allowed, message) {
+  if (!input || typeof input !== 'object' || Array.isArray(input) || Object.keys(input).some(field => !allowed.includes(field))) throw new ApiError(400, message);
+  return input;
+}
+
+function resolutionList(input, limit, map, message) {
+  if (!Array.isArray(input) || input.length > limit) throw new ApiError(400, message);
+  const values = input.map(map);
+  const ids = values.map(value => typeof value === 'string' ? value : value.id);
+  if (new Set(ids).size !== ids.length) throw new ApiError(400, message);
+  return values;
+}
+
+function resolutionEffects(input = {}) {
+  resolutionObject(input, ['flags','secrets','threads','relations','nextScenes'], 'Некорректные связи результата.');
+  const map = (field, limit, validate) => resolutionList(input[field] ?? [], limit, validate, 'Некорректные связи результата.');
+  return {
+    flags: map('flags', 100, value => {
+      resolutionObject(value, ['id','value'], 'Некорректный факт результата.');
+      if (!['yes','no','unknown'].includes(value.value)) throw new ApiError(400, 'Некорректное значение факта.');
+      return {id:key(value.id),value:value.value};
+    }),
+    secrets: map('secrets', 100, value => {
+      resolutionObject(value, ['id','revealed'], 'Некорректная тайна результата.');
+      if (typeof value.revealed !== 'boolean') throw new ApiError(400, 'Укажите раскрытие тайны.');
+      return {id:key(value.id),revealed:value.revealed};
+    }),
+    threads: map('threads', 100, value => {
+      resolutionObject(value, ['id','status'], 'Некорректная сюжетная нить.');
+      if (!['open','later','closed'].includes(value.status)) throw new ApiError(400, 'Некорректное состояние сюжетной нити.');
+      return {id:key(value.id),status:value.status};
+    }),
+    relations: map('relations', 200, value => {
+      resolutionObject(value, ['id'], 'Некорректная связь персонажей.');
+      return {id:key(value.id)};
+    }),
+    nextScenes: map('nextScenes', 60, value => key(value)),
+  };
+}
+
+function missionResolutions(input, mission, state) {
+  if (!Object.hasOwn(input, 'resolutions')) return null;
+  if (!mission) {
+    if (!Array.isArray(input.resolutions) || input.resolutions.length) throw new ApiError(400, 'Для результатов нужна миссия.');
+    return null;
+  }
+  const context = input.resolutionContext ?? {session:1,actions:mission.actions};
+  resolutionObject(context, ['session','actions'], 'Некорректный контекст сцены.');
+  const actions = resolutionList(context.actions, 60, action => {
+    resolutionObject(action, ['id','label'], 'Некорректное действие сцены.');
+    return {id:key(action.id,200),label:text(action.label,240)};
+  }, 'Некорректные действия сцены.');
+  const session = integer(context.session, 1, 1000000);
+  const resolutions = resolutionList(input.resolutions, 40, result => {
+    resolutionObject(result, ['id','label','summary','xp','items','complete','onceKey','xpScope','actionId','effects'], 'Некорректный результат сцены.');
+    if (typeof result.complete !== 'boolean') throw new ApiError(400, 'Укажите завершение сцены.');
+    const xpScope = result.xpScope ?? 'mission';
+    if (!['mission','event'].includes(xpScope) || (xpScope === 'event' && result.complete)) throw new ApiError(400, 'Некорректный способ начисления опыта.');
+    const actionId = key(result.actionId,200);
+    if (!actions.some(action => action.id === actionId)) throw new ApiError(400, 'Действие результата отсутствует в сцене.');
+    return {
+      id:key(result.id),label:text(result.label,240),summary:text(result.summary,2000),
+      xp:integer(result.xp,0,100000),items:publicItems(result.items ?? [],state),
+      complete:result.complete,onceKey:key(result.onceKey),xpScope,actionId,
+      effects:resolutionEffects(result.effects),
+    };
+  }, 'Некорректные результаты сцены.');
+  return {missionId:mission.id,session,actions,resolutions};
+}
+
+function resolutionSnapshot(config, result, actorId) {
+  return {
+    version:1,session:config.session,actionId:result.actionId,
+    actions:structuredClone(config.actions),effects:structuredClone(result.effects),
+    label:result.label,actorId,
+  };
+}
+
+function missionView(state) {
+  if (!state.mission) return null;
+  const config = state.resolutionConfig;
+  const current = config?.missionId === state.mission.id ? config : null;
+  return {
+    id:state.mission.id,title:state.mission.title,description:state.mission.description,
+    actions:state.mission.actions.map(action => ({id:action.id,label:action.label})),
+    choices:(current?.resolutions || []).map(result => {
+      const selected = state.events.some(event => event.missionId === state.mission.id && event.resultId === result.id);
+      const claimedKey = state.events.some(event => event.eventId === result.onceKey);
+      const completed = Object.hasOwn(state.completedMissions,state.mission.id);
+      const completionBlocked = completed && (result.complete || result.xp !== 0 || result.items.length === 0);
+      return {id:result.id,label:result.label,selected,available:!selected && !claimedKey && !completionBlocked};
+    }),
+    choiceVersion:current?.choiceVersion || '',
+  };
 }
 
 function mergeItems(items) {
@@ -247,10 +346,12 @@ function roomView(row, state, auth) {
     items: event.items.filter(item => master || item.recipientId === null || item.recipientId === auth.playerId),
     complete: event.complete, createdAt: event.createdAt,
     ...(master ? { recipients: event.recipients } : { awardedToSelf: event.recipients.includes(auth.playerId) }),
+    ...(master && event.resolution ? {resolution:structuredClone(event.resolution)} : {}),
+    ...(event.actorName ? {actorName:event.actorName} : {}),
   }));
   return {
     id: row.id, name: state.name, revision: row.revision,
-    mission: state.mission, result: state.result,
+    mission: missionView(state), result: state.result,
     players: state.players.map(player => master ? playerView(state, player) : { id: player.id, name: player.name }),
     squad: state.players.map(squadMember),
     sharedItems: inventoryItems(state, null),
@@ -258,6 +359,7 @@ function roomView(row, state, auth) {
     completedMissions: state.completedMissions,
     awardedMissions: Object.keys(state.awardedMissions),
     events,
+    ...(master ? {resolutionConfig:state.resolutionConfig ? structuredClone(state.resolutionConfig) : null} : {}),
     ...(master ? {} : { self: playerView(state, currentPlayer) }),
   };
 }
@@ -319,7 +421,7 @@ async function route(request, env, pathname) {
       .bind(roomId, masterHash, JSON.stringify(state), now, now).run();
     return { roomId, masterToken, room: roomView({ id: roomId, revision: 0 }, state, { role: 'master' }) };
   }
-  const match = /^\/api\/rooms\/([a-f0-9]{32})(?:\/(join|mission|result|inventory|characters|persona))?$/.exec(pathname);
+  const match = /^\/api\/rooms\/([a-f0-9]{32})(?:\/(join|mission|result|choice|inventory|characters|persona))?$/.exec(pathname);
   if (!match) throw new ApiError(404, 'Адрес не найден.');
   const [, roomId, action] = match;
 
@@ -458,21 +560,67 @@ async function route(request, env, pathname) {
     return { duplicate: !!mutation.duplicate, ...(mutation.outcome?{outcome:mutation.outcome}:{}), room: roomView(mutation.row, mutation.state, mutation.auth) };
   }
   if (action === 'mission' && request.method === 'POST') {
-    const input = await body(request);
+    const input = await body(request, MISSION_MAX_BODY);
+    resolutionObject(input, ['mission','resolutions','resolutionContext'], 'Некорректная публикация сцены.');
     const mission = input.mission === null ? null : publicMission(input.mission);
     const mutation = await mutate(env, roomId, async (row, state) => {
       const auth = await authenticate(request, row, state);
       masterOnly(auth);
-      if (JSON.stringify(state.mission) === JSON.stringify(mission)) return { changed: false, auth };
+      const config = missionResolutions(input, mission, state);
+      const previous = state.resolutionConfig ? {...state.resolutionConfig} : null;
+      if (previous) delete previous.choiceVersion;
+      if (JSON.stringify({mission:state.mission,config:previous}) === JSON.stringify({mission,config})) return { changed: false, auth };
       if (state.mission?.id !== mission?.id) {
         const completed = mission && Object.hasOwn(state.completedMissions, mission.id) ? state.completedMissions[mission.id] : null;
         const event = completed && state.events.find(item => item.eventId === completed.eventId);
         state.result = event ? { missionId: event.missionId, resultId: event.resultId, summary: event.summary, complete: event.complete, eventId: event.eventId, createdAt: event.createdAt } : null;
       }
       state.mission = mission;
+      state.resolutionConfig = config ? {...config,choiceVersion:randomToken(16)} : null;
       return { changed: true, auth };
     });
     return { room: roomView(mutation.row, mutation.state, mutation.auth) };
+  }
+  if (action === 'choice' && request.method === 'POST') {
+    const input = await body(request);
+    resolutionObject(input, ['missionId','resultId','choiceVersion'], 'Игрок выбирает только опубликованный результат.');
+    const missionId = key(input.missionId), resultId = key(input.resultId), choiceVersion = key(input.choiceVersion);
+    const mutation = await mutate(env, roomId, async (row, state) => {
+      const auth = await authenticate(request, row, state);
+      if (auth.role !== 'player') throw new ApiError(403, 'Выбор результата доступен игрокам.');
+      // A lost reply remains retryable after the GM changes the displayed scene.
+      const prior = state.events.find(event => event.missionId === missionId && event.resultId === resultId);
+      if (prior) return {changed:false,auth,duplicate:true,appliedXp:prior.xp};
+      const config = state.resolutionConfig;
+      if (state.mission?.id !== missionId || config?.missionId !== missionId || config.choiceVersion !== choiceVersion) throw new ApiError(409, 'Сцена обновилась. Обновите её и выберите результат заново.');
+      const result = config.resolutions.find(value => value.id === resultId);
+      if (!result) throw new ApiError(409, 'Этот результат не опубликован мастером.');
+      const completed = Object.hasOwn(state.completedMissions, missionId);
+      if (completed && (result.complete || result.xp !== 0 || result.items.length === 0)) throw new ApiError(409, 'Для этой сцены уже выбран другой результат.');
+      const previousKey = state.events.find(event => event.eventId === result.onceKey);
+      if (previousKey) {
+        if (previousKey.missionId !== missionId || previousKey.resultId !== resultId) throw new ApiError(409, 'Для этого события уже выбран другой результат.');
+        return {changed:false,auth,duplicate:true,appliedXp:previousKey.xp};
+      }
+      if (state.events.length >= MAX_EVENTS) throw new ApiError(409, 'Журнал сессии заполнен. Обратитесь к мастеру.');
+      // Validate recipients against the current roster as well as at publication.
+      const items = publicItems(result.items, state);
+      const xp = result.xpScope === 'event' ? result.xp : Object.hasOwn(state.awardedMissions, missionId) ? 0 : result.xp;
+      const actor = state.players.find(player => player.id === auth.playerId);
+      const createdAt = Date.now();
+      const event = {
+        eventId:result.onceKey,missionId,resultId,summary:result.summary,xp,items,
+        complete:result.complete,createdAt,recipients:state.players.map(player => player.id),xpScope:result.xpScope,
+        resolution:resolutionSnapshot(config,result,auth.playerId),actorName:actor?.persona?.name || actor?.name || 'Игрок',
+      };
+      state.events.push(event);
+      inventoryEnsure(state);
+      if ((xp > 0 && result.xpScope === 'mission') || result.complete) state.awardedMissions[missionId] = {xp,eventId:event.eventId};
+      if (result.complete) state.completedMissions[missionId] = {resultId,eventId:event.eventId};
+      if (!completed) state.result = {missionId,resultId,summary:result.summary,complete:result.complete,eventId:event.eventId,createdAt};
+      return {changed:true,auth,appliedXp:xp};
+    });
+    return {duplicate:!!mutation.duplicate,appliedXp:mutation.appliedXp,room:roomView(mutation.row,mutation.state,mutation.auth)};
   }
   if (action === 'result' && request.method === 'POST') {
     const input = await body(request);
@@ -496,6 +644,8 @@ async function route(request, env, pathname) {
       const xp = xpScope === 'event' ? requestedXp : Object.hasOwn(state.awardedMissions, missionId) ? 0 : requestedXp;
       const createdAt = Date.now();
       const event = { eventId, missionId, resultId, summary, xp, items, complete: input.complete, createdAt, recipients: state.players.map(player => player.id), xpScope };
+      const configured = state.resolutionConfig?.missionId === missionId ? state.resolutionConfig.resolutions.find(result => result.id === resultId) : null;
+      if (configured) event.resolution = resolutionSnapshot(state.resolutionConfig,configured,'master');
       state.events.push(event);
       inventoryEnsure(state);
       if ((xp > 0 && xpScope === 'mission') || input.complete) state.awardedMissions[missionId] = { xp, eventId };
