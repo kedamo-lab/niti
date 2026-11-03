@@ -437,7 +437,7 @@
   }
   function portraitMarkup(sheet=currentSheet()) {
     const image=validPortrait(sheet.portrait) ? sheet.portrait : '';
-    return `<div class="sheet-portrait-frame ${image ? 'has-portrait' : ''}" aria-label="Арт персонажа, пропорции 10 на 15">${image ? `<img src="${escapeText(image)}" alt="Арт персонажа${sheet.name ? ': '+escapeText(sheet.name) : ''}" draggable="false">` : '<svg viewBox="0 0 80 100" fill="none" stroke="currentColor" aria-hidden="true"><path d="M7 7h66v86H7zM7 22h66M7 79h66M17 14h20m20 0h6"/><circle cx="40" cy="43" r="12"/><path d="M20 76v-4a20 20 0 0 1 40 0v4"/></svg><span>ЛИЧНОЕ ДЕЛО</span>'}<span class="sheet-portrait-format" aria-hidden="true">10 × 15</span></div><div class="sheet-portrait-copy"><span class="eyebrow">ФОТОАРХИВ · 2207</span><h2>Лицо твоей истории</h2><p>Добавь фото, арт или рисунок персонажа. Изображение целиком впишется в рамку 10×15.</p><div class="sheet-portrait-actions"><button type="button" class="button primary small" data-sheet-portrait-action="choose" ${portraitBusy ? 'disabled' : ''}>${portraitBusy ? 'Подготовка арта…' : image ? 'Заменить арт' : 'Добавить арт'}</button><button type="button" class="button ghost small" data-sheet-portrait-action="remove" ${!image || portraitBusy ? 'disabled' : ''}>Удалить арт</button></div><input class="sheet-portrait-file" id="sheetPortraitFile" type="file" accept="image/jpeg,image/png,image/webp" aria-label="Выбрать фото или арт персонажа"><small>JPG, PNG или WebP · до 12 МБ. Портрет увидит твой отряд.</small><p class="sheet-portrait-status ${portraitError ? 'is-error' : ''}" role="status" aria-live="polite">${escapeText(portraitMessage || 'Рамка сохраняет размер: поля анкеты остаются на своих местах.')}</p></div>`;
+    return `<div class="sheet-portrait-frame ${image ? 'has-portrait' : ''}" aria-label="Арт персонажа, пропорции 10 на 15">${image ? `<img src="${escapeText(image)}" alt="Арт персонажа${sheet.name ? ': '+escapeText(sheet.name) : ''}" draggable="false">` : '<svg viewBox="0 0 80 100" fill="none" stroke="currentColor" aria-hidden="true"><path d="M7 7h66v86H7zM7 22h66M7 79h66M17 14h20m20 0h6"/><circle cx="40" cy="43" r="12"/><path d="M20 76v-4a20 20 0 0 1 40 0v4"/></svg><span>ЛИЧНОЕ ДЕЛО</span>'}<span class="sheet-portrait-format" aria-hidden="true">10 × 15</span></div><div class="sheet-portrait-copy"><span class="eyebrow">ФОТОАРХИВ · 2207</span><h2>Лицо твоей истории</h2><p>Добавь фото, арт или рисунок. Ориентацию, размер и формат 10×15 подготовим автоматически — изображение впишется целиком.</p><div class="sheet-portrait-actions"><button type="button" class="button primary small" data-sheet-portrait-action="choose" ${portraitBusy ? 'disabled' : ''}>${portraitBusy ? 'Подготовка арта…' : image ? 'Заменить арт' : 'Добавить арт'}</button><button type="button" class="button ghost small" data-sheet-portrait-action="remove" ${!image || portraitBusy ? 'disabled' : ''}>Удалить арт</button></div><input class="sheet-portrait-file" id="sheetPortraitFile" type="file" accept="image/jpeg,image/png,image/webp" aria-label="Выбрать фото или арт персонажа"><small>JPG, PNG или WebP · до 24 МБ. Портрет увидит твой отряд.</small><p class="sheet-portrait-status ${portraitError ? 'is-error' : ''}" role="status" aria-live="polite">${escapeText(portraitMessage || 'Фото подстроится под рамку без обрезки и растягивания.')}</p></div>`;
   }
   function refreshPortrait() {
     const panel=document.querySelector('[data-sheet-portrait]');
@@ -455,41 +455,71 @@
     return room?.self ? room.id+':'+room.self.id : 'local';
   }
   async function preparePortrait(file) {
-    if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw new Error('Выбери изображение JPG, PNG или WebP.');
-    if(!file.size || file.size>12*1024*1024)throw new Error('Изображение должно быть не больше 12 МБ.');
+    if(!file.size || file.size>24*1024*1024)throw new Error('Выбери изображение размером до 24 МБ.');
+    // Some phone and cloud pickers omit or mislabel MIME; the file signature
+    // decides its format. Only raster files are decoded into the public portrait.
     const bytes=new Uint8Array(await file.slice(0,16).arrayBuffer());
     const png=[137,80,78,71,13,10,26,10].every((value,index)=>bytes[index]===value),jpeg=bytes[0]===255 && bytes[1]===216 && bytes[2]===255,webp=String.fromCharCode(...bytes.slice(0,4))==='RIFF' && String.fromCharCode(...bytes.slice(8,12))==='WEBP';
-    if(!png && !jpeg && !webp)throw new Error('Файл не похож на изображение JPG, PNG или WebP.');
-    let image,url='';
+    const mime=png?'image/png':jpeg?'image/jpeg':webp?'image/webp':'';
+    if(!mime)throw new Error('Выбери фото или арт в формате JPG, PNG или WebP.');
+    const source=file.type===mime?file:new Blob([file],{type:mime});
+    let image=null,url='';
     try {
-      if(typeof createImageBitmap==='function')image=await createImageBitmap(file,{imageOrientation:'from-image'});
-      else {url=URL.createObjectURL(file);image=new Image();image.src=url;await image.decode();}
-      const width=image.width || image.naturalWidth,height=image.height || image.naturalHeight;
+      if(typeof createImageBitmap==='function') {
+        try {image=await createImageBitmap(source,{imageOrientation:'from-image'});}
+        catch { /* Safari and some phone decoders need an HTML image instead. */ }
+      }
+      if(!image) {
+        url=URL.createObjectURL(source);
+        const fallback=new Image();fallback.src=url;
+        try {await fallback.decode();image=fallback;}
+        catch {throw new Error('Не удалось открыть изображение. Попробуй другое фото JPG, PNG или WebP.');}
+      }
+      const width=image.naturalWidth || image.width,height=image.naturalHeight || image.height;
       if(!width || !height || width>16000 || height>16000 || width*height>48000000)throw new Error('Выбери изображение размером до 48 мегапикселей.');
       const canvas=document.createElement('canvas'),context=canvas.getContext('2d');
       if(!context)throw new Error('Браузер не может подготовить изображение.');
-      for(const size of [[480,720],[400,600],[320,480],[240,360],[180,270]]) {
-        const scale=Math.min(1,size[0]/width,size[1]/height);
-        canvas.width=Math.max(1,Math.round(width*scale));canvas.height=Math.max(1,Math.round(height*scale));
-        context.clearRect(0,0,canvas.width,canvas.height);context.drawImage(image,0,0,canvas.width,canvas.height);
-        for(const quality of [.82,.72,.62,.52]) {
-          const data=canvas.toDataURL('image/webp',quality);
-          if(validPortrait(data))return data;
+      let webpSupported=true;
+      for(const [targetWidth,targetHeight] of [[480,720],[400,600],[320,480],[240,360],[180,270]]) {
+        // Every encoded image is exactly 2:3, not merely displayed in a 2:3 box.
+        // Center the complete artwork; transparent padding keeps its proportions.
+        canvas.width=targetWidth;canvas.height=targetHeight;
+        context.imageSmoothingEnabled=true;context.imageSmoothingQuality='high';
+        const scale=Math.min(targetWidth/width,targetHeight/height);
+        const drawWidth=width*scale,drawHeight=height*scale;
+        const draw=matte=>{
+          context.clearRect(0,0,targetWidth,targetHeight);
+          if(matte){context.fillStyle='#101014';context.fillRect(0,0,targetWidth,targetHeight);}
+          context.drawImage(image,(targetWidth-drawWidth)/2,(targetHeight-drawHeight)/2,drawWidth,drawHeight);
+        };
+        draw(!webpSupported);
+        for(const quality of [.88,.80,.72,.64,.56,.48]) {
+          let data;
+          if(webpSupported) {
+            data=canvas.toDataURL('image/webp',quality);
+            if(!data.startsWith('data:image/webp;')) {
+              // Unsupported encoders silently return PNG and ignore quality.
+              // JPEG has a neutral matte so transparent edges never turn black.
+              webpSupported=false;draw(true);
+            }
+          }
+          if(!webpSupported)data=canvas.toDataURL('image/jpeg',quality);
+          if(validPortrait(data))return {data,width:targetWidth,height:targetHeight,format:webpSupported?'WebP':'JPG'};
         }
       }
-      throw new Error('Не удалось уменьшить изображение. Выбери другой файл или уменьши его размер.');
+      throw new Error('Не удалось подготовить компактный портрет. Попробуй другое изображение.');
     } finally {image?.close?.();if(url)URL.revokeObjectURL(url);}
   }
   async function setPortraitFile(file) {
     const epoch=++portraitEpoch,identity=portraitContext();
     portraitBusy=true;portraitMessage='Подготавливаю изображение…';portraitError=false;refreshPortrait();
     try {
-      const data=await preparePortrait(file);
+      const prepared=await preparePortrait(file);
       if(epoch!==portraitEpoch || identity!==portraitContext())return;
       if(typeof window.playerSetPortrait!=='function')throw new Error('Сохранение арта пока недоступно. Обнови терминал.');
-      const result=await window.playerSetPortrait(data);
+      const result=await window.playerSetPortrait(prepared.data);
       if(result?.saved!==true)throw new Error(result?.error || 'Не удалось сохранить арт в браузере. Попробуй ещё раз.');
-      portraitMessage='Арт сохранён. Он появится в карточке отряда.';
+      portraitMessage=`Готово: ${prepared.width}×${prepared.height} px · ${prepared.format} · 10×15. Арт сохранён.`;
     } catch(error) {if(epoch===portraitEpoch){portraitMessage=error?.message || 'Не удалось открыть изображение.';portraitError=true;}}
     finally {if(epoch===portraitEpoch){portraitBusy=false;refreshPortrait();}}
   }
