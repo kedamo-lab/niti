@@ -337,6 +337,18 @@ function playerView(state, player) {
   };
 }
 
+function tickerText(value) {
+  if (typeof value !== 'string' || value.length > 600) throw new ApiError(400, 'В бегущей строке может быть до 600 символов.');
+  const normalized = value.replace(/\r\n?/g, '\n').split('\n').map(line => line.trim()).filter(Boolean).join('\n');
+  if (!normalized) throw new ApiError(400, 'Добавьте хотя бы одну фразу в бегущую строку.');
+  return normalized;
+}
+
+function tickerView(state) {
+  const ticker = state.ticker;
+  return ticker ? {text:ticker.text,version:ticker.version,updatedAt:ticker.updatedAt} : null;
+}
+
 function roomView(row, state, auth) {
   const master = auth.role === 'master';
   const currentPlayer = state.players.find(player => player.id === auth.playerId);
@@ -350,7 +362,7 @@ function roomView(row, state, auth) {
     ...(event.actorName ? {actorName:event.actorName} : {}),
   }));
   return {
-    id: row.id, name: state.name, revision: row.revision,
+    id: row.id, name: state.name, revision: row.revision, ticker: tickerView(state),
     mission: missionView(state), result: state.result,
     players: state.players.map(player => master ? playerView(state, player) : { id: player.id, name: player.name }),
     squad: state.players.map(squadMember),
@@ -421,7 +433,7 @@ async function route(request, env, pathname) {
       .bind(roomId, masterHash, JSON.stringify(state), now, now).run();
     return { roomId, masterToken, room: roomView({ id: roomId, revision: 0 }, state, { role: 'master' }) };
   }
-  const match = /^\/api\/rooms\/([a-f0-9]{32})(?:\/(join|mission|result|choice|inventory|characters|persona))?$/.exec(pathname);
+  const match = /^\/api\/rooms\/([a-f0-9]{32})(?:\/(join|mission|result|choice|inventory|characters|persona|ticker))?$/.exec(pathname);
   if (!match) throw new ApiError(404, 'Адрес не найден.');
   const [, roomId, action] = match;
 
@@ -463,6 +475,25 @@ async function route(request, env, pathname) {
     masterOnly(auth);
     await env.DB.prepare(`DELETE FROM ${TABLE} WHERE id = ? AND master_hash = ?`).bind(roomId, row.master_hash).run();
     return { deleted: true };
+  }
+  if (action === 'ticker' && request.method === 'POST') {
+    const input = await body(request);
+    resolutionObject(input, ['text','expectedVersion'], 'Некорректное изменение бегущей строки.');
+    const value = tickerText(input.text);
+    const expectedVersion = integer(input.expectedVersion, 0, Number.MAX_SAFE_INTEGER);
+    const mutation = await mutate(env, roomId, async (row, state) => {
+      const auth = await authenticate(request, row, state);
+      masterOnly(auth);
+      const current = state.ticker;
+      // A lost successful reply is safe to retry even after the version changed.
+      if (current?.text === value) return {changed:false,auth,duplicate:true};
+      const version = current?.version || 0;
+      if (version !== expectedVersion) throw new ApiError(409, 'Бегущая строка уже изменилась. Обновите её перед сохранением.');
+      if (version >= Number.MAX_SAFE_INTEGER) throw new ApiError(409, 'Достигнут предел обновлений бегущей строки.');
+      state.ticker = {text:value,version:version+1,updatedAt:Date.now()};
+      return {changed:true,auth};
+    });
+    return {duplicate:!!mutation.duplicate,room:roomView(mutation.row,mutation.state,mutation.auth)};
   }
   if (action === 'persona' && request.method === 'POST') {
     const input = await body(request, PERSONA_MAX_BODY);

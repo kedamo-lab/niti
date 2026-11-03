@@ -475,6 +475,7 @@
     }
   }
   window.playerSessionSnapshot = () => ONLINE && hasCurrentAccess() ? snapshot : null;
+  window.playerSessionRoomId = () => ONLINE && hasCurrentAccess() && !['denied','missing'].includes(connection) ? access.roomId : '';
   window.playerSessionConnection = () => ONLINE ? connection : 'offline';
   window.playerSessionInventoryAction = inventoryAction;
   window.playerSessionPage = page;

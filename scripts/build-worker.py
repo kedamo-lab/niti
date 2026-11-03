@@ -4,7 +4,7 @@ import json, shutil, subprocess, re, base64
 root = Path(__file__).resolve().parent.parent
 subprocess.run(['python3', str(root/'build-offline.py')], cwd=root, check=True)
 files = [
-    'player-squad.js','player-squad.css','storydesk-design.css','storydesk-design.js','brand-mark.svg','equipment-rules.js',
+    'player-ticker.js','player-squad.js','player-squad.css','storydesk-design.css','storydesk-design.js','brand-mark.svg','equipment-rules.js',
     'index.html', 'player-app.js', 'player-session.js', 'player-session.css',
     'player-audio.js', 'player-audio.css', 'navigation-motion.js', 'navigation-motion.css', 'equipment-art.js',
     'rules-character.js', 'player-sheet.js', 'player-sheet.css', 'player-inventory.js', 'player-inventory.css',

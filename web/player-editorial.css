@@ -1,4 +1,8 @@
 /* The player's archive shares the GM's editorial chassis; sheet geometry stays intact. */
+.player-shared-ticker .crimson-ticker-track{gap:0;animation-duration:var(--player-ticker-duration,38s)}
+.player-shared-ticker .player-ticker-copy{display:flex;align-items:center;flex:0 0 auto;gap:26px;padding-right:26px}
+.player-shared-ticker:hover .crimson-ticker-track{animation-play-state:paused}
+@media(max-width:680px){.player-shared-ticker .player-ticker-copy{gap:18px;padding-right:18px}}
 .sidebar-footer>a[href="#help"]{display:none}
 .sidebar-footer .text-button[data-player-action=backup]{display:inline-flex;align-items:center;gap:5px}
 .topbar .player-session-tag{font-size:7px;color:var(--muted);border:0;background:transparent;white-space:nowrap}
