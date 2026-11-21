@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Нити — знак переплетённых историй</title>
+  <path d="M20 3H44L61 20V44L44 61H20L3 44V20L20 3Z" fill="#090809" stroke="#50212d" stroke-width="1.5"/>
+  <path d="M22 8H42L56 22V42L42 56H22L8 42V22L22 8Z" stroke="#50212d"/>
+  <path d="M19 44V20H26L45 44" stroke="#ff173f" stroke-width="5.5" stroke-linecap="square" stroke-linejoin="round"/>
+  <path d="M45 20V44H38L19 20" stroke="#090809" stroke-width="10" stroke-linecap="square" stroke-linejoin="round"/>
+  <path d="M45 20V44H38L19 20" stroke="#ff173f" stroke-width="5.5" stroke-linecap="square" stroke-linejoin="round"/>
+  <path d="M19 44V35.5M36.5 33L45 44" stroke="#ff173f" stroke-width="5.5" stroke-linecap="square"/>
+  <path d="M3 20H9M55 44H61M20 3V9M44 55V61" stroke="#ff3657" stroke-width="1.5"/>
+</svg>

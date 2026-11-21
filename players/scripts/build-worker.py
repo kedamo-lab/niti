@@ -1,8 +1,8 @@
 from pathlib import Path
-import json, shutil, subprocess, re, base64
+import json, shutil, subprocess, re, base64, sys
 
 root = Path(__file__).resolve().parent.parent
-subprocess.run(['python3', str(root/'build-offline.py')], cwd=root, check=True)
+subprocess.run([sys.executable, str(root/'build-offline.py')], cwd=root, check=True)
 files = [
     'player-ticker.js','player-squad.js','player-squad.css','storydesk-design.css','storydesk-design.js','brand-mark.svg','equipment-rules.js',
     'index.html', 'player-app.js', 'player-session.js', 'player-session.css',

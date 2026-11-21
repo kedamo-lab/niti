@@ -1,0 +1,5 @@
+/* A brief terminal page reveal never blocks navigation, selection or scrolling. */
+.niti-navigation-active{will-change:transform,opacity}
+.nav-item{transition:background-color .18s ease,color .18s ease,border-color .18s ease}
+@media(prefers-reduced-motion:reduce){.niti-navigation-active{will-change:auto}.nav-item{transition:none}}
+@media print{.niti-navigation-active{transform:none!important;opacity:1!important}}

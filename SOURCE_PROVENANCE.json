@@ -1,0 +1,22 @@
+{
+  "exportDate": "2026-11-21",
+  "master": {
+    "url": "https://niti-storydesk.vercel.app/",
+    "deployment": "dpl_XLxZ1wYQcygojc7DZpK5amotjDJm",
+    "deploymentCommit": "0fbfbabc116b9ec4aea1e38362647a58bbb7a95b",
+    "restoredHistoryHead": "ea991106563ec9d250a5b556bcc3dd4ee6741478",
+    "verification": "41 deployment file hashes matched; original module generator reproduces module data byte for byte"
+  },
+  "players": {
+    "url": "https://niti-players.thegromvel.chatgpt.site/",
+    "version": 17,
+    "commit": "5ce62ccf2752521e93f99e9a6f45e22f437494c7"
+  },
+  "runtimeDataIncluded": false,
+  "exportSupport": {
+    "localServer": "tools/dev-server.cjs",
+    "localDataPath": ".local/niti.sqlite",
+    "portableBuildChange": "players/scripts/build-worker.py uses sys.executable for its child Python process",
+    "masterOfflineGenerator": "Reconstructed from current production assets and verified offline"
+  }
+}

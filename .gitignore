@@ -1,6 +1,9 @@
 node_modules/
-.wrangler/
+**/__pycache__/
+*.py[cod]
+.local/
 .env
 .env.*
-outputs/
-worker/assets.js
+!.env.example
+.vercel/
+*.log
