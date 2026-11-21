@@ -10,31 +10,33 @@ files = [
     'rules-character.js', 'player-sheet.js', 'player-sheet.css', 'player-inventory.js', 'player-inventory.css',
     'player.css', 'style.css', 'fallout.css', 'palette.css', 'terminal.js',
     'dice.js', 'dice.css', 'vault-art.svg', 'niti-player-offline.html',
-    'crimson.css', 'player-editorial.css', 'assets/power-armor-crimson.webp', 'assets/wasteland-seal.svg',
+    'crimson.css', 'player-editorial.css', 'apple-design.css', 'header-fixes.css', 'assets/power-armor-crimson.webp', 'assets/wasteland-seal.svg',
     'fonts/oswald-cyrillic.woff2', 'fonts/oswald-latin.woff2', 'fonts/OFL-Oswald.txt',
+    'assets/audio/ui-click.wav', 'assets/audio/toggle.wav', 'assets/audio/dice-roll.wav',
+    'assets/audio/dice-count.wav', 'assets/audio/result.wav', 'assets/audio/level-up.wav',
 ]
-types = {'.html':'text/html', '.js':'text/javascript', '.css':'text/css', '.svg':'image/svg+xml', '.txt':'text/plain', '.webp':'image/webp', '.woff2':'font/woff2'}
+types = {'.html':'text/html', '.js':'text/javascript', '.css':'text/css', '.svg':'image/svg+xml', '.txt':'text/plain', '.webp':'image/webp', '.woff2':'font/woff2', '.wav':'audio/wav'}
 assets = {}
 for name in files:
     path = root/'web'/name
-    if path.suffix in ['.webp', '.woff2']:
+    if path.suffix in ['.webp', '.woff2', '.wav']:
         assets[name] = {'type':types[path.suffix], 'body':base64.b64encode(path.read_bytes()).decode(), 'encoding':'base64'}
     else:
-        assets[name] = {'type':types[path.suffix]+'; charset=utf-8', 'body':path.read_text()}
+        assets[name] = {'type':types[path.suffix]+'; charset=utf-8', 'body':path.read_text(encoding='utf-8')}
 asset_module = 'const assets = '+json.dumps(assets, ensure_ascii=False, separators=(',',':'))+';\n'
-(root/'worker/assets.js').write_text('export '+asset_module)
+(root/'worker/assets.js').write_text('export '+asset_module, encoding='utf-8')
 modules = []
 for name in ['equipment-rules.js','item-catalog.js', 'legacy-item-stats.js', 'inventory.js', 'api.js']:
-    module = (root/'worker'/name).read_text()
+    module = (root/'worker'/name).read_text(encoding='utf-8')
     module = re.sub(r"(?m)^import[\s\S]*?from ['\"][^'\"]+['\"];?\n", '', module)
     modules.append(module)
 api = '\n'.join(modules)
-entry = (root/'worker/index.js').read_text()
+entry = (root/'worker/index.js').read_text(encoding='utf-8')
 entry = entry.replace("import { handleApi } from './api.js';\n", '').replace("import { assets } from './assets.js';\n", '')
 dist = root/'dist'
 if dist.exists(): shutil.rmtree(dist)
 (dist/'server').mkdir(parents=True)
 (dist/'.openai').mkdir()
 shutil.copy2(root/'.openai/hosting.json', dist/'.openai/hosting.json')
-(dist/'server/index.js').write_text(api+'\n'+asset_module+'\n'+entry)
+(dist/'server/index.js').write_text(api+'\n'+asset_module+'\n'+entry, encoding='utf-8')
 print('Built isolated player Worker with '+str(len(files))+' whitelisted assets.')

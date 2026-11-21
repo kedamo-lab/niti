@@ -30,12 +30,22 @@ const servers=[];
   async function handle(req,res,isPlayer){
     try{
       const origin=isPlayer?playerOrigin:masterOrigin,url=new URL(req.url,origin);
-      if(isPlayer){
+      // One address, two terminals: /player/* and /api/* belong to the player Worker.
+      const viaPlayer=isPlayer||url.pathname==='/player'||url.pathname.startsWith('/player/')||url.pathname.startsWith('/api/');
+      if(viaPlayer){
+        if(!isPlayer&&url.pathname==='/player'){res.writeHead(301,{location:'/player/'});res.end();return;}
         const chunks=[];for await(const chunk of req)chunks.push(chunk);
         const init={method:req.method,headers:req.headers};
         if(!['GET','HEAD'].includes(req.method)&&chunks.length)init.body=Buffer.concat(chunks);
-        const request=new Request(url,init);
-        const response=url.pathname.startsWith('/api/')
+        // The Worker serves its assets from the root; strip the /player prefix on the way in.
+        const target=new URL(url.href);
+        if(!isPlayer){
+          target.protocol=new URL(playerOrigin).protocol;
+          target.host=new URL(playerOrigin).host;
+          target.pathname=url.pathname==='/'?'/':url.pathname.replace(/^\/player/,'')||'/';
+        }
+        const request=new Request(target,init);
+        const response=target.pathname.startsWith('/api/')
           ?await worker.handleApi(request,env,{allowedOrigins:[masterOrigin,playerOrigin]})
           :await worker.default.fetch(request,env);
         res.writeHead(response.status,Object.fromEntries(response.headers));res.end(Buffer.from(await response.arrayBuffer()));return;
@@ -44,7 +54,7 @@ const servers=[];
       const folder=path.join(root,'master/dist'),name=url.pathname==='/'?'index.html':decodeURIComponent(url.pathname).slice(1),file=path.resolve(folder,name);
       if(!file.startsWith(folder+path.sep)||!fs.existsSync(file)||!fs.statSync(file).isFile()){res.writeHead(404);res.end('Not found');return;}
       let data=fs.readFileSync(file);
-      if(path.extname(file)==='.html')data=Buffer.from(data.toString().replace('<head>','<head><script>window.NITI_SESSION_API_BASE='+JSON.stringify(playerOrigin+'/api')+';window.NITI_SESSION_PLAYER_URL='+JSON.stringify(playerOrigin+'/')+';</script>'));
+      if(path.extname(file)==='.html')data=Buffer.from(data.toString().replace('<head>','<head><script>window.NITI_SESSION_API_BASE='+JSON.stringify(masterOrigin+'/api')+';window.NITI_SESSION_PLAYER_URL='+JSON.stringify(masterOrigin+'/player/')+';</script>'));
       res.writeHead(200,{'content-type':mime[path.extname(file)]||'application/octet-stream','cache-control':'no-store'});res.end(req.method==='HEAD'?undefined:data);
     }catch(error){res.writeHead(500,{'content-type':'text/plain; charset=utf-8'});res.end('Local server error. See the terminal.');console.error(error.message);}
   }

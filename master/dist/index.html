@@ -2,28 +2,117 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Olympus 2207: Тартар. Все 14 заданий, персонажи, связи, проверки и последствия для ведущего.">
-<meta name="theme-color" content="#090809"><title>Тартар · Нити — пульт ведущего</title>
-<link rel="stylesheet" href="style.css"><link rel="stylesheet" href="module.css"><link rel="stylesheet" href="fallout.css"><link rel="stylesheet" href="palette.css"><link rel="stylesheet" href="dice.css"><link rel="stylesheet" href="session-gm.css"><link rel="stylesheet" href="inventory-gm.css"><link rel="stylesheet" href="scene-rewards.css"><link rel="stylesheet" href="navigation-motion.css"><link rel="stylesheet" href="storydesk-design.css"><link rel="icon" href="brand-mark.svg" type="image/svg+xml">
-<link rel="stylesheet" href="crimson.css"><link rel="stylesheet" href="ticker.css">
+<meta name="theme-color" content="#090809">
+<meta name="description" content="Нити — общий архив истории. Выбери сторону ширмы: пульт ведущего или личный терминал участника.">
+<title>Нити — выбор роли</title>
+<link rel="icon" href="brand-mark.svg" type="image/svg+xml">
 <link rel="preload" href="fonts/oswald-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="role-gate.css">
+<noscript><style>.gate{display:none}.roles[hidden]{display:flex}</style></noscript>
 </head>
 <body>
-<div class="app-shell">
-<aside class="sidebar">
-<a class="brand" href="#overview"><span class="brand-mark"><svg viewBox="0 0 64 64" fill="none" aria-hidden="true"><polygon points="32.00,13.00 35.00,9.20 37.95,9.78 39.27,14.45 41.50,15.55 46.00,13.75 48.26,15.74 47.07,20.43 48.45,22.50 53.25,23.20 54.22,26.05 50.84,29.52 51.00,32.00 54.80,35.00 54.22,37.95 49.55,39.27 48.45,41.50 50.25,46.00 48.26,48.26 43.57,47.07 41.50,48.45 40.80,53.25 37.95,54.22 34.48,50.84 32.00,51.00 29.00,54.80 26.05,54.22 24.73,49.55 22.50,48.45 18.00,50.25 15.74,48.26 16.93,43.57 15.55,41.50 10.75,40.80 9.78,37.95 13.16,34.48 13.00,32.00 9.20,29.00 9.78,26.05 14.45,24.73 15.55,22.50 13.75,18.00 15.74,15.74 20.43,16.93 22.50,15.55 23.20,10.75 26.05,9.78 29.52,13.16" stroke="currentColor" stroke-width="2"/><circle cx="32" cy="32" r="13" stroke="currentColor" stroke-width="1.5"/><path d="m32 18 5 9-5 3-5-3Zm13 21-10 1v-6l5-3Zm-26 0 5-8 5 3v6Z" fill="currentColor"/><circle cx="32" cy="32" r="3" fill="currentColor"/></svg></span><span>нити<small class="brand-sub">ТЕРМИНАЛ ВЕДУЩЕГО</small></span></a>
-<div class="campaign-label"><span class="masthead-signal" aria-hidden="true"></span> OLYMPUS 2207 <span>/</span> ТАРТАР</div>
-<nav aria-label="Разделы" id="nav"></nav>
-<div class="sidebar-quote">«Война. Война никогда не меняется.»<span>АРХИВ ПУСТОШИ / 2207</span></div>
-<div class="sidebar-footer"><div id="saveStatus" class="save-status" role="status">● Сохранено в браузере</div><button class="text-button" data-action="backup">↓ Резервная копия</button><a class="text-button" href="niti-offline.html" download>↙ Забрать пульт с собой</a><button class="text-button" data-action="help">Как здесь всё устроено ↗</button></div>
-</aside>
-<main class="main">
-<header class="topbar"><div class="breadcrumbs"><span>ТЕРМИНАЛ 2207</span><span>/</span><strong id="crumb">За ширмой</strong></div><div class="top-actions"><div class="terminal-display-settings" aria-label="Настройки экрана"><button type="button" class="terminal-setting" id="phosphorSwitch" aria-label="Переключить зелёный и янтарный экран" aria-pressed="false">Цвет: зелёный</button><button type="button" class="terminal-setting" id="crtSwitch" aria-label="Переключить эффект экрана ЭЛТ" aria-pressed="true">ЭЛТ: вкл</button></div><button class="button ghost small" data-action="manuscript">Рукопись модуля ↗</button></div></header>
-<div id="workspace" class="workspace"></div>
-<footer class="page-footer"><span>НИТИ // ТАРТАР <span class="footer-dot">·</span> АРХИВ ВЕДУЩЕГО</span><span>ПРОТОКОЛ ХРАНЕНИЯ: ЛОКАЛЬНО</span></footer>
-</main>
+
+<div class="gate" id="gate" aria-hidden="true">
+  <div class="gate-inner">
+    <div class="gate-logo">
+      <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
+        <path d="M20 3H44L61 20V44L44 61H20L3 44V20L20 3Z" fill="#090809" stroke="#50212d" stroke-width="1.5"/>
+        <path d="M22 8H42L56 22V42L42 56H22L8 42V22L22 8Z" stroke="#50212d"/>
+        <path d="M19 44V20H26L45 44" stroke="#ff173f" stroke-width="5.5" stroke-linecap="square" stroke-linejoin="round"/>
+        <path d="M45 20V44H38L19 20" stroke="#090809" stroke-width="10" stroke-linecap="square" stroke-linejoin="round"/>
+        <path d="M45 20V44H38L19 20" stroke="#ff173f" stroke-width="5.5" stroke-linecap="square" stroke-linejoin="round"/>
+        <path d="M19 44V35.5M36.5 33L45 44" stroke="#ff173f" stroke-width="5.5" stroke-linecap="square"/>
+        <path d="M3 20H9M55 44H61M20 3V9M44 55V61" stroke="#ff3657" stroke-width="1.5"/>
+      </svg>
+    </div>
+    <p class="gate-kicker">Архив Пустоши · 2207</p>
+    <h1 class="gate-title">Нити</h1>
+    <p class="gate-sub">Терминал истории</p>
+    <div class="gate-progress"><span></span></div>
+    <p class="gate-status" id="gateStatus">Инициализация архива</p>
+    <button class="gate-skip" type="button" id="gateSkip">Пропустить</button>
+  </div>
 </div>
-<div id="modalRoot"></div><div id="focusRoot"></div><div class="toast" id="toast" role="status"></div>
-<input type="file" id="backupFile" accept=".json,application/json" hidden><input type="file" id="storyFile" accept=".txt,.md,text/plain,text/markdown" hidden>
-<script src="terminal.js"></script><script src="module-data.js"></script><script src="module-ui.js"></script><script src="prompts.js"></script><script src="dice.js"></script><script src="session-catalog.js"></script><script src="item-catalog.js"></script><script src="equipment-rules.js"></script><script src="inventory-gm.js"></script><script src="scene-rewards.js"></script><script src="outcome-effects.js"></script><script src="outcome-sync.js"></script><script src="session-gm.js"></script><script src="session-recap.js"></script><script src="navigation-motion.js"></script><script src="storydesk-design.js"></script><script src="ticker.js"></script><script src="app.js"></script>
-</body></html>
+
+<main class="roles" id="roles" hidden>
+  <header class="roles-head">
+    <a class="roles-brand" href="#" aria-label="Нити — выбор роли">
+      <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
+        <path d="M20 3H44L61 20V44L44 61H20L3 44V20L20 3Z" fill="#090809" stroke="#50212d" stroke-width="1.5"/>
+        <path d="M19 44V20H26L45 44" stroke="#ff173f" stroke-width="5.5" stroke-linecap="square" stroke-linejoin="round"/>
+        <path d="M45 20V44H38L19 20" stroke="#090809" stroke-width="10" stroke-linecap="square" stroke-linejoin="round"/>
+        <path d="M45 20V44H38L19 20" stroke="#ff173f" stroke-width="5.5" stroke-linecap="square" stroke-linejoin="round"/>
+        <path d="M19 44V35.5M36.5 33L45 44" stroke="#ff173f" stroke-width="5.5" stroke-linecap="square"/>
+        <path d="M3 20H9M55 44H61M20 3V9M44 55V61" stroke="#ff3657" stroke-width="1.5"/>
+      </svg>
+      <b>Нити</b>
+      <small>Общий архив</small>
+    </a>
+    <h1 class="glitch" data-text="Выбери свою сторону ширмы.">Выбери свою <em>сторону ширмы.</em></h1>
+  </header>
+
+  <div class="flip-stage">
+    <button class="flip-arrow" type="button" id="flipArrow" aria-label="Показать участника">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4 7 12l8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="round"/></svg>
+    </button>
+
+    <div class="flick" id="roleCard" role="group" tabindex="0"
+         aria-roledescription="переворачивающаяся карточка"
+         aria-label="Выбор роли: ведущий или участник"
+         aria-describedby="flipHint">
+      <div class="flick-shadow" aria-hidden="true"></div>
+      <div class="flick-tilt">
+        <div class="flick-card">
+          <div class="flick-face flick-front" data-face="master" aria-describedby="role-master-desc">
+            <div class="role-top">
+              <span class="role-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6.5 12 3l9 3.5-9 3.5-9-3.5Z"/><path d="M3 12l9 3.5L21 12M3 17.5 12 21l9-3.5"/></svg>
+              </span>
+              <span class="role-badge" data-badge="master">За ширмой</span>
+            </div>
+            <div class="role-name"><b>Ведущий</b><span>Пульт истории</span></div>
+            <p class="role-desc" id="role-master-desc">Веди сцену, двигай угрозы и решай, что герои узнают сейчас, а что — никогда.</p>
+            <ul class="role-list">
+              <li>Сцены, персонажи и карта связей</li>
+              <li>Тайные истины и таймеры угроз</li>
+              <li>Связь с игроками и выдача наград</li>
+            </ul>
+            <a class="role-go" href="gm.html" data-role="master">
+              <span>Открыть пульт</span><span aria-hidden="true">→</span>
+            </a>
+            <div class="flick-light" aria-hidden="true"><span class="flick-shade"></span><span class="flick-band"></span></div>
+          </div>
+
+          <div class="flick-face flick-back" data-face="player" aria-describedby="role-player-desc">
+            <div class="role-top">
+              <span class="role-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 21c.6-4.2 3.7-6.4 7.5-6.4s6.9 2.2 7.5 6.4"/></svg>
+              </span>
+              <span class="role-badge" data-badge="player">За героя</span>
+            </div>
+            <div class="role-name"><b>Участник</b><span>Личный терминал</span></div>
+            <p class="role-desc" id="role-player-desc">Держи лист персонажа, инвентарь и записи при себе. Кубики всегда под рукой.</p>
+            <ul class="role-list">
+              <li>Лист героя, навыки и перки</li>
+              <li>Инвентарь, снаряжение и отряд</li>
+              <li>Заметки, кубики и связь с ведущим</li>
+            </ul>
+            <a class="role-go" href="player/" data-role="player">
+              <span>Открыть терминал</span><span aria-hidden="true">→</span>
+            </a>
+            <div class="flick-light" aria-hidden="true"><span class="flick-shade"></span><span class="flick-band"></span></div>
+          </div>
+        </div>
+      </div>
+      <p class="sr-only" id="flipHint">Сейчас показан ведущий. Перетащи карточку или нажми Enter, чтобы перевернуть.</p>
+    </div>
+  </div>
+
+  <p class="flip-hint" aria-hidden="true"><span aria-hidden="true">⟲</span> Перетащи или нажми, чтобы перевернуть</p>
+
+  <a class="roles-continue" id="continueRole" href="gm.html" hidden>Продолжить как ведущий →</a>
+</main>
+
+<script src="role-gate.js"></script>
+</body>
+</html>

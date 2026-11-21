@@ -1,0 +1,96 @@
+/* The main screen puts the current game and its next action first. */
+.master-hero{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.8fr);align-items:end;min-height:520px;padding:clamp(30px,5vw,76px);gap:30px;overflow:hidden;border-radius:28px;background:#242623;isolation:isolate}
+.master-hero::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,#242623 10%,#242623e8 42%,#24262325 100%),radial-gradient(circle at 72% 42%,#a54f3b33,transparent 55%)}
+.master-hero-copy{align-self:center;position:relative;z-index:2;max-width:720px}.master-hero-label{margin:0 0 22px;font-size:14px;font-weight:600;color:#dfb7a4}.master-hero h1{margin:0;color:#f5f1e9;font:500 clamp(54px,6.5vw,102px)/.99 Georgia,serif;letter-spacing:-.055em}.master-hero h1 em{font-weight:400;color:#d8b8a5}.master-hero-intro{max-width:450px;margin:27px 0 30px;color:#d8d5ce;font:400 18px/1.6 var(--sans)}.master-hero-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.master-hero-actions .button,.master-current .button{font-size:14px;min-height:48px;padding:13px 22px}.master-hero-actions .ghost{color:#f5f1e9}
+.master-hero-art{position:absolute;inset:0 0 0 43%;z-index:-1;opacity:.64;pointer-events:none}.master-hero-art::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#242623,transparent 45%),linear-gradient(0deg,#242623,transparent 45%)}.master-hero-art img{width:100%;height:100%;object-fit:cover;object-position:center 32%}
+.master-current{position:relative;z-index:2;justify-self:end;width:min(100%,380px);padding:26px;border:1px solid #ffffff2a;border-radius:20px;background:#171c1ae0;backdrop-filter:blur(20px);box-shadow:0 18px 60px #0004}.master-current>span{font-size:13px;color:#d1b2a2}.master-current h2{margin:12px 0 8px;color:#fff;font:500 clamp(25px,2.4vw,36px)/1.15 Georgia,serif;letter-spacing:-.025em}.master-current p{margin:0 0 22px;color:#c6c7c1;font-size:14px;line-height:1.55}.master-current .button{white-space:normal}
+.campaign-bar{margin-top:28px}.crimson-section-heading span{display:none}.crimson-section-heading h2{font-family:Georgia,serif;letter-spacing:-.04em;text-transform:none}.panel-intro,.threat-foot{font-size:13px;line-height:1.6}
+@media(max-width:900px){.master-hero{grid-template-columns:1fr;min-height:0;padding:40px}.master-hero-copy{min-height:270px}.master-current{justify-self:stretch;width:auto}.master-hero-art{inset:0 0 32% 28%}}
+@media(max-width:600px){.master-hero{padding:26px;gap:20px;border-radius:22px}.master-hero-copy{min-height:270px}.master-hero h1{font-size:clamp(48px,12vw,70px)}.master-hero-intro{font-size:16px;margin:20px 0 24px}.master-hero-art{inset:0 0 35% 15%;opacity:.35}.master-current{padding:21px}.master-current h2{font-size:27px}.master-hero-actions .button{font-size:13px}}
+
+/* The photo zooms inside its own frame, so no hard edge cuts across the hero. */
+.master-hero-art{overflow:hidden}
+
+/* One compact command bar: the section tabs share a line with the display
+   controls, and the wordmark is gone. */
+.topbar .brand.niti-brand{display:none!important}
+.topbar .sidebar-footer{display:none!important}
+@media(min-width:681px){
+  .topbar{grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px}
+  .topbar .sidebar #nav{grid-row:1;grid-column:1;flex-wrap:nowrap;align-items:center;justify-content:flex-start;gap:2px;margin:0;padding:0;overflow-x:auto;overflow-y:hidden;scrollbar-width:none}
+  .topbar .sidebar #nav::-webkit-scrollbar{display:none}
+  .topbar .sidebar .nav-item{flex:0 0 auto;min-width:0;min-height:44px;padding:10px 6px;gap:0;justify-content:center;white-space:nowrap;font-size:13px}
+  .topbar .sidebar .nav-item .icon{display:none}
+  .topbar .sidebar .nav-item .nav-count{margin-left:5px;font-size:10px}
+  .topbar .top-actions{grid-row:1;grid-column:2;width:auto;align-items:center;justify-content:flex-end}
+  /* One baseline: every control in the bar is the same height as the theme buttons. */
+  .topbar .top-actions .button{min-height:44px;height:44px;padding-block:0;display:inline-flex;align-items:center}
+}
+
+/* The timers column reaches the bottom of the plot-threads card. */
+.dashboard-grid{align-items:stretch}
+.threats-panel{display:flex;flex-direction:column}
+.threats-panel .clocks-grid{flex:0 0 auto}
+.threats-panel .threat-foot{margin-top:auto}
+
+/* Secret cards keep their "reveal" row and action on one baseline. */
+.card-grid{grid-auto-rows:1fr}
+.secret-card{display:flex;flex-direction:column}
+.secret-card>.field{flex:1 1 auto}
+.secret-card>details{margin-top:auto}
+.secret-card .card-footer{margin-top:16px}
+
+/* A little breathing room above the quick note. */
+.quick-note-panel .note-form{padding-top:8px}
+
+/* Small print was hard to read: lift every caption, tag and hint one step,
+   without touching the display headings. */
+#workspace .tag,#workspace .badge,#workspace .status{font-size:11px}
+#workspace .demo-tag{font-size:10px}
+#workspace .eyebrow{font-size:11px}
+#workspace .field-label{font-size:12px}
+#workspace .field>.field-label,#workspace label.field-label{font-size:13px}
+#workspace .module-flag-control .field-label{font-size:11px}
+#workspace .stat-label{font-size:12.5px}
+#workspace .text-button{font-size:12.5px}
+#workspace .button.small{font-size:12px}
+#workspace .clock-label{font-size:12px}
+#workspace .clock-title{font-size:13.5px}
+#workspace .clock-inner small{font-size:11px}
+#workspace small{font-size:11.5px}
+#workspace time{font-size:11.5px}
+#workspace li{font-size:12.5px}
+#workspace .module-source{font-size:11.5px}
+#workspace .module-check-number{font-size:11px}
+#workspace .scene-number{font-size:11.5px}
+#workspace .thread-sub{font-size:12.5px}
+#workspace .kanban-title{font-size:13px}
+#workspace .panel-header .panel-title{font-size:14px}
+#workspace .scene-art-content{font-size:9.5px}
+#workspace .graph-hint{font-size:12px}
+#workspace .scene-meta{font-size:11.5px}
+#workspace .scene-progress>span{font-size:11px}
+#workspace .module-clock-toggle{font-size:12px!important}
+#workspace .gm-action-outcomes,#workspace .gm-action-outcomes>span,#workspace .gm-action-outcomes>small{font-size:11.5px}
+#workspace .gm-outcomes-title>span{font-size:11px}
+#workspace .module-ledger-total span,#workspace .module-xp>span{font-size:11.5px}
+#workspace .relation-row .muted,#workspace .relation-source{font-size:11.5px}
+#workspace .module-ledger-row .muted{font-size:11.5px}
+#workspace .dice-signal{font-size:10.5px}
+#workspace .dice-console-note,#workspace .dice-history-note{font-size:12px}
+#workspace .dice-card span{font-size:11.5px}
+#workspace .module-result span{font-size:11.5px}
+#workspace .module-ledger-row strong{font-size:12.5px}
+#workspace summary{font-size:12.5px}
+#workspace .panel p,#workspace .module-clock-conditions p{font-size:13px}
+#workspace .module-dependency p{font-size:13px}
+#workspace .empty-state p{font-size:13px}
+
+/* Role gateway: a quiet way back to the choice screen. */
+.topbar .role-switch{display:inline-flex;align-items:center;gap:7px;text-decoration:none;white-space:nowrap}
+.topbar .role-switch:hover{border-color:var(--green);color:var(--green)}
+@media(max-width:680px){
+  .topbar .role-switch{padding-inline:9px;font-size:13px;min-width:40px;justify-content:center;background:transparent;border-color:var(--line)}
+  .topbar .role-switch .role-switch-label{display:none}
+}
+@media print{.topbar .role-switch{display:none!important}}

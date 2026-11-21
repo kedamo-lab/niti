@@ -2,5 +2,13 @@
   "version": 2,
   "framework": null,
   "outputDirectory": "dist",
-  "cleanUrls": false
+  "cleanUrls": false,
+  "redirects": [
+    { "source": "/player", "destination": "/player/", "permanent": false }
+  ],
+  "rewrites": [
+    { "source": "/player/", "destination": "https://niti-players.thegromvel.chatgpt.site/" },
+    { "source": "/player/:path*", "destination": "https://niti-players.thegromvel.chatgpt.site/:path*" },
+    { "source": "/api/:path*", "destination": "https://niti-players.thegromvel.chatgpt.site/api/:path*" }
+  ]
 }

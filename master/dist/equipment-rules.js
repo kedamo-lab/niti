@@ -116,7 +116,7 @@
     const damageThresholds=numericMap(options.thresholds ?? options.damageThresholds,0,1000),resistancePercent=numericMap(options.resistances ?? options.resistancePercent,0,100);
     if(!damageThresholds || !resistancePercent)return null;
     const armorClass=5+Math.round(ac/5);
-    return {armorClass,agilityDivisor:0,damageThresholds,resistancePercent,originalArmorClass:ac,method:'olympus-d20-armor-v1',note:`КБ игры ${ac}% → настольный КБ ${armorClass} = 5 + округление(${ac}/5). ПУ и СУ сохранены отдельно; дополнительного бонуса ловкости у этой адаптации нет.`};
+    return {armorClass,agilityDivisor:0,damageThresholds,resistancePercent,originalArmorClass:ac,method:'olympus-d20-armor-v1',note:`КБ игры ${ac}% — настольный КБ ${armorClass} = 5 + округление(${ac}/5). ПУ и СУ сохранены отдельно; дополнительного бонуса ловкости у этой адаптации нет.`};
   }
   function damageType(input) {
     const key=String(input||'normal').trim().toLocaleLowerCase('ru').replace(/ё/g,'е');

@@ -1,15 +1,25 @@
 'use strict';
-/* A small, locally synthesized terminal signal. No audio files or network calls. */
+/* Original local effects. One preference controls the whole terminal. */
 (function () {
   const PREF_KEY = 'niti-player-level-audio-v1';
   const PLAYED_PREFIX = 'niti-player-level-sound-played-v1:';
   const CLAIM_PREFIX = 'niti-player-level-sound-claim-v1:';
   const PENDING_MS = 30000;
+  const VOLUME_KEY = 'niti-terminal-volume-v1';
+  const soundFiles = {
+    click:'assets/audio/ui-click.wav', toggle:'assets/audio/toggle.wav',
+    diceRoll:'assets/audio/dice-roll.wav', diceCount:'assets/audio/dice-count.wav',
+    result:'assets/audio/result.wav', levelUp:'assets/audio/level-up.wav'
+  };
+  const soundGains = {click:.7,toggle:.8,diceRoll:1,diceCount:.5,result:.9,levelUp:.9};
+  const buffers = new Map(), effects = new Map(), lastEffects = new Map();
+  let loadingSounds = null, volume = .7, diceGeneration = 0, diceRolling = false;
   const AudioContextType = window.AudioContext || window.webkitAudioContext;
   let enabled = true, context = null, pending = null, flushing = false, menuOpen = false;
   let gestureReceived = false, unavailable = !AudioContextType, lastTone = -Infinity;
   const playedHere = new Set(), activeTones = new Set();
   try { enabled = localStorage.getItem(PREF_KEY) !== 'muted'; } catch {}
+  try { const stored = localStorage.getItem(VOLUME_KEY); if (stored !== null && Number.isFinite(Number(stored))) volume = Math.max(0,Math.min(1,Number(stored))); } catch {}
 
   const speaker = muted => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4Z"/>${muted ? '<path d="m17 9 5 6m0-6-5 6"/>' : '<path d="M17 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/>'}</svg>`;
   function storageRead(key) { try { return localStorage.getItem(key); } catch { return null; } }
@@ -19,9 +29,9 @@
   function alreadyPlayed(event) { const key = playedKey(event); return playedHere.has(key) || storageRead(key) === '1'; }
   function statusText() {
     if (unavailable) return 'В этом браузере звук недоступен. Уведомления остаются на экране.';
-    if (!enabled) return 'Без звука. Уведомления о новых уровнях остаются на экране.';
+    if (!enabled) return 'Звуки терминала выключены.';
     if (!gestureReceived) return 'Нажми любую кнопку в терминале, чтобы включить звук.';
-    if (context?.state === 'running') return 'Короткий сигнал при повышении уровня. Громкость — негромкая.';
+    if (context?.state === 'running') return 'Кнопки, переключатели, броски кубиков и повышение уровня.';
     return 'Нажми «Проверить звук», чтобы разрешить воспроизведение.';
   }
   function updateControls() {
@@ -36,8 +46,8 @@
         button.dataset.audioMuted = muted;
       }
       button.setAttribute('aria-expanded', String(menuOpen));
-      button.setAttribute('aria-label', 'Звук повышения уровня: ' + (enabled ? 'включён' : 'выключен') + '. Настройки');
-      button.title = enabled ? 'Звук повышения уровня включён' : 'Звук повышения уровня выключен';
+      button.setAttribute('aria-label', 'Звуки терминала: ' + (enabled ? 'включены' : 'выключены') + '. Настройки');
+      button.title = enabled ? 'Звуки терминала включены' : 'Звуки терминала выключены';
       button.classList.toggle('is-muted', !enabled);
       button.classList.toggle('is-ready', enabled && context?.state === 'running');
     }
@@ -47,6 +57,10 @@
     if (status) status.textContent = statusText();
     const test = document.querySelector('[data-player-audio-action="test"]');
     if (test) test.disabled = !enabled || unavailable;
+    const slider = document.getElementById('terminalAudioVolume');
+    if (slider && slider !== document.activeElement) slider.value = String(Math.round(volume*100));
+    const output = document.getElementById('terminalAudioVolumeValue');
+    if (output) output.textContent = Math.round(volume*100)+'%';
   }
   function closeMenu(returnFocus = false) {
     menuOpen = false;
@@ -58,7 +72,7 @@
     menuOpen = true;
     const wrapper = document.getElementById('playerAudioControl');
     if (!wrapper) return;
-    document.body.insertAdjacentHTML('beforeend', '<section id="playerAudioPopover" class="player-audio-popover" role="dialog" aria-labelledby="playerAudioTitle"><div class="player-audio-heading"><strong id="playerAudioTitle">СИГНАЛ ПОВЫШЕНИЯ</strong><button type="button" data-player-audio-action="close" aria-label="Закрыть настройки звука">×</button></div><p id="playerAudioStatus" role="status"></p><div class="player-audio-actions"><button type="button" class="button ghost small" data-player-audio-action="toggle" aria-pressed="true">Звук: включён</button><button type="button" class="button ghost small" data-player-audio-action="test">Проверить звук</button></div></section>');
+    document.body.insertAdjacentHTML('beforeend', '<section id="playerAudioPopover" class="player-audio-popover" role="dialog" aria-labelledby="playerAudioTitle"><div class="player-audio-heading"><strong id="playerAudioTitle">ЗВУКИ ТЕРМИНАЛА</strong><button type="button" data-player-audio-action="close" aria-label="Закрыть настройки звука">×</button></div><p id="playerAudioStatus" role="status"></p><label class="terminal-volume" for="terminalAudioVolume"><span>Громкость <output id="terminalAudioVolumeValue"></output></span><input id="terminalAudioVolume" type="range" min="0" max="100" step="5"></label><div class="player-audio-actions"><button type="button" class="button ghost small" data-player-audio-action="toggle" aria-pressed="true">Звук: включён</button><button type="button" class="button ghost small" data-player-audio-action="test">Проверить звук</button></div></section>');
     updateControls();
     positionMenu();
     document.querySelector('#playerAudioPopover button')?.focus({preventScroll:true});
@@ -91,6 +105,7 @@
         context.addEventListener?.('statechange', updateControls);
       }
       if (context.state !== 'running') await context.resume();
+      await loadSounds();
       updateControls();
       return context.state === 'running';
     } catch { updateControls(); return false; }
@@ -98,8 +113,46 @@
   function stopTones() {
     for (const oscillator of activeTones) { try { oscillator.stop(); } catch {} }
     activeTones.clear();
+    stopEffects();
+  }
+  function loadSounds() {
+    if (loadingSounds) return loadingSounds;
+    loadingSounds = Promise.all(Object.entries(soundFiles).map(async ([name,url]) => {
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Audio unavailable');
+        buffers.set(name,await context.decodeAudioData(await response.arrayBuffer()));
+      } catch { /* A missing sample never interrupts a game action. */ }
+    }));
+    return loadingSounds;
+  }
+  function stopEffects(names) {
+    for (const [source,effect] of effects) {
+      if (names && !names.includes(effect.name)) continue;
+      try { source.stop(); } catch {}
+      effects.delete(source);
+    }
+  }
+  function playEffect(name) {
+    if (!enabled || !volume || context?.state !== 'running' || document.hidden || !buffers.has(name)) return false;
+    const now = performance.now();
+    if (now-(lastEffects.get(name) ?? -Infinity) < (name==='click'?75:40)) return false;
+    lastEffects.set(name,now);
+    if (name==='diceCount') stopEffects(['diceCount']);
+    const source = context.createBufferSource(), gain = context.createGain();
+    source.buffer = buffers.get(name); gain.gain.value = volume*(soundGains[name] ?? 1);
+    source.connect(gain); gain.connect(context.destination);
+    effects.set(source,{name,gain});
+    source.onended = () => { effects.delete(source); source.disconnect(); gain.disconnect(); };
+    source.start();
+    return true;
   }
   function chime() {
+    if (Date.now()-lastTone<850) return false;
+    if (playEffect('levelUp')) { lastTone=Date.now(); return true; }
+    return synthChime();
+  }
+  function synthChime() {
     if (!enabled || !context || context.state !== 'running' || document.hidden || Date.now() - lastTone < 850) return false;
     lastTone = Date.now();
     try {
@@ -172,12 +225,40 @@
     else if (action === 'toggle') {
       enabled = !enabled; storageWrite(PREF_KEY, enabled ? 'enabled' : 'muted');
       if (!enabled) { pending = null; stopTones(); }
-      else void unlock().then(flushPending);
+      else void unlock().then(() => { playEffect('result'); return flushPending(); });
       updateControls();
     } else if (action === 'test') {
       if (event.isTrusted) gestureReceived = true;
-      void unlock().then(ready => { if (ready && chime()) message('Сигнал повышения уровня включён.'); updateControls(); });
+      void unlock().then(ready => { if (ready && playEffect('result')) message('Звуки терминала включены.'); updateControls(); });
     } else if (menuOpen && !event.target.closest('#playerAudioControl,#playerAudioPopover')) closeMenu();
+  });
+  document.addEventListener('input', event => {
+    if (event.target.id !== 'terminalAudioVolume') return;
+    volume = Math.max(0,Math.min(1,Number(event.target.value)/100));
+    storageWrite(VOLUME_KEY,String(volume));
+    for (const effect of effects.values()) effect.gain.gain.setTargetAtTime(volume*(soundGains[effect.name] ?? 1),context.currentTime,.02);
+    updateControls();
+  });
+  document.addEventListener('click', event => {
+    if (!event.isTrusted || !enabled) return;
+    const target = event.target.closest('button,a,input[type=checkbox]');
+    if (!target || target.disabled || target.closest('#playerAudioControl,#playerAudioPopover,.dice-roll-dialog') || target.matches('[data-dice-action]')) return;
+    const type = target.matches('#crtSwitch,.palette-option,.niti-motion-toggle,input[type=checkbox]') ? 'toggle' : 'click';
+    void unlock().then(ready => { if (ready) playEffect(type); });
+  });
+  window.addEventListener('niti:dice-roll-start', event => {
+    const generation = ++diceGeneration; diceRolling = true;
+    stopEffects(['diceRoll','diceCount','result']);
+    if (event.detail?.animated === false) return;
+    void unlock().then(ready => { if (ready && diceRolling && generation===diceGeneration) { playEffect('diceRoll'); playEffect('diceCount'); } });
+  });
+  window.addEventListener('niti:dice-roll-end', () => {
+    diceRolling = false; const generation = ++diceGeneration;
+    stopEffects(['diceRoll','diceCount']);
+    void unlock().then(ready => { if (ready && generation===diceGeneration) playEffect('result'); });
+  });
+  window.addEventListener('niti:dice-roll-cancel', () => {
+    diceRolling = false; diceGeneration++; stopEffects(['diceRoll','diceCount','result']);
   });
   document.addEventListener('keydown', event => { if (event.key === 'Escape' && menuOpen) { event.stopPropagation(); closeMenu(true); } });
   document.addEventListener('visibilitychange', () => {
@@ -185,6 +266,7 @@
     else if (pending) { if (Date.now() - pending.at > PENDING_MS) pending = null; else void flushPending(); }
   });
   window.addEventListener('storage', event => {
+    if (event.key === VOLUME_KEY) { volume = Math.max(0,Math.min(1,Number(event.newValue ?? .7))); updateControls(); return; }
     if (event.key !== PREF_KEY) return;
     enabled = event.newValue !== 'muted';
     if (!enabled) { pending = null; stopTones(); }
@@ -194,6 +276,6 @@
   window.addEventListener('niti:character-cleared', () => { pending = null; stopTones(); });
   window.addEventListener('resize', positionMenu);
   window.addEventListener('scroll', () => { if (menuOpen) positionMenu(); }, {passive:true});
-  window.PlayerLevelAudio = {getState:() => ({enabled,ready:context?.state === 'running',supported:!unavailable,pendingLevel:pending?.level || null})};
+  window.PlayerLevelAudio = {getState:() => ({enabled,volume,loadedEffects:buffers.size,ready:context?.state === 'running',supported:!unavailable,pendingLevel:pending?.level || null})};
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount, {once:true}); else mount();
 })();

@@ -71,15 +71,6 @@
     }
   }
   function decorateTools() {
-    for (const link of document.querySelectorAll('.player-home-actions>a,.player-profile-summary .text-button')) {
-      if (link.dataset.nitiArrow) continue;
-      for (const node of link.childNodes) if (node.nodeType === Node.TEXT_NODE) node.textContent = node.textContent.replace(/\s*↗\s*$/,'');
-      link.insertAdjacentHTML('beforeend',icon('arrow').replace('niti-icon','niti-icon niti-arrow-icon'));
-      link.dataset.nitiArrow = 'true';
-    }
-    for (const arrow of document.querySelectorAll('.session-summary-arrow,.player-tools>a>b')) {
-      if (!arrow.querySelector('svg')) arrow.innerHTML = icon('arrow').replace('niti-icon','niti-icon niti-arrow-icon');
-    }
     const sessionIcon = document.querySelector('.session-summary-icon');
     if (sessionIcon && !sessionIcon.querySelector('svg')) sessionIcon.innerHTML = icon('session');
     for (const link of document.querySelectorAll('.player-tools>a[href]')) {
@@ -104,4 +95,22 @@
     lastView = next;
   }
   window.NitiDesign = Object.freeze({icon,render,brandSVG:brand});
+})();
+
+// Display directional separators as dashes without changing stored text.
+(() => {
+  const arrows = /[↗↘↙↖→←↑↓↥➜➝➞]/g;
+  function clean(node) {
+    if (node.nodeType === Node.TEXT_NODE) {
+      const parent = node.parentElement;
+      if (!parent || parent.closest('script,style,textarea,input,svg,[contenteditable]')) return;
+      const updated = node.data.replace(arrows, '—');
+      if (updated !== node.data) node.data = updated;
+    } else if (node.nodeType === Node.ELEMENT_NODE && !node.matches('script,style,textarea,input,svg,[contenteditable]')) {
+      node.childNodes.forEach(clean);
+    }
+  }
+  clean(document.body);
+  new MutationObserver(records => records.forEach(record => record.addedNodes.forEach(clean)))
+    .observe(document.body, {childList:true, subtree:true});
 })();

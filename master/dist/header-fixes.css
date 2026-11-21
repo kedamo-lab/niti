@@ -1,0 +1,62 @@
+/* Readable, aligned display controls. */
+.topbar .terminal-display-settings .terminal-setting#phosphorSwitch,
+.topbar .terminal-display-settings .terminal-setting#crtSwitch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 44px;
+  height: 44px;
+  padding: 0 14px;
+  font-size: 14px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.topbar .terminal-display-settings .terminal-setting#phosphorSwitch { gap: 8px; min-width: 0; }
+.topbar .terminal-display-settings .terminal-setting#crtSwitch { min-width: 90px; }
+.topbar .terminal-display-settings .terminal-setting.player-audio-trigger {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  line-height: 1;
+}
+.topbar .terminal-display-settings .player-audio-trigger svg {
+  display: block;
+  width: 19px;
+  height: 19px;
+  margin: 0;
+}
+
+/* Fade the image itself, allowing the hero background to show through. */
+.player-landing-image {
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 47%);
+  mask-image: linear-gradient(to right, transparent 0%, #000 47%);
+}
+.player-landing-image::after {
+  background: linear-gradient(to top, #16181ba8, transparent 38%);
+}
+@media (max-width: 680px) {
+  .topbar .terminal-display-settings .terminal-setting#phosphorSwitch,
+  .topbar .terminal-display-settings .terminal-setting#crtSwitch {
+    min-height: 40px;
+    height: 40px;
+    padding: 0 9px;
+    font-size: 12px;
+  }
+  .topbar .terminal-display-settings .terminal-setting#crtSwitch { min-width: 70px; }
+  .topbar .terminal-display-settings .terminal-setting.player-audio-trigger {
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+    min-height: 40px;
+  }
+  .player-landing-image {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 42%);
+    mask-image: linear-gradient(to bottom, transparent 0%, #000 42%);
+  }
+}

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Olympus 2207: Тартар. Все 14 заданий, персонажи, связи, проверки и последствия для ведущего.">
+<meta name="theme-color" content="#090809"><title>Тартар · Нити — пульт ведущего</title>
+<link rel="stylesheet" href="style.css"><link rel="stylesheet" href="module.css"><link rel="stylesheet" href="fallout.css"><link rel="stylesheet" href="palette.css"><link rel="stylesheet" href="dice.css"><link rel="stylesheet" href="session-gm.css"><link rel="stylesheet" href="inventory-gm.css"><link rel="stylesheet" href="scene-rewards.css"><link rel="stylesheet" href="navigation-motion.css"><link rel="stylesheet" href="storydesk-design.css"><link rel="icon" href="brand-mark.svg" type="image/svg+xml">
+<link rel="stylesheet" href="crimson.css"><link rel="stylesheet" href="ticker.css">
+<link rel="preload" href="fonts/oswald-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="apple-design.css">
+<link rel="stylesheet" href="header-fixes.css">
+<link rel="stylesheet" href="master-redesign.css">
+<link rel="stylesheet" href="player-audio.css">
+<script>
+/* One site, two terminals: when this deployment serves /player/ as well,
+   invites and the role switch stay on the same origin. */
+if (location.protocol === 'http:' || location.protocol === 'https:') {
+  window.NITI_SESSION_PLAYER_URL = new URL('player/', location.href).href;
+}
+</script>
+</head>
+<body>
+<div class="app-shell">
+<aside class="sidebar">
+<a class="brand" href="#overview"><span class="brand-mark"><svg viewBox="0 0 64 64" fill="none" aria-hidden="true"><polygon points="32.00,13.00 35.00,9.20 37.95,9.78 39.27,14.45 41.50,15.55 46.00,13.75 48.26,15.74 47.07,20.43 48.45,22.50 53.25,23.20 54.22,26.05 50.84,29.52 51.00,32.00 54.80,35.00 54.22,37.95 49.55,39.27 48.45,41.50 50.25,46.00 48.26,48.26 43.57,47.07 41.50,48.45 40.80,53.25 37.95,54.22 34.48,50.84 32.00,51.00 29.00,54.80 26.05,54.22 24.73,49.55 22.50,48.45 18.00,50.25 15.74,48.26 16.93,43.57 15.55,41.50 10.75,40.80 9.78,37.95 13.16,34.48 13.00,32.00 9.20,29.00 9.78,26.05 14.45,24.73 15.55,22.50 13.75,18.00 15.74,15.74 20.43,16.93 22.50,15.55 23.20,10.75 26.05,9.78 29.52,13.16" stroke="currentColor" stroke-width="2"/><circle cx="32" cy="32" r="13" stroke="currentColor" stroke-width="1.5"/><path d="m32 18 5 9-5 3-5-3Zm13 21-10 1v-6l5-3Zm-26 0 5-8 5 3v6Z" fill="currentColor"/><circle cx="32" cy="32" r="3" fill="currentColor"/></svg></span><span>нити<small class="brand-sub">ТЕРМИНАЛ ВЕДУЩЕГО</small></span></a>
+<div class="campaign-label"><span class="masthead-signal" aria-hidden="true"></span> OLYMPUS 2207 <span>/</span> ТАРТАР</div>
+<nav aria-label="Разделы" id="nav"></nav>
+<div class="sidebar-quote">«Война. Война никогда не меняется.»<span>АРХИВ ПУСТОШИ / 2207</span></div>
+<div class="sidebar-footer"><div id="saveStatus" class="save-status" role="status">● Сохранено в браузере</div><a class="text-button" href="niti-offline.html" download> Забрать пульт с собой</a><button class="text-button" data-action="help">Как здесь всё устроено</button></div>
+</aside>
+<main class="main">
+<header class="topbar"><div class="breadcrumbs"><span>ТЕРМИНАЛ 2207</span><span>/</span><strong id="crumb">За ширмой</strong></div><div class="top-actions"><a class="button ghost small role-switch" href="./" title="Вернуться к выбору роли"><span aria-hidden="true">⇄</span><span class="role-switch-label">Сменить роль</span></a><div class="terminal-display-settings" aria-label="Настройки экрана"><button type="button" class="terminal-setting" id="phosphorSwitch" aria-label="Переключить зелёный и янтарный экран" aria-pressed="false">Цвет: зелёный</button><button type="button" class="terminal-setting" id="crtSwitch" aria-label="Переключить эффект экрана ЭЛТ" aria-pressed="true">ЭЛТ: вкл</button></div><button class="button ghost small" data-action="manuscript">Рукопись модуля</button></div></header>
+<div id="workspace" class="workspace"></div>
+<footer class="page-footer"><span>НИТИ // ТАРТАР <span class="footer-dot">·</span> АРХИВ ВЕДУЩЕГО</span><span>ПРОТОКОЛ ХРАНЕНИЯ: ЛОКАЛЬНО</span></footer>
+</main>
+</div>
+<div id="modalRoot"></div><div id="focusRoot"></div><div class="toast" id="toast" role="status"></div>
+<input type="file" id="backupFile" accept=".json,application/json" hidden><input type="file" id="storyFile" accept=".txt,.md,text/plain,text/markdown" hidden>
+<script>document.querySelector('.topbar').prepend(document.querySelector('.sidebar'));</script>
+<script src="player-audio.js"></script>
+<script src="terminal.js"></script><script src="module-data.js"></script><script src="module-ui.js"></script><script src="prompts.js"></script><script src="dice.js"></script><script src="session-catalog.js"></script><script src="item-catalog.js"></script><script src="equipment-rules.js"></script><script src="inventory-gm.js"></script><script src="scene-rewards.js"></script><script src="outcome-effects.js"></script><script src="outcome-sync.js"></script><script src="session-gm.js"></script><script src="session-recap.js"></script><script src="navigation-motion.js"></script><script src="storydesk-design.js"></script><script src="ticker.js"></script><script src="app.js"></script>
+</body></html>

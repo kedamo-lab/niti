@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Bundle the current dist/index.html into its downloadable offline notebook."""
+"""Bundle the GM terminal (dist/gm.html) into its downloadable offline notebook."""
 from __future__ import annotations
 
 import base64
@@ -37,7 +37,7 @@ def local_file(url: str, parent: Path) -> Path | None:
 
 
 def data_uri(path: Path) -> str:
-    mime = {".woff2": "font/woff2", ".svg": "image/svg+xml", ".webp": "image/webp"}.get(path.suffix)
+    mime = {".woff2": "font/woff2", ".svg": "image/svg+xml", ".webp": "image/webp", ".wav": "audio/wav"}.get(path.suffix)
     mime = mime or mimetypes.guess_type(path.name)[0] or "application/octet-stream"
     return f"data:{mime};base64," + base64.b64encode(path.read_bytes()).decode("ascii")
 
@@ -67,8 +67,19 @@ def embed_markup_assets(source: str, parent: Path) -> str:
     return re.sub(r"(\b(?:src|href)\s*=\s*)([\"'])(.*?)(?:\2)", resource, source, flags=re.I)
 
 
+def embed_audio_assets(source: str, parent: Path) -> str:
+    """Inline literal local WAV paths used by the sound controller."""
+    def resource(match: re.Match[str]) -> str:
+        path = local_file(match[2], parent)
+        if path is None or not path.is_file():
+            raise ValueError(f"Offline audio asset is missing: {match[2]}")
+        return match[1] + data_uri(path) + match[1]
+
+    return re.sub(r"([\"'])(assets/audio/[A-Za-z0-9_-]+\.wav)\1", resource, source)
+
+
 def build() -> Path:
-    source = (DIST / "index.html").read_text(encoding="utf-8")
+    source = (DIST / "gm.html").read_text(encoding="utf-8")
 
     def link(match: re.Match[str]) -> str:
         attrs = Tag(match[0]).attrs
@@ -92,13 +103,15 @@ def build() -> Path:
         path = local_file(attrs["src"], DIST)
         if path is None:
             raise ValueError("Offline scripts must be local files")
-        js = embed_markup_assets(path.read_text(encoding="utf-8"), path.parent)
+        js = embed_audio_assets(embed_markup_assets(path.read_text(encoding="utf-8"), path.parent), path.parent)
         js = re.sub(r"</script", lambda _: r"<\/script", js, flags=re.I)
         extra = "".join(" " + name + ("" if value is None else '="' + html.escape(value, quote=True) + '"') for name, value in attrs.items() if name != "src")
         return '<script data-source="' + html.escape(path.relative_to(DIST).as_posix(), quote=True) + '"' + extra + '>' + js + "</script>"
 
     source = re.sub(r"(<script\b[^>]*>).*?</script\s*>", script, source, flags=re.I | re.S)
     source = re.sub(r'<a\b(?=[^>]*\bhref=[\"\']niti-offline\.html[\"\'])[^>]*>.*?</a\s*>', "", source, flags=re.I | re.S)
+    # The gateway page does not travel with a single-file copy.
+    source = re.sub(r'<a\b(?=[^>]*\bclass=[\"\'][^\"\']*\brole-switch\b)[^>]*>.*?</a\s*>', "", source, flags=re.I | re.S)
     source = embed_markup_assets(source, DIST)
     licenses = {"fonts/OFL-Oswald.txt": (DIST / "fonts/OFL-Oswald.txt").read_text(encoding="utf-8")}
     metadata = json.dumps(licenses, ensure_ascii=False).replace("</", "<\\/")

@@ -1,0 +1,184 @@
+/* Readable, aligned display controls. */
+.topbar .brand.niti-brand .niti-brand-name { display: none; }
+.topbar .sidebar-footer { display: none; }
+.topbar .sidebar .nav-item:hover, .topbar .sidebar .nav-item:hover .icon { transform: none; }
+body.niti-scrolled .topbar { margin-left: clamp(16px, 3vw, 48px); margin-right: clamp(16px, 3vw, 48px); }
+@media (max-width: 680px) { body.niti-scrolled .topbar { margin-left: 10px; margin-right: 10px; } }
+@media (min-width: 1451px) {
+  .topbar { grid-template-columns: auto minmax(0, 1fr) auto; }
+  .topbar .sidebar #nav { grid-column: 2; grid-row: 1; flex-wrap: nowrap; }
+  .topbar .top-actions { grid-column: 3; grid-row: 1; }
+}
+.topbar .terminal-display-settings .terminal-setting#phosphorSwitch,
+.topbar .terminal-display-settings .terminal-setting#crtSwitch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 44px;
+  height: 44px;
+  padding: 0 14px;
+  font-size: 14px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* Keep the two invitation cards aligned and their descriptions readable. */
+.session-join-grid { align-items: stretch; }
+.session-join-grid > .session-join-info { height: auto; align-self: stretch; }
+.session-join-info li > strong { font-size: 14px; line-height: 1.45; }
+.session-join-info li > span { font-size: 14px; line-height: 1.6; }
+.fallout-sheet input.sheet-special-mod { box-sizing: border-box; padding: 0 !important; text-align: center; line-height: normal; }
+
+/* A painted mark fills the remaining space without covering the skill controls. */
+.sheet-skills-column { display: flex; flex-direction: column; }
+.sheet-skills-column::after {
+  content: 'ПУСТОШЬ\A ПОМНИТ.';
+  display: block;
+  margin: auto 0 0;
+  padding: 60px 18px 35px;
+  color: color-mix(in srgb, var(--green) 56%, transparent);
+  font: italic 900 clamp(36px, 5vw, 76px)/.88 Impact, 'Arial Narrow', sans-serif;
+  letter-spacing: -.045em;
+  text-align: center;
+  white-space: pre;
+  transform: rotate(-4deg);
+  text-shadow: 2px 2px 0 var(--paper), 4px 4px 0 color-mix(in srgb, var(--green) 22%, transparent);
+  pointer-events: none;
+}
+@media(max-width: 680px) { .sheet-skills-column::after { padding: 48px 8px 30px; font-size: 42px; } }
+@media print { .sheet-skills-column::after { display: none; } }
+
+/* Help topics share consistent rows and aligned actions. */
+.player-help-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; gap: 18px; }
+.player-help-grid > .panel { display: flex; flex-direction: column; min-width: 0; height: auto; padding: 28px; }
+.player-help-grid h2 { margin: 0 0 16px; font-family: var(--serif); font-size: 26px; line-height: 1.2; text-transform: none; }
+.player-help-grid p { font-size: 14px; line-height: 1.7; }
+.player-help-grid .player-data-actions, .player-help-grid > .panel > a.button { margin-top: auto; align-self: flex-start; }
+.player-help-grid .player-data-actions { padding-top: 14px; }
+.player-help-grid > .panel > a.button { margin-top: auto; }
+@media(max-width: 680px) { .player-help-grid { grid-template-columns: 1fr; gap: 12px; } .player-help-grid > .panel { padding: 22px; } }
+.topbar .terminal-display-settings .terminal-setting#phosphorSwitch { gap: 8px; min-width: 0; }
+.topbar .terminal-display-settings .terminal-setting#phosphorSwitch:hover,
+.topbar .terminal-display-settings .terminal-setting#phosphorSwitch:hover span:not(.palette-current-swatch) { color: #000; }
+.topbar .terminal-display-settings .terminal-setting#crtSwitch { min-width: 90px; }
+.topbar .terminal-display-settings .terminal-setting.player-audio-trigger {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  line-height: 1;
+}
+.topbar .terminal-display-settings .player-audio-trigger svg {
+  display: block;
+  width: 19px;
+  height: 19px;
+  margin: 0;
+}
+
+/* Fade the image itself, allowing the hero background to show through. */
+.player-landing-image {
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 47%);
+  mask-image: linear-gradient(to right, transparent 0%, #000 47%);
+}
+.player-landing-image::after {
+  background: linear-gradient(to top, #16181ba8, transparent 38%);
+}
+@media (max-width: 680px) {
+  .topbar .terminal-display-settings .terminal-setting#phosphorSwitch,
+  .topbar .terminal-display-settings .terminal-setting#crtSwitch {
+    min-height: 40px;
+    height: 40px;
+    padding: 0 9px;
+    font-size: 12px;
+  }
+  .topbar .terminal-display-settings .terminal-setting#crtSwitch { min-width: 70px; }
+  .topbar .terminal-display-settings .terminal-setting.player-audio-trigger {
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+    min-height: 40px;
+  }
+  .player-landing-image {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 42%);
+    mask-image: linear-gradient(to bottom, transparent 0%, #000 42%);
+  }
+}
+
+/* The lower sheet uses the same reading scale as the rest of the workspace. */
+@media screen {
+  .fallout-sheet .sheet-body { grid-template-columns: minmax(165px, 180px) minmax(280px, 320px) minmax(0, 1fr); gap: 24px; }
+  .fallout-sheet .sheet-advancement { padding: 24px; gap: 20px; }
+  .fallout-sheet .sheet-advancement .eyebrow { font-size: 13px; }
+  .fallout-sheet .sheet-advancement strong { font-size: 28px; line-height: 1.3; margin: 8px 0 12px; }
+  .fallout-sheet .sheet-advancement p { font-size: 16px; line-height: 1.6; }
+  .fallout-sheet :is(.sheet-rule-notices, .sheet-notebox, .sheet-skills-column, .sheet-equipment-section) { padding: 22px; }
+  .fallout-sheet :is(.sheet-rules-help, .sheet-warning, .sheet-rule-preview, .sheet-rule-card p, .sheet-rule-card small, .sheet-special-hint, .sheet-special-allocation p, .sheet-special-allocation>small, .sheet-storage-note, .sheet-save-status, .sheet-formulas, .sheet-thief-config, .sheet-thief-config legend, .sheet-thief-skill) { font-size: 14px; line-height: 1.6; }
+  .fallout-sheet .sheet-section-title { gap: 10px; flex-wrap: wrap; margin-bottom: 18px; padding-bottom: 16px; }
+  .fallout-sheet .sheet-section-title :is(h2, h3), .fallout-sheet .sheet-section-title>strong { font-size: 19px; line-height: 1.3; letter-spacing: .02em; }
+  .fallout-sheet .sheet-skills-column .sheet-section-title h2 { font-size: 23px; }
+  .fallout-sheet .sheet-section-title>span, .fallout-sheet .sheet-section-title>small { font-size: 13px; line-height: 1.5; }
+  .fallout-sheet .sheet-rule-card { padding: 16px; }
+  .fallout-sheet .sheet-rule-card strong { font-size: 16px; line-height: 1.4; }
+  .fallout-sheet :is(.sheet-catalog>summary, .sheet-formulas>summary, .sheet-rule-rank, .sheet-perk-locked) { font-size: 14px; line-height: 1.5; }
+  .fallout-sheet .sheet-catalog { padding-top: 16px; margin-top: 18px; }
+  .fallout-sheet :is(.sheet-body .button, .sheet-advancement .button, .sheet-footer .button) { font-size: 15px; min-height: 46px; padding: 12px 16px; line-height: 1.35; }
+  .fallout-sheet .sheet-body .sheet-field>span { font-size: 14px; line-height: 1.5; }
+  .fallout-sheet .sheet-body :is(.input, .textarea):where(:not(.sheet-special-input, .sheet-special-mod)), .fallout-sheet select.input { font-size: 16px; line-height: 1.5; min-height: 44px; }
+  .fallout-sheet .sheet-notebox .textarea { font-size: 16px; padding: 12px; }
+  .fallout-sheet .sheet-skill-row { grid-template-columns: 24px minmax(0, 1fr) 62px 44px; gap: 10px; min-height: 70px; padding: 10px 0; }
+  .fallout-sheet .sheet-skill-row>label { font-size: 16px; line-height: 1.4; }
+  .fallout-sheet .sheet-skill-row>label>small { font-size: 12px; line-height: 1.5; margin-top: 4px; }
+  .fallout-sheet .sheet-skill-row input[type=checkbox] { width: 22px; height: 22px; }
+  .fallout-sheet .sheet-skill-row .input { min-height: 42px; font-size: 18px; padding: 6px; }
+  .fallout-sheet .sheet-skill-total { font-size: 21px; }
+  .fallout-sheet .sheet-special-column { grid-template-rows: repeat(7, minmax(150px, 1fr)) auto; gap: 14px; }
+  .fallout-sheet .sheet-special { padding: 16px 12px; }
+  .fallout-sheet .sheet-special>label { font-size: 14px; line-height: 1.3; }
+  .fallout-sheet .sheet-special-input { font-size: 30px; min-height: 52px; }
+  .fallout-sheet input.sheet-special-mod { font-size: 16px; width: 40px; height: 40px; min-height: 40px; padding: 0; }
+  .fallout-sheet .sheet-special-allocation { padding: 16px; gap: 12px; }
+  .fallout-sheet .sheet-special-allocation>span { font-size: 12px; letter-spacing: .03em; }
+  .fallout-sheet .sheet-special-allocation>strong { font-size: 32px; }
+  .fallout-sheet .sheet-equipment-table { font-size: 15px; min-width: 760px; }
+  .fallout-sheet .sheet-equipment-table th { font-size: 13px; line-height: 1.4; padding: 14px 12px; }
+  .fallout-sheet .sheet-equipment-table td { font-size: 15px; padding: 14px 12px; }
+  .fallout-sheet .sheet-equipment-table .sheet-reference-input { font-size: 16px; line-height: 1.5; padding: 8px; min-height: 100px; }
+  .fallout-sheet .sheet-formulas { padding: 20px 24px; }
+  .fallout-sheet .sheet-footer { gap: 16px; padding-top: 24px; }
+  .fallout-sheet .sheet-footer .sheet-save-status { flex-basis: 100%; }
+}
+@media screen and (max-width: 1250px) {
+  .fallout-sheet .sheet-body { grid-template-columns: minmax(280px, .85fr) minmax(0, 1.4fr); }
+  .fallout-sheet .sheet-special-column { grid-column: 1/-1; grid-template-columns: repeat(7, minmax(0, 1fr)); grid-template-rows: auto; }
+  .fallout-sheet .sheet-special { min-height: 170px; padding: 14px 8px; }
+  .fallout-sheet .sheet-special-column .sheet-special-allocation { grid-column: 1/-1; }
+}
+@media screen and (max-width: 900px) {
+  .fallout-sheet .sheet-body { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .fallout-sheet .sheet-special-column { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .fallout-sheet :is(.sheet-rule-notices, .sheet-notebox, .sheet-skills-column, .sheet-equipment-section) { padding: 18px; }
+}
+@media screen and (max-width: 420px) {
+  .fallout-sheet .sheet-special-column { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .fallout-sheet .sheet-skill-row { grid-template-columns: 22px minmax(0, 1fr) 48px 35px; gap: 7px; }
+  .fallout-sheet .sheet-skill-row>label { font-size: 15px; }
+}
+/* Role gateway: back to the choice screen. */
+.topbar .role-switch{display:inline-flex;align-items:center;gap:6px;text-decoration:none;white-space:nowrap}
+.topbar .role-switch:hover{transform:none}
+@media (max-width: 680px){
+  .topbar .role-switch{padding-inline:9px;font-size:13px;min-width:40px;justify-content:center;background:transparent;border-color:var(--line)}
+  .topbar .role-switch .role-switch-label{display:none}
+}
+@media (min-width: 681px) {
+  /* One menu row at tablet widths; the bar scrolls sideways instead of wrapping. */
+  .topbar .sidebar #nav { flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; }
+  .topbar .sidebar #nav::-webkit-scrollbar { display: none; }
+  .topbar .sidebar .nav-item { flex: 0 0 auto; white-space: nowrap; }
+}
+@media print{.topbar .role-switch{display:none!important}}

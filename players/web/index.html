@@ -9,15 +9,26 @@
 <link rel="stylesheet" href="storydesk-design.css">
 <link rel="stylesheet" href="crimson.css"><link rel="stylesheet" href="player-editorial.css">
 <link rel="preload" href="fonts/oswald-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="apple-design.css">
+<link rel="stylesheet" href="header-fixes.css">
 </head>
 <body>
 <div class="app-shell"><aside class="sidebar">
-<a class="brand" href="#home"><span class="brand-mark"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m32 6 23 13v26L32 58 9 45V19Zm0 0L19 39h26L32 6ZM9 19l36 20-13 19-13-19 36-20"/></svg></span><span>нити<small class="brand-sub">ТЕРМИНАЛ ИГРОКА</small></span></a>
+<a class="brand" href="#home" aria-label="Нити — на главную"><span class="brand-mark"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m32 6 23 13v26L32 58 9 45V19Zm0 0L19 39h26L32 6ZM9 19l36 20-13 19-13-19 36-20"/></svg></span><span>нити<small class="brand-sub">ТЕРМИНАЛ ИГРОКА</small></span></a>
 <div class="campaign-label"><span class="masthead-signal" aria-hidden="true"></span> OLYMPUS 2207 <span>/</span> ИГРОК</div><nav id="nav" aria-label="Разделы"></nav>
 <div class="sidebar-quote">«Твои решения.<br>Твои записи.<br>Твоя история.»<span>ЛИЧНЫЙ ТЕРМИНАЛ</span></div>
-<div class="sidebar-footer"><div id="saveStatus" class="save-status" role="status">● Личные записи в браузере</div><button type="button" class="text-button" data-player-action="backup">↓ Скачать мои данные</button><a class="text-button" href="niti-player-offline.html" download>↙ Терминал без интернета</a><a class="text-button" href="#help">Справка и сохранения ↗</a></div>
-</aside><main class="main"><header class="topbar"><div class="breadcrumbs"><span>ТЕРМИНАЛ ИГРОКА</span><span>/</span><strong id="crumb">На связи</strong></div><div class="top-actions"><div class="terminal-display-settings" aria-label="Настройки экрана"><button type="button" class="terminal-setting" id="phosphorSwitch">Цвет: зелёный</button><button type="button" class="terminal-setting" id="crtSwitch" aria-pressed="true">ЭЛТ: вкл</button></div><span class="tag player-session-tag">ЛИЧНЫЕ ДАННЫЕ</span></div></header><div id="workspace" class="workspace"></div><footer class="page-footer"><span>НИТИ // ТЕРМИНАЛ ИГРОКА</span><span>ЗАПИСИ ХРАНЯТСЯ НА ЭТОМ УСТРОЙСТВЕ</span></footer></main></div>
+<div class="sidebar-footer"><div id="saveStatus" class="save-status" role="status">● Личные записи в браузере</div><button type="button" class="text-button" data-player-action="backup"> Скачать мои данные</button><a class="text-button" href="niti-player-offline.html" download> Терминал без интернета</a><a class="text-button" href="#help">Справка и сохранения</a></div>
+</aside><main class="main"><header class="topbar"><div class="breadcrumbs"><span>ТЕРМИНАЛ ИГРОКА</span><span>/</span><strong id="crumb">На связи</strong></div><div class="top-actions"><a class="button ghost small role-switch" href="/" title="Вернуться к выбору роли"><span aria-hidden="true">⇄</span><span class="role-switch-label">Сменить роль</span></a><div class="terminal-display-settings" aria-label="Настройки экрана"><button type="button" class="terminal-setting" id="phosphorSwitch">Цвет: зелёный</button><button type="button" class="terminal-setting" id="crtSwitch" aria-pressed="true">ЭЛТ: вкл</button></div><span class="tag player-session-tag">ЛИЧНЫЕ ДАННЫЕ</span></div></header><div id="workspace" class="workspace"></div><footer class="page-footer"><span>НИТИ // ТЕРМИНАЛ ИГРОКА</span><span>ЗАПИСИ ХРАНЯТСЯ НА ЭТОМ УСТРОЙСТВЕ</span></footer></main></div>
 <div id="modalRoot"></div><div id="toast" class="toast" role="status"></div><input type="file" id="playerBackupFile" accept=".json,application/json" hidden>
+<script>document.querySelector('.topbar').prepend(document.querySelector('.sidebar'));</script>
+<script>
+/* The role switch only makes sense when this terminal sits under /player/
+   on a combined site; a standalone player deployment hides it. */
+(function(){
+  var link = document.querySelector('.top-actions .role-switch');
+  if (link && !/\/player\/?$/.test(location.pathname)) link.style.display = 'none';
+})();
+</script>
 <script src="terminal.js"></script><script src="dice.js"></script><script src="player-session.js"></script><script src="rules-character.js"></script><script src="player-audio.js"></script><script src="player-sheet.js"></script><script src="equipment-art.js"></script><script src="equipment-rules.js"></script><script src="player-inventory.js"></script><script src="navigation-motion.js"></script><script src="storydesk-design.js"></script><script src="player-squad.js"></script>
 <script src="player-ticker.js"></script><script src="player-app.js"></script>
 </body></html>
