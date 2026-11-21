@@ -5,3 +5,8 @@ node_modules
 *.log
 .vercel
 .layero
+
+# The CLI drops any folder named dist by default. Both terminals' built files
+# live there and are the deployed site itself, so they must travel.
+!master/dist
+!players/dist
