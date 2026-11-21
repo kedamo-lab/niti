@@ -8,6 +8,7 @@
   },
   "scripts": {
     "start": "node tools/layero-server.cjs",
-    "dev": "node tools/dev-server.cjs"
+    "dev": "node tools/dev-server.cjs",
+    "test:ydb": "node tools/ydb-shim-test.cjs"
   }
 }

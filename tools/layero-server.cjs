@@ -7,14 +7,16 @@
 // static console: the browser always talks to one origin, the GM console keeps
 // its live sessions, and nothing depends on an outside deployment.
 //
-// The database is SQLite on the container disk, exactly as in the local dev
-// server. It survives freezes, but not a rebuild or a long idle: keep anything
-// that must outlive the container in a Layero database.
+// The database is YDB when YDB_DOCUMENT_ENDPOINT and YDB_SERVICE_ACCOUNT_KEY
+// are set, so rooms survive a rebuild, a freeze and a long idle. Without those
+// variables the entry falls back to SQLite on the container disk, exactly as
+// the local dev server, which is fine for a throwaway preview.
 const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
 const { pathToFileURL } = require('node:url');
 const { DatabaseSync } = require('node:sqlite');
+const { createDatabase } = require('./ydb-db.cjs');
 
 const root = path.resolve(__dirname, '..');
 const PORT = Number(process.env.PORT || 3000);
@@ -51,13 +53,20 @@ function dataDir() {
 const ORIGIN_SCRIPT = '<script>window.NITI_SESSION_API_BASE=new URL(\'api/\',location.href).href;window.NITI_SESSION_PLAYER_URL=new URL(\'player/\',location.href).href;</script>';
 
 // The Worker expects the D1 statement API; node:sqlite is close enough.
-class Statement {
+class SqliteStatement {
   constructor(sql, values = []) { this.sql = sql; this.values = values; }
-  bind(...values) { return new Statement(this.sql, values); }
+  bind(...values) { return new SqliteStatement(this.sql, values); }
   async first(column) { const row = db.prepare(this.sql).get(...this.values); return row ? (column ? row[column] : { ...row }) : null; }
   async all() { return { success: true, results: db.prepare(this.sql).all(...this.values).map(row => ({ ...row })) }; }
   async run() { const row = db.prepare(this.sql).run(...this.values); return { success: true, meta: { changes: Number(row.changes), last_row_id: Number(row.lastInsertRowid) } }; }
 }
+
+// One object answers `prepare` for whichever backend booted. When YDB is
+// configured but unreachable the Worker gets no DB at all, and its own
+// /api/health and room routes answer 503 instead of inventing a second,
+// divergent database on disk.
+let backend = null;
+const workerEnv = () => ({ DB: backend ? { prepare: sql => backend.prepare(sql) } : undefined });
 
 let db = null;
 let worker = null;
@@ -80,8 +89,8 @@ const server = http.createServer(async (req, res) => {
       // One origin: whatever Origin the browser sent is our own.
       const sent = req.headers.origin;
       const response = target.pathname.startsWith('/api/')
-        ? await worker.handleApi(request, { DB: { prepare: sql => new Statement(sql) } }, sent ? { allowedOrigins: [sent] } : {})
-        : await worker.default.fetch(request, { DB: { prepare: sql => new Statement(sql) } });
+        ? await worker.handleApi(request, workerEnv(), sent ? { allowedOrigins: [sent] } : {})
+        : await worker.default.fetch(request, workerEnv());
       res.writeHead(response.status, Object.fromEntries(response.headers));
       res.end(req.method === 'HEAD' ? undefined : Buffer.from(await response.arrayBuffer()));
       return;
@@ -110,9 +119,23 @@ const server = http.createServer(async (req, res) => {
 
 (async () => {
   if (!fs.existsSync(workerFile)) throw new Error('Missing ' + workerFile + '. Run: python players/scripts/build-worker.py');
-  db = new DatabaseSync(path.join(dataDir(), 'niti.sqlite'));
-  if (!db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='niti_rooms'").get()) {
-    db.exec(fs.readFileSync(schemaFile, 'utf8'));
+  if (process.env.YDB_DOCUMENT_ENDPOINT && process.env.YDB_SERVICE_ACCOUNT_KEY) {
+    try {
+      const ydb = createDatabase();
+      const table = await ydb.ensureTable();
+      backend = ydb;
+      console.log('rooms live in YDB · table ' + table);
+    } catch (error) {
+      // Serving the static site is still useful; sessions say they are offline.
+      console.error('YDB is configured but unreachable, sessions are offline:', error.message);
+    }
+  } else {
+    db = new DatabaseSync(path.join(dataDir(), 'niti.sqlite'));
+    if (!db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='niti_rooms'").get()) {
+      db.exec(fs.readFileSync(schemaFile, 'utf8'));
+    }
+    backend = { prepare: sql => new SqliteStatement(sql) };
+    console.log('rooms live in SQLite on the container disk · not durable across rebuilds');
   }
   worker = await import(pathToFileURL(workerFile).href);
   await new Promise((resolve, reject) => { server.once('error', reject); server.listen(PORT, '0.0.0.0', resolve); });
