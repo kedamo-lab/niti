@@ -5883,6 +5883,10 @@ const GM_SESSION = (() => {
   let message = '';
   // Kept after an error so the heading stays honest while a retry runs.
   let lastFailure = false;
+  // A missing room or a rejected key will not heal by itself, so polling
+  // stops until the master asks again. Keeps dead sessions from holding the
+  // free instance awake.
+  let halted = false;
   let creating = false;
   let refreshing = false;
   let requestedMission = null;
@@ -6236,6 +6240,7 @@ const GM_SESSION = (() => {
     connection = 'online';
     message = '';
     lastFailure = false;
+    halted = false;
     acceptTicker(next);
     const applied=typeof state!=='undefined' ? window.gmApplyResolutionEvents?.(state,room) : null;
     const awardsChanged=syncLocalAwards();
@@ -6405,6 +6410,7 @@ const GM_SESSION = (() => {
       if (access?.roomId !== roomId) return;
       connection = 'error';
       lastFailure = true;
+      halted = [401, 403, 404].includes(error.status);
       message = error.status === 401 || error.status === 403 ? 'Ключ этой комнаты не принят. Восстанови файл доступа мастера.' : error.status === 404 ? 'Игровая комната не найдена. Можно восстановить другой ключ или отключить этот терминал.' : error.message;
     } finally { refreshing = false; paint(); ensureCurrentPublication(); if(connection==='online')void drainTicker(); }
   }
@@ -6612,7 +6618,7 @@ const GM_SESSION = (() => {
     const control = event.target.closest('[data-gm-action]');
     if (!control || control.disabled) return;
     const action = control.dataset.gmAction;
-    if (action === 'refresh') { if (requestedMission) void drainMissionQueue(); else void refresh(); }
+    if (action === 'refresh') { halted = false; if (requestedMission) void drainMissionQueue(); else void refresh(); }
     if (action === 'publish-mission') missionSelected(control.dataset.missionId);
     if (action === 'result') void deliverResult(control.dataset.missionId, control.dataset.resultId);
     if (action === 'edit-public') editPublic(control.dataset.missionId);
@@ -6631,7 +6637,7 @@ const GM_SESSION = (() => {
     }
     if (action === 'open-current' && room?.mission?.id) { if (typeof selectedScene !== 'undefined') selectedScene = room.mission.id; if (typeof navigate === 'function') navigate('scenes'); }
     if (action === 'disconnect' && typeof modal === 'function') modal('Отключить этот терминал?', '<p>Комната, игроки и награды сохранятся. Для возврата понадобится скачанный ключ мастера.</p>', () => {
-      access = null; room = null; requestedMission = null; lastPublished = ''; adoptedRoom = ''; message = ''; connection = 'idle'; lastFailure = false; recipients.clear();
+      access = null; room = null; requestedMission = null; lastPublished = ''; adoptedRoom = ''; message = ''; connection = 'idle'; lastFailure = false; halted = false; recipients.clear();
       try { localStorage.removeItem(KEY); } catch { /* Disconnect current runtime even when storage is blocked. */ }
       closeModal(); paint();window.gmTickerRefresh?.();
     }, '<button class="button ghost" type="button" data-action="close-modal">Отмена</button><button class="button primary" type="submit">Отключить</button>');
@@ -6648,7 +6654,7 @@ const GM_SESSION = (() => {
   }
   function onReady() { if (access && !offlineFile) void refresh(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', onReady, {once: true}); else setTimeout(onReady, 0);
-  setInterval(() => { if (!document.hidden && access && !publishing && !pendingResults.size) void refresh(); }, 5000);
+  setInterval(() => { if (!document.hidden && access && !halted && !publishing && !pendingResults.size) void refresh(); }, 5000);
   document.addEventListener('visibilitychange', () => { if (!document.hidden && access) void refresh(); });
   window.addEventListener('online', () => { if (access) { if (requestedMission) void drainMissionQueue(); else void refresh(); } });
 

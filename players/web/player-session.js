@@ -176,7 +176,10 @@
   }
   function schedulePoll() {
     clearTimeout(pollingTimer);
-    if (ONLINE && hasCurrentAccess() && !document.hidden) pollingTimer = setTimeout(refresh, 5000);
+    // A missing room or a rejected key will not heal by itself, so polling
+    // stops until the player joins or restores access again.
+    const permanent = connection === 'missing' || connection === 'denied';
+    if (ONLINE && !permanent && hasCurrentAccess() && !document.hidden) pollingTimer = setTimeout(refresh, 5000);
   }
   async function refresh() {
     if (!ONLINE || !hasCurrentAccess() || joining) return;
