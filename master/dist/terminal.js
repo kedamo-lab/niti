@@ -32,11 +32,37 @@ root.style.setProperty('--terminal-art-filter','url("#niti-terminal-art")');
 const artMatrix=artDefs.querySelector('[data-terminal-art-color]');
 function tintArtwork(hex){const rgb=hex.slice(1).match(/../g).map(channel=>parseInt(channel,16)/255);artMatrix.setAttribute('values',`${rgb[0]} 0 0 0 0 0 ${rgb[1]} 0 0 0 0 0 ${rgb[2]} 0 0 0 0 0 1 0`);}
 function closePanel(restoreFocus=false){panel.hidden=true;color.setAttribute('aria-expanded','false');if(restoreFocus)color.focus();}
-function paint(){const c=palette.find(p=>p.id===phosphor);root.dataset.phosphor=phosphor;root.dataset.crt=crt?'on':'off';for(const[k,v]of Object.entries(variableKeys))root.style.setProperty(k,c[v]);root.style.setProperty('--terminal-glow',c.dot+'27');tintArtwork(c.dot);color.innerHTML='<span class="palette-current-swatch" aria-hidden="true"></span><span>Цвет: '+c.name.toLocaleLowerCase('ru')+'</span><svg class="palette-caret" viewBox="0 0 10 6" fill="none" aria-hidden="true"><path d="m1 1 4 4 4-4" stroke="currentColor"/></svg>';scan.textContent=crt?'ЭЛТ: вкл':'ЭЛТ: выкл';scan.setAttribute('aria-pressed',String(crt));panel.querySelectorAll('[data-color]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.color===phosphor)));document.querySelector('meta[name="theme-color"]').content=c.paper;}
+function paint(){const c=palette.find(p=>p.id===phosphor);root.dataset.phosphor=phosphor;root.dataset.crt=crt?'on':'off';for(const[k,v]of Object.entries(variableKeys))root.style.setProperty(k,c[v]);root.style.setProperty('--terminal-glow',c.dot+'27');tintArtwork(c.dot);color.innerHTML='<span class="palette-current-swatch" aria-hidden="true"></span><span>Цвет: '+c.name.toLocaleLowerCase('ru')+'</span><svg class="palette-caret" viewBox="0 0 10 6" fill="none" aria-hidden="true"><path d="m1 1 4 4 4-4" stroke="currentColor"/></svg>';scan.textContent=crt?'ЭЛТ: вкл':'ЭЛТ: выкл';scan.setAttribute('aria-pressed',String(crt));panel.querySelectorAll('[data-color]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.color===phosphor)));document.querySelector('meta[name="theme-color"]').content=c.paper;paintHero();}
 color.addEventListener('click',()=>{if(!panel.hidden){closePanel();return;}panel.hidden=false;color.setAttribute('aria-expanded','true');panel.querySelector('[aria-pressed="true"]').focus();});
 panel.addEventListener('click',event=>{if(event.target.closest('.palette-close')){closePanel(true);return;}const option=event.target.closest('[data-color]');if(!option)return;phosphor=option.dataset.color;paint();try{localStorage.setItem('niti-gm-display-palette-v2',phosphor);}catch{}closePanel(true);});
 scan.addEventListener('click',()=>{crt=!crt;paint();try{localStorage.setItem('niti-display-crt',crt?'on':'off');}catch{}});
 document.addEventListener('pointerdown',event=>{if(!panel.hidden&&!panel.contains(event.target)&&!color.contains(event.target))closePanel();});
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!panel.hidden){event.preventDefault();event.stopImmediatePropagation();closePanel(true);}if(event.key==='Tab'&&!panel.hidden){const items=[color,...panel.querySelectorAll('button')];if((event.shiftKey&&document.activeElement===color)||(!event.shiftKey&&document.activeElement===items[items.length-1]))closePanel();}},true);
+// The hero banner follows the palette: every colour id has its own artwork.
+// On the shared origin the console serves those files from /assets; the player
+// bundle only carries the crimson webp, so a failed load falls back to it.
+const heroDefault='assets/power-'+'armor-crimson.webp';
+function heroFile(id){
+  if(id==='crimson')return heroDefault;
+  // The console serves the palette artwork from /assets on the shared origin;
+  // a deployment without it simply keeps the crimson fallback.
+  return '/assets/'+id+'.png';
+}
+function paintHero(){
+  if(root.dataset.offline==='true')return;
+  const src=heroFile(phosphor);
+  document.querySelectorAll('img[data-theme-hero]').forEach(img=>{
+    if(!img.dataset.heroFallback){
+      img.dataset.heroFallback='1';
+      img.addEventListener('error',()=>{if(img.getAttribute('src')!==heroDefault)img.setAttribute('src',heroDefault);});
+    }
+    if(img.getAttribute('src')!==src)img.setAttribute('src',src);
+  });
+}
+let heroQueued=false;
+function queueHero(){if(heroQueued)return;heroQueued=true;setTimeout(()=>{heroQueued=false;paintHero();},0);}
+// Terminal pages render their workspace after this script runs, so a new hero
+// node must pick up the current colour as soon as it appears.
+new MutationObserver(queueHero).observe(document.documentElement,{childList:true,subtree:true});
 paint();
 })();

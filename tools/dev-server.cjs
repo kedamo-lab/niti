@@ -23,13 +23,23 @@ class Statement{
   async run(){const row=db.prepare(this.sql).run(...this.values);return{success:true,meta:{changes:Number(row.changes),last_row_id:Number(row.lastInsertRowid)}};}
 }
 const env={DB:{prepare:sql=>new Statement(sql)}};
-const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json; charset=utf-8','.svg':'image/svg+xml','.webp':'image/webp','.woff2':'font/woff2','.txt':'text/plain; charset=utf-8'};
+const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json; charset=utf-8','.svg':'image/svg+xml','.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.webp':'image/webp','.woff2':'font/woff2','.txt':'text/plain; charset=utf-8','.wav':'audio/wav','.mp3':'audio/mpeg'};
 const servers=[];
 (async()=>{
   const worker=await import(pathToFileURL(compiled).href);
   async function handle(req,res,isPlayer){
     try{
       const origin=isPlayer?playerOrigin:masterOrigin,url=new URL(req.url,origin);
+      // The player page shares the console's palette artwork, exactly as the
+      // single-origin server does; the bundled webp remains the fallback.
+      if(isPlayer&&url.pathname.startsWith('/assets/')){
+        const folder=path.join(root,'master/dist'),file=path.resolve(folder,decodeURIComponent(url.pathname).slice(1));
+        if(file.startsWith(folder+path.sep)&&fs.existsSync(file)&&fs.statSync(file).isFile()){
+          const ext=path.extname(file).toLowerCase();
+          res.writeHead(200,{'content-type':mime[ext]||'application/octet-stream','cache-control':'public, max-age=3600'});
+          res.end(fs.readFileSync(file));return;
+        }
+      }
       // One address, two terminals: /player/* and /api/* belong to the player Worker.
       const viaPlayer=isPlayer||url.pathname==='/player'||url.pathname.startsWith('/player/')||url.pathname.startsWith('/api/');
       if(viaPlayer){
@@ -55,7 +65,9 @@ const servers=[];
       if(!file.startsWith(folder+path.sep)||!fs.existsSync(file)||!fs.statSync(file).isFile()){res.writeHead(404);res.end('Not found');return;}
       let data=fs.readFileSync(file);
       if(path.extname(file)==='.html')data=Buffer.from(data.toString().replace('<head>','<head><script>window.NITI_SESSION_API_BASE='+JSON.stringify(masterOrigin+'/api')+';window.NITI_SESSION_PLAYER_URL='+JSON.stringify(masterOrigin+'/player/')+';</script>'));
-      res.writeHead(200,{'content-type':mime[path.extname(file)]||'application/octet-stream','cache-control':'no-store'});res.end(req.method==='HEAD'?undefined:data);
+      const ext=path.extname(file).toLowerCase();
+      const cacheable=['.png','.jpg','.jpeg','.webp','.svg','.woff2','.wav','.mp3'].includes(ext);
+      res.writeHead(200,{'content-type':mime[ext]||'application/octet-stream','cache-control':cacheable?'public, max-age=3600':'no-store'});res.end(req.method==='HEAD'?undefined:data);
     }catch(error){res.writeHead(500,{'content-type':'text/plain; charset=utf-8'});res.end('Local server error. See the terminal.');console.error(error.message);}
   }
   for(const[port,isPlayer]of[[masterPort,false],[playerPort,true]]){

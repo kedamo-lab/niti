@@ -145,7 +145,7 @@ function playerEditorialHero(){
       <p>Персонаж, снаряжение и всё, что важно для игры — в одном месте.</p>
       <div class="player-landing-actions"><a class="button primary" href="#character">Открыть персонажа </a><a class="button" href="#session">Игровая сессия </a></div>
     </div>
-    <div class="player-landing-image" aria-hidden="true"><img src="assets/power-armor-crimson.webp" alt="" width="960" height="1200" fetchpriority="high"></div>
+    <div class="player-landing-image" aria-hidden="true"><img data-theme-hero src="assets/power-armor-crimson.webp" alt="" width="960" height="1200" fetchpriority="high"></div>
     <div class="player-landing-person"><span>Твой персонаж</span><strong>${esc(profile.name)||'Создай свою историю'}</strong><a href="#character">К анкете</a></div>
   </section>`;
 }

@@ -103,10 +103,13 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(404, { 'content-type': 'text/plain; charset=utf-8' }); res.end('Not found'); return;
     }
     let data = fs.readFileSync(file);
-    if (path.extname(file) === '.html') data = Buffer.from(data.toString().replace('<head>', '<head>' + ORIGIN_SCRIPT));
+    const ext = path.extname(file).toLowerCase();
+    if (ext === '.html') data = Buffer.from(data.toString().replace('<head>', '<head>' + ORIGIN_SCRIPT));
+    // Hero artwork is megabytes per file; caching keeps a theme switch cheap.
+    const cacheable = ['.png', '.jpg', '.jpeg', '.webp', '.avif', '.svg', '.woff2', '.woff', '.ttf', '.mp3', '.wav', '.ogg'].includes(ext);
     res.writeHead(200, {
-      'content-type': MIME[path.extname(file).toLowerCase()] || 'application/octet-stream',
-      'cache-control': 'no-store',
+      'content-type': MIME[ext] || 'application/octet-stream',
+      'cache-control': cacheable ? 'public, max-age=3600' : 'no-store',
       'x-content-type-options': 'nosniff',
     });
     res.end(req.method === 'HEAD' ? undefined : data);

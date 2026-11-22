@@ -79,7 +79,7 @@ def embed_audio_assets(source: str, parent: Path) -> str:
 
 
 def build() -> Path:
-    source = (DIST / "gm.html").read_text(encoding="utf-8")
+    source = (DIST / "gm.html").read_text(encoding="utf-8").replace('<html lang="ru">', '<html lang="ru" data-offline="true">')
 
     def link(match: re.Match[str]) -> str:
         attrs = Tag(match[0]).attrs

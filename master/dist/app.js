@@ -28,7 +28,7 @@ function clock(c){if(c.activation)return moduleClock(c);return `<div class="cloc
 function masterEditorialHero(scene){
   return `<section class="master-hero" aria-labelledby="master-hero-title">
     <div class="master-hero-copy"><p class="master-hero-label">Тартар · Сессия ${state.session}</p><h1 id="master-hero-title">История<br><em>в твоих руках.</em></h1><p class="master-hero-intro">Все сцены, персонажи и решения — в одном месте.</p><div class="master-hero-actions"><a href="#session" class="button primary">Связь с игроками</a>${btn('Завершить сессию','end-session','ghost')}</div></div>
-    <div class="master-hero-art" aria-hidden="true"><img src="assets/power-armor-crimson.webp" alt="" width="960" height="1200" fetchpriority="high"></div>
+    <div class="master-hero-art" aria-hidden="true"><img data-theme-hero src="assets/power-armor-crimson.webp" alt="" width="960" height="1200" fetchpriority="high"></div>
     <div class="master-current"><span>${scene?'Текущая сцена':'Новая глава'}</span><h2>${scene?esc(scene.title):'История начинается здесь'}</h2><p>${scene?esc(scene.place||'Следующий ход — за тобой.'):'Подготовь первую сцену и собери отряд.'}</p>${scene?btn('Открыть сцену','open-scene','primary',`data-id="${esc(scene.id)}"`):btn('Добавить сцену','add','primary','data-kind="scenes"')}</div>
   </section>`;
 }
